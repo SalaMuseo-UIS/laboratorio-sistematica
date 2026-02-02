@@ -368,12 +368,12 @@ mermaid.initialize({
         <h3>Mapa Conceptual: Flujo de Decisión para Codificación</h3>
         <div class="mermaid">
         graph TD
-            Start{"¿Tengo el dato?"}
-            Start -->|Sí| A["Codificar Estado: 0, 1, 2..."]
-            Start -->|No| B{"¿El organismo posee la estructura?"}
+            Q1{"¿Tengo el dato?"}
+            Q1 -- "Sí" --> A["Codificar Estado: 0, 1, 2..."]
+            Q1 -- "No" --> Q2{"¿El organismo posee la estructura?"}
             
-            B -->|Sí, pero está roto/perdido| C["MISSING DATA (?)"]
-            B -->|No, la estructura no existe| D["INAPPLICABLE (-)"]
+            Q2 -- "Sí, pero está roto/perdido" --> C["MISSING DATA (?)"]
+            Q2 -- "No, la estructura no existe" --> D["INAPPLICABLE (-)"]
             
             C --> E["El software imputará el estado más probable"]
             D --> F["El software ignorará este carácter para este taxón"]
