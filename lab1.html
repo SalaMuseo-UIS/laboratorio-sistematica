@@ -9,9 +9,11 @@ import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.mi
 mermaid.initialize({ 
     startOnLoad: true, 
     theme: 'neutral',
+    securityLevel: 'loose',
     themeVariables: {
-        fontSize: '16px',
-        fontFamily: '"Segoe UI", Roboto, sans-serif'
+        fontSize: '15px',
+        fontFamily: '"Segoe UI", Roboto, sans-serif',
+        lineColor: '#2c3e50'
     }
 });
 </script>
@@ -78,7 +80,7 @@ mermaid.initialize({
         font-size: 0.9em;
     }
 
-    /* Cajas de Conceptos y Ejemplos */
+    /* Cajas de Conceptos */
     .concept-box {
         background-color: #ffffff;
         border: 1px solid #dfe6e9;
@@ -101,7 +103,7 @@ mermaid.initialize({
         padding-bottom: 8px;
     }
 
-    /* Caja Especial para Teoría Moderna */
+    /* Caja Moderna */
     .modern-box {
         background-color: #e8f8f5;
         border: 1px solid #1abc9c;
@@ -120,25 +122,7 @@ mermaid.initialize({
         padding-bottom: 8px;
     }
 
-    /* Glosario */
-    .glossary-box {
-        background-color: #f9fbe7;
-        border: 2px solid #cddc39;
-        border-radius: 8px;
-        padding: 25px;
-        margin-top: 40px;
-    }
-    .glossary-title {
-        color: #827717;
-        font-weight: bold;
-        font-size: 1.2em;
-        margin-bottom: 15px;
-        display: block;
-        text-transform: uppercase;
-    }
-    .glossary-term { font-weight: bold; color: #33691e; }
-
-    /* Mapas Conceptuales */
+    /* Mapas Conceptuales - Ajuste de Tamaño */
     .mermaid {
         margin: 30px auto;
         text-align: center;
@@ -146,6 +130,8 @@ mermaid.initialize({
         padding: 20px;
         border-radius: 8px;
         border: 1px solid #eee;
+        /* Control de tamaño para que no sean gigantes */
+        max-width: 750px; 
     }
     .mermaid svg {
         max-width: 100% !important;
@@ -159,19 +145,10 @@ mermaid.initialize({
     tr:nth-child(even) { background-color: #f2f6f8; }
 
     /* Bibliografía */
-    .bibliography {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        padding: 60px;
-    }
-    .bib-item {
-        margin-bottom: 20px;
-        padding-left: 30px;
-        text-indent: -30px;
-        font-size: 0.95em;
-        line-height: 1.6;
-    }
+    .bibliography { background-color: #2c3e50; color: #ecf0f1; padding: 60px; }
+    .bib-item { margin-bottom: 20px; padding-left: 30px; text-indent: -30px; font-size: 0.95em; line-height: 1.6; }
 
+    /* Preguntas */
     .question-box {
         background-color: #fff3e0;
         border-left: 5px solid #ff9800;
@@ -179,13 +156,7 @@ mermaid.initialize({
         border-radius: 4px;
         margin-top: 20px;
     }
-    
-    .question-header {
-        font-weight: bold;
-        color: #d35400;
-        margin-bottom: 10px;
-        display: block;
-    }
+    .question-header { font-weight: bold; color: #d35400; margin-bottom: 10px; display: block; }
     
     .back-btn {
         display: inline-block;
@@ -197,7 +168,6 @@ mermaid.initialize({
         border-radius: 5px;
         font-weight: bold;
     }
-    .back-btn:hover { background-color: #2c3e50; }
 </style>
 </head>
 <body>
@@ -216,29 +186,37 @@ mermaid.initialize({
     <div class="content-section">
         <h2 class="section-title">1. El Marco Histórico: La Guerra de las Escuelas</h2>
         
-        <p>
-            La sistemática del siglo XX no fue un campo unificado. Según <strong>Morrone (2000)</strong>, tres grandes escuelas compitieron por definir el método "correcto". Entender este conflicto es vital para comprender por qué hoy rechazamos la simple similitud (fenética) y los grados evolutivos subjetivos.
-        </p>
+        <p>La sistemática del siglo XX no fue un campo unificado. Según <strong>Morrone (2000)</strong>, tres grandes escuelas compitieron por definir el método "correcto". Entender este conflicto es vital para comprender por qué hoy rechazamos la simple similitud (fenética) y los grados evolutivos subjetivos.</p>
 
         <div class="concept-box">
             <span class="concept-title">Las Tres Escuelas Clásicas (Hull, 1988)</span>
             <ol>
-                <li><strong>Sistemática Evolutiva:</strong> (Mayr) Clasificaba por genealogía + divergencia. Aceptaba <em>parafilia</em> (ej. agrupar reptiles excluyendo aves).</li>
-                <li><strong>Fenética:</strong> (Sokal) Clasificaba solo por <em>similitud global</em> observable, usando algoritmos matemáticos pero ignorando la historia evolutiva de los caracteres.</li>
+                <li><strong>Sistemática Evolutiva:</strong> (Mayr) Clasificaba por genealogía + divergencia. Aceptaba <em>parafilia</em> (ej. Reptilia sin Aves).</li>
+                <li><strong>Fenética:</strong> (Sokal) Clasificaba solo por <em>similitud global</em> observable, ignorando la historia evolutiva de los caracteres.</li>
                 <li><strong>Cladística:</strong> (Hennig) Clasifica estrictamente por genealogía. Solo acepta grupos monofiléticos definidos por <em>sinapomorfías</em>.</li>
             </ol>
         </div>
 
+        <h3>Mapa Conceptual 1: Criterios de Clasificación</h3>
+        <div class="mermaid">
+        graph TD
+            A["Datos Biológicos"] --> B{"¿Qué criterio de agrupación?"}
+            B -->|Similitud Global| C["FENÉTICA"]
+            B -->|Genealogía + Divergencia| D["EVOLUTIVA"]
+            B -->|Solo Genealogía| E["CLADÍSTICA"]
+            
+            C --> F("Fenogramas")
+            D --> G("Árboles Filogenéticos con Grados")
+            E --> H("Cladogramas Estrictos")
+            
+            F --> I["Falla: Agrupa por Homoplasia"]
+            G --> J["Falla: Subjetividad en Grados"]
+            H --> K["Éxito: Distingue Homología"]
+        </div>
+
         <div class="modern-box">
             <span class="modern-title">Actualización: El Nuevo Campo de Batalla</span>
-            <p>
-                La "Guerra de las Escuelas" terminó con la victoria conceptual de la Cladística. Sin embargo, como señalan <strong>De Luna et al. (2005)</strong>, el debate se ha desplazado a los algoritmos:
-            </p>
-            <ul>
-                <li><strong>Parsimonia (MP):</strong> Minimiza pasos evolutivos (Lógica Popperiana).</li>
-                <li><strong>Métodos Probabilísticos (ML/Bayesiano):</strong> Usan modelos de evolución molecular.</li>
-                <li><strong>Coalescencia:</strong> Modela la genética de poblaciones dentro de la filogenia.</li>
-            </ul>
+            <p>La "Guerra de las Escuelas" terminó con la victoria conceptual de la Cladística. Sin embargo, como señalan <strong>De Luna et al. (2005)</strong>, el debate se ha desplazado a los algoritmos (Parsimonia vs. Probabilísticos vs. Coalescencia).</p>
         </div>
     </div>
 
@@ -246,28 +224,33 @@ mermaid.initialize({
         <h2 class="section-title">2. Lógica de la Inferencia y Métodos Alternativos</h2>
         
         <h3>El Criterio de Parsimonia (Farris)</h3>
-        <p>
-            Basado en el falsacionismo de Popper, el árbol más parsimonioso es el que es <strong>"menos falsado"</strong> por la evidencia (homoplasias). Se busca maximizar el poder explicativo minimizando las hipótesis <em>ad hoc</em>.
-        </p>
+        <p>Basado en el falsacionismo de Popper, el árbol más parsimonioso es el que es <strong>"menos falsado"</strong> por la evidencia (homoplasias). Se busca maximizar el poder explicativo minimizando las hipótesis <em>ad hoc</em>.</p>
+
+        <h3>Mapa Conceptual 2: El Ciclo Hipotético-Deductivo (Farris)</h3>
+        <div class="mermaid">
+        graph LR
+            A["Observación de Caracteres"] --> B("Matriz de Datos")
+            B --> C{"Generación de Árboles"}
+            C --> D["Árbol 1: Requiere 5 Homoplasias"]
+            C --> E["Árbol 2: Requiere 1 Homoplasia"]
+            D --> F["RECHAZADO<br>(Menor Poder Explicativo)"]
+            E --> G["ACEPTADO<br>(Máxima Parsimonia)"]
+            G --> H("Hipótesis Preferida")
+            
+            style E fill:#d5f5e3,stroke:#2ecc71,stroke-width:2px
+            style F fill:#fadbd8,stroke:#e74c3c,stroke-width:2px
+        </div>
 
         <div class="concept-box" style="border-left: 5px solid #9b59b6;">
             <span class="concept-title" style="color: #8e44ad;">El Nuevo Paradigma: La Teoría Coalescente</span>
-            <p>
-                <strong>Scott Edwards (2009)</strong> plantea que la sistemática molecular ha sufrido un cambio de paradigma. Históricamente, al usar Parsimonia o ML en genes concatenados, asumíamos que "el árbol del gen es el árbol de la especie".
-            </p>
-            <ul>
-                <li><strong>El Problema (ILS):</strong> El <em>Sorteo de Linaje Incompleto</em> causa que, si la especiación es rápida, los genes cuenten historias diferentes a la de las especies.</li>
-                <li><strong>La Solución:</strong> La Coalescencia Multiespecífica estima el árbol de especies integrando la distribución estadística de múltiples árboles de genes discordantes.</li>
-            </ul>
+            <p><strong>Scott Edwards (2009)</strong> plantea que la sistemática molecular ha sufrido un cambio de paradigma debido al problema del <em>Sorteo de Linaje Incompleto (ILS)</em>, donde los árboles de genes no coinciden con el árbol de las especies.</p>
         </div>
     </div>
 
     <div class="content-section">
         <h2 class="section-title">3. Interpretación Gráfica y Topología</h2>
         
-        <p>
-            El "Tree Thinking" requiere leer nodos y ramas, no puntas. Un árbol es un móvil topológico.
-        </p>
+        <p>El "Tree Thinking" requiere leer nodos y ramas, no puntas. Un árbol es un móvil topológico.</p>
 
         <div class="concept-box">
             <span class="concept-title">Terminología Clave de Relaciones (Morrone, 2000)</span>
@@ -278,32 +261,50 @@ mermaid.initialize({
                 </tr>
                 <tr>
                     <td><strong>Ingroup vs. Outgroup</strong></td>
-                    <td>El <em>Ingroup</em> es el grupo de estudio. El <em>Outgroup</em> se usa para enraizar y polarizar caracteres (decidir qué es primitivo).</td>
+                    <td>El <em>Ingroup</em> es el grupo de estudio. El <em>Outgroup</em> se usa para enraizar y polarizar caracteres.</td>
                 </tr>
             </table>
         </div>
 
-        <div class="concept-box">
-            <span class="concept-title">La Regla de la Rotación</span>
-            <p>
-                Los nodos pueden girar libremente. El orden de izquierda a derecha de los terminales no tiene significado evolutivo. Taxón A al lado de Taxón B no significa que sean parientes cercanos a menos que compartan un nodo exclusivo.
-            </p>
+        <h3>Mapa Conceptual 3: Componentes y Relaciones</h3>
+        <div class="mermaid">
+        graph TD
+            A(("Raíz")) --> B(("Nodo Interno"))
+            B --> C["Outgroup (Grupo Externo)"]
+            B --> D(("Nodo Interno"))
+            
+            subgraph INGROUP
+                D --> E["Taxón A"]
+                D --> F(("Nodo"))
+                F --> G["Taxón B"]
+                F --> H["Taxón C"]
+            end
+            
+            style C fill:#f9f9f9,stroke:#333,stroke-dasharray: 5 5
+            style G fill:#d5f5e3,stroke:#2ecc71,stroke-width:2px
+            style H fill:#d5f5e3,stroke:#2ecc71,stroke-width:2px
+            
+            linkStyle 3,4,5 stroke-width:4px,fill:none,stroke:red;
         </div>
+        <p style="text-align: center; font-size: 0.9em; margin-top: -20px;"><em>Nota: Taxón B y Taxón C son Grupos Hermanos.</em></p>
     </div>
 
     <div class="content-section">
         <h2 class="section-title">4. El Lenguaje de los Caracteres: Apomorfía vs. Plesiomorfía</h2>
         
-        <p>
-            No todas las semejanzas son iguales. La cladística de <strong>Hennig</strong> y la formalización de <strong>Morrone (2000)</strong> nos obligan a distinguir el estatus evolutivo de cada rasgo.
-        </p>
+        <p>No todas las semejanzas son iguales. La cladística nos obliga a distinguir el estatus evolutivo de cada rasgo.</p>
 
+        <h3>Mapa Conceptual 4: Evolución del Carácter</h3>
         <div class="mermaid">
         graph TD
-            A[Estado Ancestral: Plesiomorfía] -->|Cambio Evolutivo| B[Estado Derivado: Apomorfía]
+            A[Estado Ancestral: PLESIOMORFÍA] -->|Cambio Evolutivo| B[Estado Derivado: APOMORFÍA]
+            B --> C{¿Compartido por varios?}
+            C -->|Sí| D[SINAPOMORFÍA<br>(Define Grupos)]
+            C -->|No, es único| E[AUTAPOMORFÍA<br>(Define Especies)]
             
             style A fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
             style B fill:#ffebee,stroke:#f44336,stroke-width:2px
+            style D fill:#d5f5e3,stroke:#2ecc71,stroke-width:2px
         </div>
 
         <div class="concept-box">
@@ -312,111 +313,102 @@ mermaid.initialize({
                 <tr>
                     <th>Término</th>
                     <th>Definición</th>
-                    <th>¿Sirve para Agrupar?</th>
+                    <th>¿Agrupa?</th>
                 </tr>
                 <tr>
                     <td><strong>Plesiomorfía</strong></td>
-                    <td>Estado ancestral o primitivo de un carácter.</td>
+                    <td>Estado ancestral.</td>
                     <td>NO</td>
                 </tr>
                 <tr>
-                    <td><strong>Apomorfía</strong></td>
-                    <td>Estado derivado o "nuevo" de un carácter (surgió después).</td>
-                    <td>SÍ (Potencialmente)</td>
-                </tr>
-                <tr>
                     <td><strong>Sinapomorfía</strong></td>
-                    <td>Apomorfía compartida por dos o más taxones.</td>
-                    <td style="background-color:#d5f5e3; font-weight:bold;">¡SÍ! (Única evidencia válida)</td>
+                    <td>Apomorfía compartida.</td>
+                    <td style="background-color:#d5f5e3; font-weight:bold;">SÍ</td>
                 </tr>
                 <tr>
                     <td><strong>Simplesiomorfía</strong></td>
-                    <td>Plesiomorfía compartida. (Ej. Tener 5 dedos en humanos y lagartijas).</td>
-                    <td style="background-color:#fadbd8; font-weight:bold;">NO (Crea grupos parafiléticos)</td>
-                </tr>
-                <tr>
-                    <td><strong>Autapomorfía</strong></td>
-                    <td>Apomorfía única de un solo taxón terminal.</td>
-                    <td>NO (Solo define al terminal, no agrupa)</td>
+                    <td>Plesiomorfía compartida.</td>
+                    <td style="background-color:#fadbd8; font-weight:bold;">NO</td>
                 </tr>
                 <tr>
                     <td><strong>Homoplasia</strong></td>
-                    <td>Similitud que NO es homología (convergencia, paralelismo, reversión).</td>
-                    <td style="background-color:#fadbd8; font-weight:bold;">NO (Engaña al análisis)</td>
+                    <td>Similitud falsa (convergencia).</td>
+                    <td style="background-color:#fadbd8; font-weight:bold;">NO</td>
                 </tr>
             </table>
-        </div>
-        
-        <div class="citation-block">
-            "Las simplesiomorfías son homologías, pero son inútiles para la filogenia porque son retenidas de ancestros muy lejanos. Solo las novedades compartidas (sinapomorfías) indican parentesco reciente."
-            <span class="citation-source">— Basado en Morrone (2000)</span>
         </div>
     </div>
 
     <div class="content-section">
         <h2 class="section-title">5. Teoría del Carácter y Codificación</h2>
         
-        <p>
-            Al pasar de la observación a la matriz de datos, nos enfrentamos a problemas lógicos. El más grave es la "Codificación de la Ausencia".
-        </p>
-
-        <h3>El Dilema: ¿Faltante o Inaplicable?</h3>
-        <p>
-            Según <strong>Strong & Lipscomb (1999)</strong>, tratar lo "inaplicable" (no tengo alas, luego no tengo color de alas) como un simple "dato faltante" o un "cero" puede generar resultados catastróficos.
-        </p>
+        <p>Al pasar de la observación a la matriz de datos, el problema más grave es la "Codificación de la Ausencia".</p>
         
         <div class="concept-box" style="border-left: 5px solid #e74c3c;">
             <span class="concept-title" style="color: #c0392b;">Peligro: Codificación Reductiva</span>
-            <p>
-                Si usted pone un "0" en "Alas" y un "0" en "Venas de las alas", el software piensa que esos organismos comparten <strong>dos</strong> cosas. En realidad, comparten solo una (no tener alas). Esto infla artificialmente el soporte para ese grupo.
-            </p>
+            <p>Codificar "No alas" y "No venas" como dos ceros ("0") distintos duplica el peso de una sola característica. Esto viola la independencia de caracteres.</p>
+        </div>
+
+        <h3>Mapa Conceptual 5: Flujo de Decisión para Codificación</h3>
+        <div class="mermaid">
+        graph TD
+            Q1{"¿Tengo el dato?"}
+            Q1 -- "Sí" --> A["Codificar Estado: 0, 1, 2..."]
+            Q1 -- "No" --> Q2{"¿El organismo posee la estructura?"}
+            
+            Q2 -- "Sí, pero está perdido" --> C["MISSING DATA (?)"]
+            Q2 -- "No, la estructura no existe" --> D["INAPPLICABLE (-)"]
+            
+            C --> E["El software imputará el estado más probable"]
+            D --> F["El software IGNORA este carácter"]
+            
+            style D fill:#ffcccc,stroke:#333,stroke-width:2px
         </div>
     </div>
 
     <div class="content-section" style="background-color: #fbfbfb;">
         <h2 class="section-title">Evaluación de Conceptos</h2>
-        <p>Responda las siguientes preguntas para validar su comprensión de cada módulo.</p>
+        <p>Responda las siguientes preguntas para validar su comprensión.</p>
         
         <div class="question-box">
-            <span class="question-header">Módulo 1: Historia y Escuelas</span>
-            <p><strong>P1.</strong> Si un taxónomo agrupa a las ballenas con los peces basándose en que "ambos nadan y tienen aletas", a pesar de saber que las ballenas son mamíferos, ¿qué criterio de la Escuela Fenética está priorizando y qué tipo de carácter (homología u homoplasia) está usando?</p>
-            <p><strong>P2.</strong> ¿Por qué la Escuela Evolutiva aceptaba grupos como "Reptilia" (excluyendo aves), mientras que la Escuela Cladista lo rechaza? Utilice el concepto de <em>Parafilia</em> en su respuesta.</p>
+            <span class="question-header">Módulo 1: Historia</span>
+            <p><strong>P1.</strong> Si un taxónomo agrupa ballenas con peces porque "ambos nadan", ¿qué criterio Fenético usa y qué tipo de carácter (homología u homoplasia) es?</p>
+            <p><strong>P2.</strong> ¿Por qué la Escuela Evolutiva aceptaba la Parafilia (ej. Reptilia) y la Cladística la rechaza?</p>
         </div>
 
         <div class="question-box">
-            <span class="question-header">Módulo 2: Inferencia (Parsimonia y Coalescencia)</span>
-            <p><strong>P3.</strong> Según la lógica de Farris y Popper, ¿por qué preferimos el árbol más corto? ¿Es porque la naturaleza es simple o porque queremos minimizar las explicaciones <em>ad hoc</em>?</p>
-            <p><strong>P4.</strong> Explique el fenómeno de <em>Sorteo de Linaje Incompleto (ILS)</em>. ¿Cómo es posible que un gen humano sea más parecido a un gen de gorila que a uno de chimpancé, si los humanos y chimpancés son especies hermanas?</p>
+            <span class="question-header">Módulo 2: Inferencia</span>
+            <p><strong>P3.</strong> Según Farris/Popper, ¿por qué preferimos el árbol más corto? ¿Simplicidad natural o minimización de hipótesis ad hoc?</p>
+            <p><strong>P4.</strong> Explique cómo el <em>Sorteo de Linaje Incompleto</em> hace que un árbol de genes difiera del árbol de especies.</p>
         </div>
 
         <div class="question-box">
             <span class="question-header">Módulo 3: Tree Thinking</span>
-            <p><strong>P5.</strong> En un cladograma, si rotamos un nodo de modo que el taxón A quede lejos del taxón B visualmente, ¿ha cambiado su relación de parentesco? ¿Por qué?</p>
-            <p><strong>P6.</strong> Defina <em>Grupo Hermano</em>. Si el Taxón X es el grupo hermano del clado (Y+Z), ¿es X más antiguo que Y o Z?</p>
+            <p><strong>P5.</strong> Si rotamos un nodo alejando visualmente al taxón A del B, ¿cambia su parentesco? ¿Por qué?</p>
+            <p><strong>P6.</strong> Defina <em>Grupo Hermano</em>. ¿Es el taxón X más antiguo que su grupo hermano Y?</p>
         </div>
 
         <div class="question-box">
-            <span class="question-header">Módulo 4: Terminología de Caracteres</span>
-            <p><strong>P7.</strong> Los humanos y los lagartos tienen 5 dedos (pentadactilia). ¿Es este carácter una <em>Sinapomorfía</em> que une a humanos y lagartos? ¿O es una <em>Simplesiomorfía</em>? ¿Por qué?</p>
-            <p><strong>P8.</strong> Si descubrimos una especie nueva de escarabajo que tiene un color púrpura único que ninguna otra especie tiene, ¿cómo clasificamos este carácter? ¿Sirve una <em>Autapomorfía</em> para saber con quién está emparentado este escarabajo?</p>
+            <span class="question-header">Módulo 4: Caracteres</span>
+            <p><strong>P7.</strong> La pentadactilia en humanos y lagartos: ¿Sinapomorfía o Simplesiomorfía? ¿Por qué?</p>
+            <p><strong>P8.</strong> ¿Una Autapomorfía sirve para agrupar especies? Justifique.</p>
         </div>
 
         <div class="question-box">
             <span class="question-header">Módulo 5: Codificación</span>
-            <p><strong>P9.</strong> Usted está codificando caracteres para serpientes (que no tienen patas). Para el carácter "Número de dedos en las patas traseras", ¿debería usar un código de "0" (ausente) o un código de "-" (inaplicable)? Justifique según Strong & Lipscomb.</p>
-            <p><strong>P10.</strong> ¿Qué significa que los caracteres deben ser <em>independientes</em>? ¿Cómo viola la codificación reductiva este principio?</p>
+            <p><strong>P9.</strong> En serpientes (sin patas), ¿codifica "dedos traseros" como "0" (ausente) o "-" (inaplicable)? Justifique.</p>
+            <p><strong>P10.</strong> ¿Cómo viola la codificación reductiva el principio de independencia?</p>
         </div>
     </div>
 
     <div class="bibliography">
         <h3 style="margin-top: 0; border-bottom: 1px solid #7f8c8d; padding-bottom: 15px; margin-bottom: 20px;">Bibliografía Citada</h3>
-        
-        <div class="bib-item">Baum, D. A., Smith, S. D., & Donovan, S. S. S. (2005). The tree-thinking challenge. <em>Science</em>, 310.</div>
-        <div class="bib-item">De Luna, E., et al. (2005). Sistemática biológica: avances y direcciones... <em>Hidrobiológica</em>, 15(3).</div>
-        <div class="bib-item">Edwards, S. V. (2009). Is a new and general theory of molecular systematics emerging? <em>Evolution</em>, 63(1).</div>
+        <div class="bib-item">Baum, D. A., et al. (2005). The tree-thinking challenge. <em>Science</em>.</div>
+        <div class="bib-item">De Luna, E., et al. (2005). Sistemática biológica... <em>Hidrobiológica</em>.</div>
+        <div class="bib-item">Edwards, S. V. (2009). Is a new and general theory... <em>Evolution</em>.</div>
         <div class="bib-item">Farris, J. S. (1983). The logical basis of phylogenetic analysis.</div>
         <div class="bib-item">Morrone, J. J. (2000). <em>El lenguaje de la cladística</em>. UNAM.</div>
-        <div class="bib-item">Strong, E. E., & Lipscomb, D. (1999). Character coding and inadmissible missing data.</div>
+        <div class="bib-item">Strong, E. E., & Lipscomb, D. (1999). Character coding... <em>Cladistics</em>.</div>
     </div>
 
 </div>
