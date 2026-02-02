@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Laboratorio 1: Fundamentos Históricos, Lógicos y Teóricos</title>
-<!-- Integración de Mermaid.js para Mapas Conceptuales -->
 <script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
 mermaid.initialize({ 
     startOnLoad: true, 
     theme: 'neutral',
     themeVariables: {
-        fontSize: '18px',
+        fontSize: '16px',
         fontFamily: '"Segoe UI", Roboto, sans-serif'
     }
 });
@@ -129,7 +128,7 @@ mermaid.initialize({
         border-radius: 8px;
         border: 1px solid #eee;
     }
-    /* Forzar que el SVG ocupe el espacio necesario para que se vea grande */
+    /* Forzar que el SVG ocupe el espacio necesario */
     .mermaid svg {
         max-width: 100% !important;
         height: auto !important;
@@ -190,7 +189,6 @@ mermaid.initialize({
         </p>
     </div>
 
-    <!-- MÓDULO 1: HISTORIA Y ESCUELAS -->
     <div class="content-section">
         <h2 class="section-title">1. El Marco Histórico: La Guerra de las Escuelas</h2>
         
@@ -205,10 +203,10 @@ mermaid.initialize({
                     <strong>Sistemática Evolutiva (Gradismo):</strong> Liderada por Mayr y Simpson. Clasificaba basándose en dos criterios simultáneos: genealogía y <em>grado de divergencia</em>. Aceptaba grupos parafiléticos (ej. "Reptilia") si estos ocupaban una zona adaptativa distinta a sus descendientes (Aves).
                 </li>
                 <li>
-                    <strong>Fenética (Taxonomía Numérica):</strong> Liderada por Sokal y Sneath. Reaccionó contra la subjetividad de los evolutivos. Propuso usar matemáticas para agrupar organismos basados exclusivamente en <strong>Similitud Global</strong> (Overall Similarity), usando todos los caracteres sin ponderar.
+                    <strong>Fenética (Taxonomía Numérica):</strong> Liderada por Sokal y Sneath. Reaccionó contra la subjetividad de los evolutivos. Propuso usar matemáticas para agrupar organismos basados exclusivamente en <strong>Similitud Global</strong> (Overall Similarity), usando todos los caracteres sin ponderar y sin distinguir entre homología y homoplasia.
                 </li>
                 <li>
-                    <strong>Sistemática Filogenética (Cladística):</strong> Liderada por Willi Hennig. Propuso que la clasificación debe reflejar estrictamente la genealogía (puntos de ramificación). Solo acepta grupos monofiléticos definidos por <strong>sinapomorfías</strong>.
+                    <strong>Sistemática Filogenética (Cladística):</strong> Liderada por Willi Hennig. Propuso que la clasificación debe reflejar estrictamente la genealogía (puntos de ramificación). Introdujo el <strong>"Principio Auxiliar"</strong>: <em>Nunca asumas convergencia a menos que la evidencia te obligue a ello</em>. Solo acepta grupos monofiléticos definidos por <strong>sinapomorfías</strong>.
                 </li>
             </ol>
         </div>
@@ -235,6 +233,10 @@ mermaid.initialize({
             <span class="citation-source">— Basado en Farris (1983)</span>
         </div>
 
+        <p>
+            <strong>Nota Actual:</strong> Hoy en día, la discusión metodológica ha evolucionado. Como señalan <strong>De Luna et al. (2005)</strong>, el debate moderno no es "Parsimonia vs. Fenética", sino entre métodos que buscan la historia (Parsimonia) y métodos basados en modelos probabilísticos explícitos de evolución molecular (Máxima Verosimilitud e Inferencia Bayesiana).
+        </p>
+
         <div class="glossary-box">
             <span class="glossary-title">Glosario del Módulo 1</span>
             <ul>
@@ -246,7 +248,6 @@ mermaid.initialize({
         </div>
     </div>
 
-    <!-- MÓDULO 2: LÓGICA DE INFERENCIA -->
     <div class="content-section">
         <h2 class="section-title">2. Lógica de la Inferencia: El Criterio de Parsimonia</h2>
         
@@ -254,15 +255,22 @@ mermaid.initialize({
             La reconstrucción del pasado es un problema de inferencia abductiva. No podemos observar la especiación, por lo que debemos inferirla. <strong>De Luna et al. (2005)</strong> explican que la Parsimonia es uno de los criterios de optimidad para elegir entre múltiples hipótesis (árboles) posibles.
         </p>
 
-        <h3>¿Por qué el árbol más corto? (La justificación de Farris)</h3>
+        <h3>¿Por qué el árbol más corto? (La justificación lógica)</h3>
         <p>
-            James Farris (1983) refutó la idea de que la parsimonia asume que "la evolución es simple". En cambio, argumentó que la parsimonia maximiza el <strong>Poder Explicativo</strong>. 
+            James Farris (1983) refutó la idea de que la parsimonia asume que "la evolución es simple". En cambio, fundamentó la parsimonia en la lógica del <strong>Falsacionismo de Karl Popper</strong>:
         </p>
         <ul>
-            <li>Cada homología postulada (sinapomorfía) explica una similitud como herencia común.</li>
-            <li>Cada homoplasia (convergencia/reversión) es una hipótesis <em>ad hoc</em>: una excepción que no es explicada por el árbol, sino que debe ser asumida como un evento extra.</li>
-            <li>Científicamente, preferimos la teoría que requiere menos excepciones (menos homoplasias).</li>
+            <li>El árbol es una hipótesis científica.</li>
+            <li>Los datos que no encajan en el árbol (homoplasias) actúan como "falsadores" potenciales.</li>
+            <li>El árbol más parsimonioso es aquel que es <strong>"menos falsado"</strong> por la evidencia disponible. Maximiza el <strong>Poder Explicativo</strong> al minimizar las explicaciones <em>ad hoc</em>.</li>
         </ul>
+
+        <div class="concept-box">
+            <span class="concept-title">Poder Explicativo vs. Hipótesis Ad Hoc</span>
+            <p>
+                Cada vez que un árbol nos obliga a decir "este carácter evolucionó dos veces de forma independiente" (convergencia), estamos invocando una hipótesis <strong>ad hoc</strong> (una excusa para explicar por qué el dato no encaja con la genealogía propuesta). La ciencia busca minimizar el número de excusas necesarias.
+            </p>
+        </div>
 
         <h3>Mapa Conceptual: El Ciclo Hipotético-Deductivo</h3>
         <div class="mermaid">
@@ -281,17 +289,16 @@ mermaid.initialize({
             <ul>
                 <li><span class="glossary-term">Parsimonia:</span> Criterio metodológico que selecciona la hipótesis filogenética que minimiza el número total de cambios de estado (pasos) requeridos para explicar los datos.</li>
                 <li><span class="glossary-term">Hipótesis Ad Hoc:</span> Una suposición auxiliar necesaria para salvar una teoría que ha sido contradicha por la evidencia. En filogenia, cada homoplasia es una hipótesis <em>ad hoc</em>.</li>
-                <li><span class="glossary-term">Poder Explicativo:</span> La capacidad de una hipótesis para dar cuenta de las observaciones sin recurrir a excepciones externas.</li>
+                <li><span class="glossary-term">Poder Explicativo:</span> La capacidad de una hipótesis para explicar las observaciones como resultado de un proceso general (herencia común) en lugar de eventos aislados (convergencia).</li>
             </ul>
         </div>
     </div>
 
-    <!-- MÓDULO 3: PENSAMIENTO EN ÁRBOL -->
     <div class="content-section">
         <h2 class="section-title">3. Interpretación Gráfica: "Tree Thinking"</h2>
         
         <p>
-            Saber generar un árbol no es lo mismo que saber leerlo. <strong>Baum, Smith y Donovan (2005)</strong> advierten sobre errores cognitivos comunes, como leer el árbol como una "escalera de progreso" (la *scala naturae* de Aristóteles).
+            Saber generar un árbol no es lo mismo que saber leerlo. <strong>Baum, Smith y Donovan (2005)</strong> advierten sobre errores cognitivos comunes, como leer el árbol como una "escalera de progreso" (la *scala naturae* de Aristóteles) o leer las relaciones en las puntas ("lectura lateral").
         </p>
 
         <div class="concept-box">
@@ -332,12 +339,11 @@ mermaid.initialize({
         </div>
     </div>
 
-    <!-- MÓDULO 4: TEORÍA DEL CARÁCTER -->
     <div class="content-section">
         <h2 class="section-title">4. Teoría del Carácter y Codificación</h2>
         
         <p>
-            Una matriz filogenética no es una hoja de cálculo cualquiera. Es un conjunto formal de hipótesis de homología. <strong>Strong & Lipscomb (1999)</strong> demostraron que la forma en que codificamos la ausencia de caracteres puede destruir la lógica del análisis.
+            Una matriz filogenética no es una hoja de cálculo cualquiera. Es un conjunto formal de hipótesis de homología. <strong>Strong & Lipscomb (1999)</strong> demostraron que la forma en que codificamos la ausencia de caracteres puede destruir la lógica del análisis si violamos la <strong>independencia de caracteres</strong>.
         </p>
 
         <h3>Codificación: El Dilema de la Ausencia</h3>
@@ -353,7 +359,7 @@ mermaid.initialize({
             </tr>
             <tr>
                 <td><strong>Dato Faltante (Missing Data)</strong></td>
-                <td>El carácter existe teóricamente, pero no tenemos la información. Es una incertidumbre epistemológica.</td>
+                <td>El carácter existe teóricamente, pero no tenemos la información (ej. espécimen roto). Es una incertidumbre epistemológica.</td>
                 <td style="text-align:center; font-weight:bold; font-size:1.2em;">?</td>
                 <td>Fósil sin cabeza. No sabemos la forma de sus dientes, pero <em>tenía</em> dientes.</td>
             </tr>
@@ -364,6 +370,13 @@ mermaid.initialize({
                 <td>Color de las alas en una araña. Como no tiene alas, el atributo "color" no aplica.</td>
             </tr>
         </table>
+
+        <div class="concept-box" style="border-left: 5px solid #e74c3c;">
+            <span class="concept-title" style="color: #c0392b;">¡Advertencia! El Peligro de la Codificación Reductiva</span>
+            <p>
+                Si codificamos "ausencia de cola" como un estado (0) y "ausencia de color de cola" como otro estado (0), el software puede contar esto como <strong>dos similitudes</strong> independientes. Esto agrupa artificialmente a las especies sin cola, inflando el soporte para ese grupo basándose en la nada. Strong & Lipscomb (1999) advierten que esto genera filogenias incorrectas.
+            </p>
+        </div>
 
         <h3>Mapa Conceptual: Flujo de Decisión para Codificación</h3>
         <div class="mermaid">
@@ -376,7 +389,9 @@ mermaid.initialize({
             Q2 -- "No, la estructura no existe" --> D["INAPPLICABLE (-)"]
             
             C --> E["El software imputará el estado más probable"]
-            D --> F["El software ignorará este carácter para este taxón"]
+            D --> F["El software DEBE ignorar este carácter (No aporta peso)"]
+            
+            style D fill:#ffcccc,stroke:#333,stroke-width:2px
         </div>
 
         <div class="glossary-box">
@@ -384,21 +399,20 @@ mermaid.initialize({
             <ul>
                 <li><span class="glossary-term">Homología Primaria:</span> La hipótesis inicial de identidad (codificar dos rasgos con el mismo número en la matriz) basada en similitud observacional.</li>
                 <li><span class="glossary-term">Homología Secundaria:</span> La confirmación de esa identidad como herencia común (sinapomorfía) tras el análisis de parsimonia.</li>
-                <li><span class="glossary-term">Codificación Reductiva:</span> Práctica errónea de usar un estado "0" para representar tanto la ausencia real como la inaplicabilidad, creando falsas agrupaciones.</li>
+                <li><span class="glossary-term">Codificación Reductiva:</span> Práctica errónea de usar un estado "0" para representar tanto la ausencia real como la inaplicabilidad, creando falsas agrupaciones por falta de independencia.</li>
             </ul>
         </div>
     </div>
 
-    <!-- CUESTIONARIO FINAL -->
     <div class="content-section" style="background-color: #fbfbfb;">
         <h2 class="section-title">Evaluación de Conceptos</h2>
         <div class="question-box">
             <h4>1. Análisis de Escuelas</h4>
-            <p>Si usted agrupa a las aves y los cocodrilos en el mismo clado (Archosauria) a pesar de que los cocodrilos se parecen más externamente a las lagartijas, ¿a qué escuela de sistemática está siguiendo y por qué? Utilice los conceptos de <em>Similitud Global</em> vs <em>Similitud Especial</em>.</p>
+            <p>Si usted agrupa a las aves y los cocodrilos en el mismo clado (Archosauria) a pesar de que los cocodrilos se parecen más externamente a las lagartijas, ¿a qué escuela de sistemática está siguiendo y por qué? Utilice los conceptos de <em>Similitud Global</em> vs <em>Sinapomorfía</em>.</p>
         </div>
         <div class="question-box">
-            <h4>2. Lógica de Farris</h4>
-            <p>Explique la siguiente afirmación de Farris (1983): <em>"La parsimonia no es una suposición sobre cómo funciona la naturaleza, es una defensa metodológica contra las hipótesis ad hoc."</em></p>
+            <h4>2. Lógica de Farris y Popper</h4>
+            <p>Explique la siguiente afirmación: <em>"Un árbol filogenético no se prueba demostrando que es verdadero, sino demostrando que es el menos falso."</em> ¿Cómo se relacionan las homoplasias con la idea de "falsación"?</p>
         </div>
         <div class="question-box">
             <h4>3. Desafío de Tree Thinking</h4>
@@ -406,11 +420,10 @@ mermaid.initialize({
         </div>
         <div class="question-box">
             <h4>4. Problema de Codificación</h4>
-            <p>Usted estudia vertebrados. El carácter 1 es "Presencia de Cola". El carácter 2 es "Color de la Cola". ¿Cómo codifica a una Rana (que no tiene cola) para el carácter 2? ¿Qué error lógico cometería si le asigna un "0"?</p>
+            <p>Usted estudia vertebrados. El carácter 1 es "Presencia de Cola". El carácter 2 es "Color de la Cola". ¿Cómo codifica a una Rana (que no tiene cola) para el carácter 2? ¿Qué error de <em>independencia</em> cometería si le asigna un estado "0" (Ausente) en lugar de un inplicable?</p>
         </div>
     </div>
 
-    <!-- BIBLIOGRAFÍA -->
     <div class="bibliography">
         <h3 style="margin-top: 0; border-bottom: 1px solid #7f8c8d; padding-bottom: 15px; margin-bottom: 20px;">Bibliografía Citada (Formato APA)</h3>
         
