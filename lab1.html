@@ -44,17 +44,18 @@ mermaid.initialize({
         background-color: #ffffff;
         box-shadow: 0 5px 25px rgba(0,0,0,0.05);
         border: 1px solid #dce1e6;
-        border-radius: 4px; /* Bordes más rectos, más serios */
+        border-radius: 4px;
         overflow: hidden;
     }
 
     /* ENCABEZADO */
     .header-banner {
-        background-color: #2c3e50; /* Azul oscuro sobrio */
+        background-color: #2c3e50;
         color: white;
         padding: 60px 50px;
         text-align: center;
-        border-bottom: 4px solid #c0392b; /* Acento académico */
+        border-bottom: 4px solid #c0392b;
+        position: relative;
     }
     .header-banner h1 { margin: 0; font-size: 2.8em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
     .header-banner h2 { font-size: 1.3em; font-weight: 300; margin-top: 10px; color: #ecf0f1; }
@@ -78,22 +79,30 @@ mermaid.initialize({
     h3 { color: #34495e; margin-top: 40px; font-size: 1.4em; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
     p { margin-bottom: 1.5em; text-align: justify; font-size: 1.05em; color: #444; }
 
-    /* CITAS */
-    .citation-block {
-        background-color: #f8f9fa;
-        border-left: 4px solid #34495e;
-        padding: 15px 25px;
-        margin: 25px 0;
-        font-family: 'Georgia', serif;
-        font-style: italic;
-        color: #555;
+    /* BLOQUES DE EJERCICIO PRÁCTICO */
+    .exercise-box {
+        background-color: #fffdf0;
+        border: 1px solid #f1c40f;
+        border-left: 6px solid #f1c40f;
+        padding: 25px;
+        margin: 30px 0;
+        border-radius: 4px;
+    }
+    .exercise-title {
+        color: #9a7d0a;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85em;
+        display: block;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
     }
 
-    /* CAJAS CONCEPTUALES (Diseño Sobrio) */
+    /* CAJAS CONCEPTUALES */
     .concept-box {
         background-color: #ffffff;
         border: 1px solid #dfe6e9;
-        border-top: 3px solid #3498db; /* Azul medio */
+        border-top: 3px solid #3498db;
         padding: 25px;
         margin-top: 25px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.03);
@@ -107,57 +116,29 @@ mermaid.initialize({
         margin-bottom: 15px;
         border-bottom: 1px solid #eee;
         padding-bottom: 5px;
-        letter-spacing: 0.5px;
     }
 
-    /* Cajas Especiales */
-    .warning-box {
-        border: 1px solid #fadbd8;
-        border-top: 3px solid #e74c3c;
-        background-color: #fdfefe;
-    }
+    .warning-box { border: 1px solid #fadbd8; border-top: 3px solid #e74c3c; background-color: #fdfefe; }
     .warning-title { color: #c0392b; }
-
-    .advanced-box {
-        border: 1px solid #d4e6f1;
-        border-top: 3px solid #2980b9;
-        background-color: #fbfdff;
-    }
+    .advanced-box { border: 1px solid #d4e6f1; border-top: 3px solid #2980b9; background-color: #fbfdff; }
 
     /* MERMAID DIAGRAMS */
-    .mermaid {
-        margin: 40px auto;
-        text-align: center;
-        background-color: #ffffff;
-        padding: 20px;
-        /* Sin bordes toscos, integración limpia */
-    }
+    .mermaid { margin: 40px auto; text-align: center; background-color: #ffffff; padding: 20px; }
 
     /* TABLAS ACADÉMICAS */
     table { width: 100%; border-collapse: collapse; margin: 30px 0; font-size: 0.95em; border: 1px solid #ddd; }
     th { background-color: #f4f6f7; color: #2c3e50; padding: 12px 15px; text-align: left; font-weight: 700; border-bottom: 2px solid #ddd; }
     td { border-bottom: 1px solid #eee; padding: 12px 15px; vertical-align: top; }
-    tr:last-child td { border-bottom: none; }
 
-    /* BIBLIOGRAFÍA */
+    /* PREGUNTAS Y BIBLIOGRAFÍA */
+    .question-box { background-color: #fffaf0; border: 1px solid #fae5d3; border-left: 4px solid #e67e22; padding: 20px; margin-top: 20px; border-radius: 2px; }
+    .question-header { font-weight: 700; color: #d35400; margin-bottom: 10px; display: block; text-transform: uppercase; font-size: 0.85em; }
     .bibliography { background-color: #f9f9f9; padding: 60px 50px; border-top: 1px solid #ddd; }
     .bib-item { margin-bottom: 15px; padding-left: 30px; text-indent: -30px; font-size: 0.9em; color: #555; }
     .bib-item em { font-style: italic; color: #2c3e50; }
 
-    /* PREGUNTAS */
-    .question-box {
-        background-color: #fffaf0;
-        border: 1px solid #fae5d3;
-        border-left: 4px solid #e67e22;
-        padding: 20px;
-        margin-top: 20px;
-        border-radius: 2px;
-    }
-    .question-header { font-weight: 700; color: #d35400; margin-bottom: 10px; display: block; text-transform: uppercase; font-size: 0.85em; }
-
     .back-btn {
         display: inline-block;
-        margin-top: 20px;
         padding: 8px 16px;
         background-color: rgba(255,255,255,0.2);
         color: white;
@@ -165,10 +146,8 @@ mermaid.initialize({
         border: 1px solid rgba(255,255,255,0.4);
         border-radius: 4px;
         font-size: 0.9em;
-        transition: background 0.3s;
+        position: absolute; top: 40px; left: 40px;
     }
-    .back-btn:hover { background-color: rgba(255,255,255,0.4); }
-
 </style>
 </head>
 <body>
@@ -176,7 +155,7 @@ mermaid.initialize({
 <div class="main-container">
 
     <div class="header-banner">
-        <a href="index.html" class="back-btn" style="position: absolute; top: 40px; left: 40px;">&larr; Volver al Menú</a>
+        <a href="index.html" class="back-btn">&larr; Volver al Menú</a>
         <h1>Laboratorio 1</h1>
         <h2>Fundamentos Epistemológicos y Teóricos de la Sistemática</h2>
         <p class="quote">"El objetivo de la ciencia es explicar la mayor cantidad de hechos empíricos con la menor cantidad de hipótesis."</p>
@@ -195,6 +174,12 @@ mermaid.initialize({
                 <li><strong>Los Estados:</strong> Se limitan a cuatro posibilidades discretas (A, C, G, T) o un estado de "gap" (-).</li>
                 <li><strong>Reversibilidad y Saturación:</strong> Dado que el espacio de estados es limitado (solo 4), la probabilidad de que una posición mute de A&rarr;T y luego regrese T&rarr;A (reversión) es alta en tiempos evolutivos largos. Esto borra la señal histórica, fenómeno conocido como <em>saturación</em>.</li>
             </ul>
+        </div>
+
+        <div class="exercise-box">
+            <span class="exercise-title">Aplicación Práctica: Homología Primaria</span>
+            <p><strong>Escenario:</strong> Usted tiene dos secuencias: <code>ATGCGT</code> y <code>ATGG T</code>. Al alinearlas, decide insertar un gap: <code>ATGCGT</code> vs <code>ATG-GT</code>.</p>
+            <p>¿Cuántas posiciones de homología posicional (caracteres) tiene ahora su matriz y cuántas de ellas muestran identidad absoluta entre las dos secuencias?</p>
         </div>
     </div>
 
@@ -234,16 +219,18 @@ mermaid.initialize({
         <div class="mermaid">
         graph TD
             Data["Datos Biológicos"] --> Crit{"¿Qué criterio de agrupación?"}
-            
             Crit -- "Similitud Global" --> Fen["FENÉTICA"]
             Crit -- "Genealogía + Divergencia" --> Evol["EVOLUTIVA"]
             Crit -- "Solo Genealogía" --> Clad["CLADÍSTICA"]
-            
             Fen --> Res1["Fenogramas<br>(Grupos artificiales)"]
             Evol --> Res2["Árboles con Grados<br>(Acepta Parafilia)"]
             Clad --> Res3["Cladogramas<br>(Solo Monofilia)"]
-            
             style Clad fill:#d5f5e3,stroke:#27ae60,stroke-width:2px
+        </div>
+
+        <div class="exercise-box">
+            <span class="exercise-title">Aplicación Práctica: Identificación de Escuelas</span>
+            <p>Si un software agrupa a un tiburón y a un delfín en el mismo clado porque ambos tienen "forma hidrodinámica" y "aletas", ignorando que uno es pez y otro mamífero, ¿bajo qué filosofía de agrupación está operando?</p>
         </div>
     </div>
 
@@ -254,21 +241,15 @@ mermaid.initialize({
         </p>
 
         <h3>Mapa Conceptual 2: Algoritmos de Inferencia</h3>
-        <p><em>Este diagrama ilustra el flujo de decisión para seleccionar un método de análisis basado en los supuestos teóricos.</em></p>
         <div class="mermaid">
         graph TD
             Start["Matriz de Datos"] --> Q1{"¿Asume Modelo Evolutivo?"}
-            
             Q1 -- "NO (Navaja de Ockham)" --> MP["PARSIMONIA (MP)<br>Minimiza pasos ad hoc"]
-            
             Q1 -- "SÍ (Procesos Estocásticos)" --> Q2{"¿Tratamiento de Genes?"}
-            
             Q2 -- "Concatenación<br>(Supermatriz)" --> Q3{"¿Criterio de Optimidad?"}
             Q3 -- "Maximizar P(D|H)" --> ML["MÁXIMA VEROSIMILITUD (ML)<br>Estimación puntual"]
             Q3 -- "Maximizar P(H|D)" --> BI["INFERENCIA BAYESIANA (BI)<br>Distribución Posterior"]
-            
             Q2 -- "Independencia<br>(Multilocus)" --> Coal["COALESCENCIA<br>Maneja ILS y Discordancia"]
-
             style MP fill:#fcf3cf,stroke:#f1c40f,stroke-width:2px
             style Coal fill:#e8daef,stroke:#8e44ad,stroke-width:2px
         </div>
@@ -276,9 +257,9 @@ mermaid.initialize({
         <div class="concept-box">
             <span class="concept-title">Detalle de los Métodos</span>
             <ul>
-                <li><strong>Parsimonia (MP):</strong> Se fundamenta en el falsacionismo popperiano. Prefiere la topología que requiere el menor número de cambios evolutivos para explicar los datos, minimizando así las hipótesis <em>ad hoc</em> (homoplasias)..</li>
-                <li><strong>Máxima Verosimilitud (ML):</strong> Utiliza modelos explícitos de sustitución nucleotídica (ej. GTR+G) para calcular la probabilidad de obtener los datos observados dado un árbol específico. Busca el árbol que maximiza esta probabilidad.</li>
-                <li><strong>Inferencia Bayesiana (BI):</strong> Combina la verosimilitud con probabilidades <em>a priori</em> (priors) para calcular la probabilidad posterior del árbol. El resultado no es un solo árbol, sino una distribución de árboles probables muestreados mediante cadenas de Markov (MCMC).</li>
+                <li><strong>Parsimonia (MP):</strong> Se fundamenta en el falsacionismo popperiano. Prefiere la topología que requiere el menor número de cambios evolutivos para explicar los datos, minimizando así las hipótesis <em>ad hoc</em> (homoplasias).</li>
+                <li><strong>Máxima Verosimilitud (ML):</strong> Utiliza modelos explícitos de sustitución nucleotídica (ej. GTR+G) para calcular la probabilidad de obtener los datos observados dado un árbol específico.</li>
+                <li><strong>Inferencia Bayesiana (BI):</strong> Combina la verosimilitud con probabilidades <em>a priori</em> (priors) para calcular la probabilidad posterior del árbol.</li>
             </ul>
         </div>
 
@@ -288,9 +269,14 @@ mermaid.initialize({
                 <strong>Edwards (2009)</strong> destaca que los genes individuales pueden tener historias diferentes a la de las especies debido al <strong>Sorteo de Linaje Incompleto (ILS)</strong>.
             </p>
             <ul>
-                <li><strong>Concatenación (MP, ML, BI clásico):</strong> Fuerza a todos los genes a ajustarse a una sola topología, lo que puede dar resultados erróneos (positivos falsos) en radiaciones rápidas.</li>
-                <li><strong>Coalescencia Multiespecífica:</strong> Trata a los genes como variables aleatorias que evolucionan dentro de las ramas de las especies, permitiendo estimar el árbol de especies correcto incluso ante discordancia genética masiva.</li>
+                <li><strong>Concatenación:</strong> Fuerza a todos los genes a ajustarse a una sola topología.</li>
+                <li><strong>Coalescencia Multiespecífica:</strong> Permite estimar el árbol de especies correcto incluso ante discordancia genética masiva.</li>
             </ul>
+        </div>
+
+        <div class="exercise-box">
+            <span class="exercise-title">Aplicación Práctica: Selección de Método</span>
+            <p>Usted está analizando una radiación adaptativa muy rápida (ocurrida en pocos miles de años). ¿Por qué debería considerar un método de <strong>Coalescencia</strong> en lugar de una simple concatenación de genes?</p>
         </div>
     </div>
 
@@ -306,14 +292,12 @@ mermaid.initialize({
             Raiz(("RAÍZ<br>(Ancestro Común)")) --> N1(("Nodo 1"))
             N1 --> Out["Grupo Externo<br>(Outgroup)"]
             N1 --> N2(("Nodo 2"))
-            
             subgraph INGROUP ["Ingroup (Grupo de Estudio)"]
                 N2 --> TaxonA["Taxón A"]
                 N2 --> N3(("Nodo 3"))
                 N3 --> TaxonB["Taxón B"]
                 N3 --> TaxonC["Taxón C"]
             end
-
             style Out fill:#f2f3f4,stroke-dasharray: 5 5
             style TaxonB fill:#d4efdf,stroke:#27ae60
             style TaxonC fill:#d4efdf,stroke:#27ae60
@@ -325,10 +309,15 @@ mermaid.initialize({
         <div class="concept-box">
             <span class="concept-title">Conceptos Clave de Lectura</span>
             <ul>
-                <li><strong>Rotación de Nodos:</strong> El orden lineal de las puntas no tiene significado evolutivo. Dos árboles pueden verse diferentes pero ser topológicamente idénticos si sus grupos hermanos son los mismos.</li>
-                <li><strong>Grupo Hermano (Sister Group):</strong> El pariente más cercano de un taxón dado. Comparten un ancestro común exclusivo.</li>
-                <li><strong>Grupo Externo (Outgroup):</strong> Taxón utilizado para enraizar el árbol y determinar la polaridad de los caracteres (qué estado es plesiomórfico y cuál apomórfico).</li>
+                <li><strong>Rotación de Nodos:</strong> El orden lineal de las puntas no tiene significado evolutivo.</li>
+                <li><strong>Grupo Hermano (Sister Group):</strong> El pariente más cercano de un taxón dado.</li>
+                <li><strong>Grupo Externo (Outgroup):</strong> Taxón utilizado para enraizar el árbol y determinar la polaridad.</li>
             </ul>
+        </div>
+
+        <div class="exercise-box">
+            <span class="exercise-title">Aplicación Práctica: Rotación Filogenética</span>
+            <p>En el diagrama de arriba, si rotamos el Nodo 3, el Taxón C aparecerá arriba del Taxón B. ¿Cambia esto la relación de parentesco del Taxón C con el Taxón A?</p>
         </div>
     </div>
 
@@ -339,18 +328,14 @@ mermaid.initialize({
         </p>
 
         <h3>Mapa Conceptual 4: Evolución del Carácter</h3>
-        <p><em>Este diagrama distingue correctamente entre homología (origen común) y homoplasia (convergencia).</em></p>
         <div class="mermaid">
         graph TD
             Anc["Estado Ancestral<br>(PLESIOMORFÍA)"] -->|Cambio Evolutivo| Der["Estado Derivado<br>(APOMORFÍA)"]
             Der --> Q1{"¿Presente en varios taxones?"}
-            
             Q1 -- "SÍ (Compartido)" --> Q2{"¿Origen Común?"}
             Q2 -- "SÍ" --> Syn["SINAPOMORFÍA<br>(Define Grupo Monofilético)"]
             Q2 -- "NO (Convergencia)" --> Hom["HOMOPLASIA<br>(Crea Grupo Polifilético)"]
-            
             Q1 -- "NO (Único)" --> Aut["AUTAPOMORFÍA<br>(Solo distingue al terminal)"]
-            
             style Syn fill:#d5f5e3,stroke:#2ecc71,stroke-width:2px
             style Hom fill:#fadbd8,stroke:#c0392b,stroke-width:2px
         </div>
@@ -363,27 +348,16 @@ mermaid.initialize({
                     <th>Definición</th>
                     <th>Utilidad Filogenética</th>
                 </tr>
-                <tr>
-                    <td><strong>Sinapomorfía</strong></td>
-                    <td>Carácter derivado compartido.</td>
-                    <td><strong>Alta</strong> (Define clados)</td>
-                </tr>
-                <tr>
-                    <td><strong>Simplesiomorfía</strong></td>
-                    <td>Carácter ancestral compartido.</td>
-                    <td><strong>Nula</strong> (Agrupa parafiléticamente)</td>
-                </tr>
-                <tr>
-                    <td><strong>Autapomorfía</strong></td>
-                    <td>Carácter derivado único.</td>
-                    <td><strong>Baja</strong> (Solo diagnostica especies)</td>
-                </tr>
-                <tr>
-                    <td><strong>Homoplasia</strong></td>
-                    <td>Similitud independiente (convergencia).</td>
-                    <td><strong>Negativa</strong> (Introduce ruido/error)</td>
-                </tr>
+                <tr><td><strong>Sinapomorfía</strong></td><td>Carácter derivado compartido.</td><td><strong>Alta</strong> (Define clados)</td></tr>
+                <tr><td><strong>Simplesiomorfía</strong></td><td>Carácter ancestral compartido.</td><td><strong>Nula</strong> (Agrupa parafiléticamente)</td></tr>
+                <tr><td><strong>Autapomorfía</strong></td><td>Carácter derivado único.</td><td><strong>Baja</strong> (Solo diagnóstica)</td></tr>
+                <tr><td><strong>Homoplasia</strong></td><td>Similitud independiente (convergencia).</td><td><strong>Negativa</strong> (Error)</td></tr>
             </table>
+        </div>
+
+        <div class="exercise-box">
+            <span class="exercise-title">Aplicación Práctica: Clasificación de Rasgos</span>
+            <p>Si estamos estudiando el grupo de los Primates, el hecho de tener "pelo" (que comparten con todos los mamíferos) ¿es una sinapomorfía o una simplesiomorfía para este nivel de análisis?</p>
         </div>
     </div>
 
@@ -399,13 +373,8 @@ mermaid.initialize({
             Start{"¿Tengo el dato?"}
             Start -- "SÍ" --> Code["Codificar Estado: 0, 1, 2..."]
             Start -- "NO" --> Q2{"¿El organismo posee la estructura?"}
-            
             Q2 -- "SÍ (Dañado/Desconocido)" --> Miss["DATO FALTANTE (?)<br>Epistemológico"]
             Q2 -- "NO (Estructura ausente)" --> Inapp["INAPLICABLE (-)<br>Ontológico"]
-            
-            Miss --> Act1["Software: Imputa estado probable"]
-            Inapp --> Act2["Software: Ignora el carácter"]
-            
             style Inapp fill:#fadbd8,stroke:#c0392b
         </div>
 
@@ -413,9 +382,12 @@ mermaid.initialize({
             <span class="concept-title warning-title">Peligro: La Codificación Reductiva</span>
             <p>
                 <strong>Strong & Lipscomb (1999)</strong> advierten sobre el error de codificar la ausencia de una estructura y la ausencia de sus partes como caracteres separados.
-                <br><em>Ejemplo:</em> Codificar "Ausencia de Alas (0)" y "Ausencia de Venas en Alas (0)".
-                <br><strong>Consecuencia:</strong> Se duplica artificialmente el peso de un solo evento evolutivo, inflando el soporte para agrupamientos erróneos.
             </p>
+        </div>
+
+        <div class="exercise-box">
+            <span class="exercise-title">Aplicación Práctica: Codificación de Datos</span>
+            <p>Usted está analizando un fósil donde el cráneo está destruido. ¿Qué símbolo debe usar para los caracteres del cráneo: 0, 1, ? o -? Justifique.</p>
         </div>
     </div>
 
