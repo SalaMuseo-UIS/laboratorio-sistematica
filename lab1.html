@@ -7,7 +7,14 @@
 <!-- Integración de Mermaid.js para Mapas Conceptuales -->
 <script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+mermaid.initialize({ 
+    startOnLoad: true, 
+    theme: 'neutral',
+    themeVariables: {
+        fontSize: '18px',
+        fontFamily: '"Segoe UI", Roboto, sans-serif'
+    }
+});
 </script>
 <style>
     body {
@@ -122,6 +129,11 @@ mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
         border-radius: 8px;
         border: 1px solid #eee;
     }
+    /* Forzar que el SVG ocupe el espacio necesario para que se vea grande */
+    .mermaid svg {
+        max-width: 100% !important;
+        height: auto !important;
+    }
 
     /* Tablas */
     table { width: 100%; border-collapse: collapse; margin: 30px 0; font-size: 0.95em; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
@@ -204,18 +216,18 @@ mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
         <h3>Mapa Conceptual: Criterios de Clasificación</h3>
         <div class="mermaid">
         graph TD
-            A[Datos Biológicos] --> B{¿Qué criterio de agrupación?}
-            B -->|Similitud Global| C[FENÉTICA]
-            B -->|Genealogía + Divergencia| D[EVOLUTIVA]
-            B -->|Solo Genealogía| E[CLADÍSTICA]
+            A["Datos Biológicos"] --> B{"¿Qué criterio de agrupación?"}
+            B -->|Similitud Global| C["FENÉTICA"]
+            B -->|Genealogía + Divergencia| D["EVOLUTIVA"]
+            B -->|Solo Genealogía| E["CLADÍSTICA"]
             
-            C --> F(Fenogramas)
-            D --> G(Árboles Filogenéticos con Grados)
-            E --> H(Cladogramas Estrictos)
+            C --> F("Fenogramas")
+            D --> G("Árboles Filogenéticos con Grados")
+            E --> H("Cladogramas Estrictos")
             
-            F --> I[Falla: Agrupa por Homoplasia]
-            G --> J[Falla: Subjetividad en Grados]
-            H --> K[Éxito: Distingue Homología]
+            F --> I["Falla: Agrupa por Homoplasia"]
+            G --> J["Falla: Subjetividad en Grados"]
+            H --> K["Éxito: Distingue Homología"]
         </div>
 
         <div class="citation-block">
@@ -255,13 +267,13 @@ mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
         <h3>Mapa Conceptual: El Ciclo Hipotético-Deductivo</h3>
         <div class="mermaid">
         graph LR
-            A[Observación de Caracteres] --> B(Matriz de Datos)
-            B --> C{Generación de Árboles}
-            C --> D[Árbol 1: Requiere 5 Homoplasias]
-            C --> E[Árbol 2: Requiere 1 Homoplasia]
-            D --> F[Rechazado: Menor Poder Explicativo]
-            E --> G[Aceptado: Máxima Parsimonia]
-            G --> H(Hipótesis Filogenética Preferida)
+            A["Observación de Caracteres"] --> B("Matriz de Datos")
+            B --> C{"Generación de Árboles"}
+            C --> D["Árbol 1: Requiere 5 Homoplasias"]
+            C --> E["Árbol 2: Requiere 1 Homoplasia"]
+            D --> F["Rechazado: Menor Poder Explicativo"]
+            E --> G["Aceptado: Máxima Parsimonia"]
+            G --> H("Hipótesis Filogenética Preferida")
         </div>
 
         <div class="glossary-box">
@@ -296,11 +308,11 @@ mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
         <h3>Mapa Conceptual: Componentes del Árbol</h3>
         <div class="mermaid">
         graph TD
-            A((Raíz)) --> B((Nodo Interno))
-            B --> C[Taxón A]
-            B --> D((Nodo Interno))
-            D --> E[Taxón B]
-            D --> F[Taxón C]
+            A(("Raíz")) --> B(("Nodo Interno"))
+            B --> C["Taxón A"]
+            B --> D(("Nodo Interno"))
+            D --> E["Taxón B"]
+            D --> F["Taxón C"]
             
             style A fill:#f9f,stroke:#333,stroke-width:2px
             style B fill:#bbf,stroke:#333,stroke-width:2px
@@ -356,15 +368,15 @@ mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
         <h3>Mapa Conceptual: Flujo de Decisión para Codificación</h3>
         <div class="mermaid">
         graph TD
-            Start{¿Tengo el dato?}
-            Start -->|Sí| A[Codificar Estado: 0, 1, 2...]
-            Start -->|No| B{¿El organismo posee la estructura?}
+            Start{"¿Tengo el dato?"}
+            Start -->|Sí| A["Codificar Estado: 0, 1, 2..."]
+            Start -->|No| B{"¿El organismo posee la estructura?"}
             
-            B -->|Sí, pero está roto/perdido| C[MISSING DATA (?)]
-            B -->|No, la estructura no existe| D[INAPPLICABLE (-)]
+            B -->|Sí, pero está roto/perdido| C["MISSING DATA (?)"]
+            B -->|No, la estructura no existe| D["INAPPLICABLE (-)"]
             
-            C --> E[El software imputará el estado más probable]
-            D --> F[El software ignorará este carácter para este taxón]
+            C --> E["El software imputará el estado más probable"]
+            D --> F["El software ignorará este carácter para este taxón"]
         </div>
 
         <div class="glossary-box">
