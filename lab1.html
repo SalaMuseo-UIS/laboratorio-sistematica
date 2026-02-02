@@ -130,7 +130,6 @@ mermaid.initialize({
         padding: 20px;
         border-radius: 8px;
         border: 1px solid #eee;
-        /* Control de tamaño para que no sean gigantes */
         max-width: 750px; 
     }
     .mermaid svg {
@@ -146,7 +145,17 @@ mermaid.initialize({
 
     /* Bibliografía */
     .bibliography { background-color: #2c3e50; color: #ecf0f1; padding: 60px; }
-    .bib-item { margin-bottom: 20px; padding-left: 30px; text-indent: -30px; font-size: 0.95em; line-height: 1.6; }
+    .bib-item { 
+        margin-bottom: 20px; 
+        padding-left: 30px; 
+        text-indent: -30px; 
+        font-size: 0.95em; 
+        line-height: 1.6;
+        color: #bdc3c7; /* Texto claro para fondo oscuro */
+    }
+    .bib-item em {
+        color: #f1c40f; /* Resaltar revistas/libros */
+    }
 
     /* Preguntas */
     .question-box {
@@ -403,12 +412,34 @@ mermaid.initialize({
 
     <div class="bibliography">
         <h3 style="margin-top: 0; border-bottom: 1px solid #7f8c8d; padding-bottom: 15px; margin-bottom: 20px;">Bibliografía Citada</h3>
-        <div class="bib-item">Baum, D. A., et al. (2005). The tree-thinking challenge. <em>Science</em>.</div>
-        <div class="bib-item">De Luna, E., et al. (2005). Sistemática biológica... <em>Hidrobiológica</em>.</div>
-        <div class="bib-item">Edwards, S. V. (2009). Is a new and general theory... <em>Evolution</em>.</div>
-        <div class="bib-item">Farris, J. S. (1983). The logical basis of phylogenetic analysis.</div>
-        <div class="bib-item">Morrone, J. J. (2000). <em>El lenguaje de la cladística</em>. UNAM.</div>
-        <div class="bib-item">Strong, E. E., & Lipscomb, D. (1999). Character coding... <em>Cladistics</em>.</div>
+        
+        <div class="bib-item">
+            Baum, D. A., Smith, S. D., & Donovan, S. S. S. (2005). The tree-thinking challenge. <em>Science</em>, 310(5750), 979-980.
+        </div>
+        
+        <div class="bib-item">
+            De Luna, E., Guerrero, J. A., & Chew-Taracena, T. (2005). Sistemática biológica: avances y direcciones en la teoría y los métodos de la reconstrucción filogenética. <em>Hidrobiológica</em>, 15(3), 351-370.
+        </div>
+        
+        <div class="bib-item">
+            Edwards, S. V. (2009). Is a new and general theory of molecular systematics emerging? <em>Evolution</em>, 63(1), 1-19.
+        </div>
+        
+        <div class="bib-item">
+            Farris, J. S. (1983). The logical basis of phylogenetic analysis. En N. I. Platnick & V. A. Funk (Eds.), <em>Advances in Cladistics</em> (Vol. 2, pp. 7-36). Columbia University Press.
+        </div>
+        
+        <div class="bib-item">
+            Hull, D. L. (1988). <em>Science as a Process: An Evolutionary Account of the Social and Conceptual Development of Science</em>. University of Chicago Press.
+        </div>
+        
+        <div class="bib-item">
+            Morrone, J. J. (2000). <em>El lenguaje de la cladística</em>. Universidad Nacional Autónoma de México (UNAM).
+        </div>
+        
+        <div class="bib-item">
+            Strong, E. E., & Lipscomb, D. (1999). Character coding and inadmissible missing data. <em>Cladistics</em>, 15(4), 363-371.
+        </div>
     </div>
 
 </div>
