@@ -213,18 +213,28 @@ mermaid.initialize({
         <div class="d-title">Fenética (Similitud)</div>
         <div class="mermaid">
         graph TD
-            %% Definición de estilos
+            %% Definición de Estilos
             classDef taxon fill:#f9f9f9,stroke:#333,stroke-width:1px,rx:5,ry:5;
-            classDef node fill:#333,stroke:none,color:#333,width:6px,height:6px;
+            classDef node fill:#333,stroke:none,color:#333,width:5px;
 
-            %% Nodos (Usamos comillas con espacio para máxima compatibilidad)
-            Root((" ")):::node --- N1((" ")):::node
-            
-            Root --- C[Taxón C]:::taxon
-            N1 --- A[Taxón A]:::taxon
-            N1 --- B[Taxón B]:::taxon
-            
-            %% Estilos de las líneas (0,1,2,3)
+            %% 1. Definimos los nodos primero (usamos un punto para evitar error de vacío)
+            Root((.))
+            N1((.))
+            TaxC[Taxón C]
+            TaxA[Taxón A]
+            TaxB[Taxón B]
+
+            %% 2. Definimos las conexiones
+            Root --- N1
+            Root --- TaxC
+            N1 --- TaxA
+            N1 --- TaxB
+
+            %% 3. Aplicamos clases al final (Método más seguro)
+            class TaxA,TaxB,TaxC taxon;
+            class Root,N1 node;
+
+            %% 4. Estilos de línea
             linkStyle 0,1,2,3 stroke-width:2px,fill:none,stroke:#555;
         </div>
         <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
