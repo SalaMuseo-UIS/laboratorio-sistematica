@@ -213,20 +213,22 @@ mermaid.initialize({
         <div class="d-title">Fenética (Similitud)</div>
         <div class="mermaid">
         graph TD
-            %% Estilos
             classDef taxon fill:#f9f9f9,stroke:#333,stroke-width:1px,rx:5,ry:5;
             
-            %% Estructura
-            Root(( )) --- N1(( ))
+            %% Usamos un punto dentro del círculo para evitar errores de renderizado
+            Root((.)) --- N1((.))
             Root --- C[Taxón C]
             N1 --- A[Taxón A]
             N1 --- B[Taxón B]
             
-            %% Aplicación de estilos
             class A,B,C taxon;
             
-            %% Corrección: Usamos índices explícitos en lugar de 'default'
+            %% Estilos de línea gris para fenética
             linkStyle 0,1,2,3 stroke-width:2px,fill:none,stroke:#555;
+            
+            %% Ocultamos el texto del punto para que parezca vacío
+            style Root fill:#333,stroke:none,color:#333
+            style N1 fill:#333,stroke:none,color:#333
         </div>
         <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
             Agrupamiento por parecido físico (A y B), sin importar la historia.
@@ -237,14 +239,11 @@ mermaid.initialize({
         <div class="d-title">Sist. Evolutiva (Grados)</div>
         <div class="mermaid">
         graph TD
-            %% Estilos
             classDef reptile fill:#fff5e6,stroke:#f39c12,stroke-width:2px,rx:5;
             classDef bird fill:#e8f8f5,stroke:#1abc9c,stroke-width:2px,rx:5;
 
-            %% Nodos
             Anc(( )) --> NodeRept(( ))
             
-            %% Corrección: Comillas añadidas al título del subgraph para evitar error con paréntesis
             subgraph Grade ["Grado Reptil (Parafilético)"]
                 direction TB
                 NodeRept --> Liz[Lagartos]
@@ -253,12 +252,9 @@ mermaid.initialize({
             
             NodeRept -->|Gran Divergencia| Ave[Aves]
             
-            %% Estilos
             class Liz,Croc reptile;
             class Ave bird;
             
-            %% Índices de linkStyle corregidos
-            %% 0: Anc->NodeRept, 1: NodeRept->Liz, 2: NodeRept->Croc, 3: NodeRept->Ave
             linkStyle 3 stroke:#1abc9c,stroke-width:3px;
             linkStyle 0,1,2 stroke:#555,stroke-width:2px;
         </div>
@@ -271,12 +267,10 @@ mermaid.initialize({
         <div class="d-title">Cladística (Clados)</div>
         <div class="mermaid">
         graph TD
-            %% Estilos
             classDef clado fill:#d5f5e3,stroke:#27ae60,stroke-width:2px,rx:5;
             classDef out fill:#ecf0f1,stroke:#95a5a6,stroke-dasharray: 5 5,rx:5;
             classDef labelBox fill:#fff,stroke:#27ae60,color:#27ae60,font-size:0.8em;
 
-            %% Estructura
             C_Anc(( )) --> C_N1(( ))
             C_N1 --> Out[G. Externo]
             
@@ -286,42 +280,6 @@ mermaid.initialize({
             C_N2 --> A[Taxón A]
             C_N2 --> B[Taxón B]
             
-            %% Estilos
-            class A,B clado;
-            class Out out;
-            class Sinap labelBox;
-            
-            linkStyle 2,3,4 stroke:#27ae60,stroke-width:3px;
-            linkStyle 0,1 stroke:#555,stroke-width:2px;
-        </div>
-        <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
-            Solo reconoce grupos definidos por una novedad evolutiva (Sinapomorfía).
-        </p>
-    </div>
-
-</div>
-
-    <div class="diagram-box">
-        <div class="d-title">Cladística (Clados)</div>
-        <div class="mermaid">
-        graph TD
-            %% Estilos
-            classDef clado fill:#d5f5e3,stroke:#27ae60,stroke-width:2px,rx:5;
-            classDef out fill:#ecf0f1,stroke:#95a5a6,stroke-dasharray: 5 5,rx:5;
-            classDef labelBox fill:#fff,stroke:#27ae60,color:#27ae60,font-size:0.8em;
-
-            %% Estructura
-            C_Anc(( )) --> C_N1(( ))
-            C_N1 --> Out[G. Externo]
-            
-            %% La sinapomorfía como nodo intermedio para que se lea bien
-            C_N1 --> Sinap(Sinapomorfía)
-            Sinap --> C_N2(( ))
-            
-            C_N2 --> A[Taxón A]
-            C_N2 --> B[Taxón B]
-            
-            %% Estilos
             class A,B clado;
             class Out out;
             class Sinap labelBox;
