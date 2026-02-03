@@ -179,90 +179,125 @@ mermaid.initialize({
             </tbody>
         </table>
 
-       HTML
-<h3>Visualización de Topologías por Escuela</h3>
-
 <style>
+    /* Mismos estilos de grid para mantener consistencia */
     .diagram-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 20px;
-        margin-bottom: 30px;
+        margin: 20px 0;
     }
     .diagram-box {
-        background: #f9f9f9;
-        border: 1px solid #ddd;
+        background: #fff;
+        border: 1px solid #e0e0e0;
         border-radius: 8px;
-        padding: 10px;
+        padding: 20px 10px; /* Un poco más de padding vertical */
         text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
-    .diagram-title {
+    .d-title {
         font-weight: bold;
         color: #2c3e50;
-        margin-bottom: 10px;
-        font-size: 0.9em;
+        margin-bottom: 15px;
         text-transform: uppercase;
+        font-size: 0.9em;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+        display: inline-block;
     }
 </style>
 
 <div class="diagram-container">
-    
+
     <div class="diagram-box">
-        <div class="diagram-title">Fenética (Similitud)</div>
+        <div class="d-title">Fenética (Similitud)</div>
         <div class="mermaid">
         graph TD
             %% Estilos
-            classDef node fill:#000,stroke:#000,width:5px,height:5px;
+            classDef taxon fill:#f9f9f9,stroke:#333,stroke-width:1px,rx:5,ry:5;
+            classDef node fill:#333,stroke:none,width:5px;
             
-            F_Root(( )) --- F_Node1(( ))
-            F_Root --- F_C[Taxón C]
-            F_Node1 --- F_A[Taxón A]
-            F_Node1 --- F_B[Taxón B]
+            %% Estructura
+            Root(( )) --- N1(( ))
+            Root --- C[Taxón C]
+            N1 --- A[Taxón A]
+            N1 --- B[Taxón B]
             
-            linkStyle default stroke-width:2px, fill:none;
+            %% Aplicación de estilos
+            class A,B,C taxon;
+            linkStyle default stroke-width:2px,fill:none,stroke:#555;
         </div>
-        <p style="font-size:0.8em; color:#666;">Se agrupan A y B por parecerse visualmente.</p>
+        <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
+            Agrupamiento por parecido físico (A y B), sin importar la historia.
+        </p>
     </div>
 
     <div class="diagram-box">
-        <div class="diagram-title">Sist. Evolutiva (Grados)</div>
+        <div class="d-title">Sist. Evolutiva (Grados)</div>
         <div class="mermaid">
         graph TD
-            classDef default fill:#fff,stroke:#333;
+            %% Estilos
+            classDef reptile fill:#fff5e6,stroke:#f39c12,stroke-width:2px,rx:5;
+            classDef bird fill:#e8f8f5,stroke:#1abc9c,stroke-width:2px,rx:5;
+            classDef rootNode fill:#333,stroke:none,width:5px;
+
+            %% Nodos
+            Anc(( )) --> NodeRept(( ))
             
-            E_Anc(( )) --> E_Reptiles[Reptiles<br/>Ancestrales]
-            
-            subgraph GRADO ["Grado Reptil (Parafilético)"]
+            subgraph Grade [Grado Reptil (Parafilético)]
                 direction TB
-                E_Reptiles --> E_Liz[Lagartos]
-                E_Reptiles --> E_Croc[Cocodrilos]
+                NodeRept --> Liz[Lagartos]
+                NodeRept --> Croc[Cocodrilos]
             end
             
-            %% La rama larga de las aves
-            E_Reptiles -->|Gran Divergencia| E_Aves[Aves]
+            %% Rama de Aves con etiqueta
+            NodeRept -->|Gran Divergencia| Ave[Aves]
             
-            style GRADO fill:#fff5e6,stroke:#f39c12,stroke-dasharray: 5 5
-            style E_Aves fill:#e8f8f5,stroke:#1abc9c
+            %% Estilos
+            class Liz,Croc reptile;
+            class Ave bird;
+            
+            %% Ajuste de enlaces para que se vean bien
+            linkStyle 2 stroke:#1abc9c,stroke-width:3px;
+            linkStyle 0,1,3 stroke:#555,stroke-width:2px;
         </div>
-        <p style="font-size:0.8em; color:#666;">Acepta grupos parafiléticos (caja naranja) basados en nichos ecológicos.</p>
+        <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
+            Separa a las Aves (Verde) por su gran cambio morfológico, dejando a los reptiles en un grado (Naranja).
+        </p>
     </div>
 
     <div class="diagram-box">
-        <div class="diagram-title">Cladística (Clados)</div>
+        <div class="d-title">Cladística (Clados)</div>
         <div class="mermaid">
         graph TD
-            classDef node fill:#000,stroke:#000,width:5px,height:5px;
+            %% Estilos
+            classDef clado fill:#d5f5e3,stroke:#27ae60,stroke-width:2px,rx:5;
+            classDef out fill:#ecf0f1,stroke:#95a5a6,stroke-dasharray: 5 5,rx:5;
+            classDef labelBox fill:#fff,stroke:#27ae60,color:#27ae60,font-size:0.8em;
+
+            %% Estructura
+            C_Anc(( )) --> C_N1(( ))
+            C_N1 --> Out[G. Externo]
             
-            C_Anc(( )) --> C_Node1(( ))
-            C_Node1 --> C_Out[Grupo Externo]
-            C_Node1 --"Sinapomorfía"--> C_Node2(( ))
-            C_Node2 --> C_A[Taxón A]
-            C_Node2 --> C_B[Taxón B]
+            %% La sinapomorfía como nodo intermedio para que se lea bien
+            C_N1 --> Sinap(Sinapomorfía)
+            Sinap --> C_N2(( ))
             
-            style C_Node2 fill:#27ae60,stroke:#27ae60,width:8px,height:8px
-            linkStyle 2 stroke:#27ae60,stroke-width:3px;
+            C_N2 --> A[Taxón A]
+            C_N2 --> B[Taxón B]
+            
+            %% Estilos
+            class A,B clado;
+            class Out out;
+            class Sinap labelBox;
+            
+            linkStyle 2,3,4 stroke:#27ae60,stroke-width:3px;
+            linkStyle 0,1 stroke:#555,stroke-width:2px;
         </div>
-        <p style="font-size:0.8em; color:#666;">Solo acepta grupos monofiléticos definidos por sinapomorfías (flecha verde).</p>
+        <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
+            Solo reconoce grupos definidos por una novedad evolutiva (Sinapomorfía).
+        </p>
     </div>
 
 </div>
