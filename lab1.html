@@ -179,30 +179,60 @@ mermaid.initialize({
             </tbody>
         </table>
 
-        <h3>Visualización de Topologías por Escuela</h3>
-        <div class="mermaid">
-        graph TD
-            subgraph "FENÉTICA (Distancia)"
-            A1---B1
-            B1---C1
-            C1---D1
-            style A1 fill:#f9f,stroke:#333
-            end
-            
-            subgraph "EVOLUTIVA (Grados)"
-            E1-->F1
-            E1-->G1
-            G1-.->H1[Grado Adaptativo]
-            end
-            
-            subgraph "CLADÍSTICA (Clados)"
-            I1(( ))-->J1[Monofilia]
-            I1-->K1(( ))
-            K1-->L1[Sinapomorfía]
-            K1-->M1[Sinapomorfía]
-            style J1 fill:#d5f5e3,stroke:#27ae60
-            end
-        </div>
+       <h3>Visualización de Topologías por Escuela</h3>
+<div class="mermaid">
+graph TD
+    %% ESTILOS GENERALES
+    classDef tax fill:#fff,stroke:#333,stroke-width:2px;
+    classDef node fill:#000,stroke:#000,width:5px,height:5px;
+    classDef group fill:#f9f9f9,stroke:#666,stroke-dasharray: 5 5;
+
+    %% 1. FENÉTICA
+    subgraph FENETICA ["FENÉTICA (Similitud Global)"]
+        direction TB
+        %% Se agrupan por similitud visual, no historia
+        F_Root(( )) --- F_Node1(( ))
+        F_Root --- F_C[Taxón C]
+        F_Node1 --- F_A[Taxón A]
+        F_Node1 --- F_B[Taxón B]
+        
+        %% Nota visual: La longitud de rama indica distancia
+    end
+
+    %% 2. EVOLUTIVA
+    subgraph EVOLUTIVA ["SIST. EVOLUTIVA (Árbol + Grado)"]
+        direction TB
+        E_Anc(( )) --> E_Reptiles
+        E_Reptiles[Reptiles<br/>Ancestrales] --> E_Liz[Lagartos]
+        E_Reptiles --> E_Croc[Cocodrilos]
+        
+        %% La rama de las aves diverge mucho (zona adaptativa nueva)
+        E_Reptiles -->|Gran Divergencia| E_Aves[Aves]
+        
+        %% Representación del grupo parafilético "Reptilia"
+        subgraph Grado ["Grado Reptil (Parafilético)"]
+            E_Liz
+            E_Croc
+        end
+        style Grado fill:#fff5e6,stroke:#f39c12
+    end
+
+    %% 3. CLADÍSTICA
+    subgraph CLADISTICA ["CLADÍSTICA (Monofilia Estricta)"]
+        direction TB
+        C_Anc(( )) --> C_Node1(( ))
+        C_Node1 --> C_Out[Grupo Externo]
+        C_Node1 --"Sinapomorfía X"--> C_Node2(( ))
+        C_Node2 --> C_A[Taxón A]
+        C_Node2 --> C_B[Taxón B]
+        
+        %% El clado incluye al ancestro y TODOS sus descendientes
+        style C_Node2 fill:#27ae60,stroke:#27ae60,width:8px
+        linkStyle 6,7 stroke:#27ae60,stroke-width:3px
+    end
+    
+    class F_A,F_B,F_C,E_Liz,E_Croc,E_Aves,C_A,C_B,C_Out tax;
+</div>
 
         <div class="analysis-box">
             <span class="analysis-header">ANÁLISIS CRÍTICO 1</span>
@@ -211,351 +241,645 @@ mermaid.initialize({
         </div>
     </div>
 
-    <div class="content-section">
-        <h2 class="section-title">2. Interpretación Gráfica (Tree Thinking)</h2>
-        <p>
-            Un árbol filogenético no es una ilustración del "progreso" biológico, sino una <strong>hipótesis topológica</strong> sobre la jerarquía de la vida. Según <em>Wiley & Lieberman (2011)</em>, la interpretación correcta requiere entender que los árboles son estructuras dinámicas donde el parentesco se define por el orden de ramificación y no por la posición lineal de las puntas.
-        </p>
-        
-        <div class="concept-box">
-            <h3>Principios de Lectura de Árboles</h3>
-            <ul>
-                <li><strong>Nodos como Eventos de Especiación:</strong> Cada nodo representa el ancestro común más reciente de los linajes que de él derivan.</li>
-                <li><strong>Libertad de Rotación:</strong> Los nodos pueden rotar 180° sin alterar la topología. El "orden de las puntas" (de arriba a abajo o de izquierda a derecha) es arbitrario y no implica mayor o menor evolución.</li>
-                <li><strong>Polaridad y Raíz:</strong> La raíz establece la dirección del tiempo y permite distinguir estados ancestrales de derivados. Sin ella, solo tenemos relaciones de vecindad sin jerarquía temporal.</li>
-            </ul>
-        </div>
-
-        
-
-        <h3>Tipología de Grupos y su Significado Sistemático</h3>
-        <p>En la sistemática moderna, solo los <strong>grupos naturales (monofiléticos)</strong> poseen validez taxonómica, ya que son los únicos que reflejan una historia evolutiva completa.</p>
-
-        
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Concepto</th>
-                    <th>Definición Técnica</th>
-                    <th>Base de Identificación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Monofilia</strong></td>
-                    <td>Grupo que incluye al ancestro común más reciente (ACMR) y a <strong>TODOS</strong> sus descendientes.</td>
-                    <td>Sinapomorfías</td>
-                </tr>
-                <tr>
-                    <td><strong>Parafilia</strong></td>
-                    <td>Grupo que incluye al ACMR pero <strong>EXCLUYE</strong> a uno o más descendientes (ej. Peces, Reptiles).</td>
-                    <td>Simplesiomorfías</td>
-                </tr>
-                <tr>
-                    <td><strong>Polifilia</strong></td>
-                    <td>Grupo cuyos miembros no comparten un ancestro común reciente dentro del grupo (basado en errores).</td>
-                    <td>Homoplasias</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="mermaid">
-        graph TD
-            subgraph "Monofilia"
-            M1(( ))-->M2[A]
-            M1-->M3[B]
-            end
-            
-            subgraph "Parafilia"
-            P1(( ))-->P2[A]
-            P1-->P3[B]
-            P1-.->P4[X - Excluido]
-            end
-            
-            subgraph "Polifilia"
-            Po1(( ))-->Po2[A]
-            Po3(( ))-->Po4[B]
-            style Po2 fill:#fadbd8
-            style Po4 fill:#fadbd8
-            end
-        </div>
-
-        <div class="analysis-box">
-            <span class="analysis-header">ANÁLISIS CRÍTICO 2</span>
-            <p>
-                <strong>P3. Falacia de la Primitividad:</strong> Un estudiante afirma que <em>"la especie A es más primitiva que la especie B"</em> porque el linaje de A se separó primero y está gráficamente más cerca de la raíz. ¿Por qué es esta afirmación conceptualmente errónea si consideramos que todos los linajes terminales han evolucionado durante el mismo tiempo desde su ancestro común?
-            </p>
-            <p>
-                <strong>P4. Polaridad y Enraizamiento:</strong> Si eliminamos el grupo externo (outgroup) de un análisis, la topología se convierte en un "árbol sin raíz" (unrooted tree). ¿Por qué este proceso nos impide identificar cuáles estados de un carácter son <em>plesiomórficos</em> y cuáles son <em>apomórficos</em>?
-            </p>
-        </div>
+<div class="content-section">
+    <h2 class="section-title">2. Interpretación Gráfica (Tree Thinking)</h2>
+    <p>
+        Un árbol filogenético no es una ilustración del "progreso" biológico, sino una <strong>hipótesis topológica</strong> sobre la jerarquía de la vida. Según <em>Wiley & Lieberman (2011)</em>, la interpretación correcta requiere entender que los árboles son estructuras dinámicas donde el parentesco se define por el orden de ramificación y no por la posición lineal de las puntas.
+    </p>
+    
+    <div class="concept-box">
+        <h3>Principios de Lectura de Árboles</h3>
+        <ul>
+            <li><strong>Nodos como Eventos de Especiación:</strong> Cada nodo representa el ancestro común más reciente de los linajes que de él derivan.</li>
+            <li><strong>Libertad de Rotación:</strong> Los nodos pueden rotar 180° sin alterar la topología. El "orden de las puntas" (de arriba a abajo o de izquierda a derecha) es arbitrario y no implica mayor o menor evolución.</li>
+            <li><strong>Polaridad y Raíz:</strong> La raíz establece la dirección del tiempo y permite distinguir estados ancestrales de derivados. Sin ella, solo tenemos relaciones de vecindad sin jerarquía temporal.</li>
+        </ul>
     </div>
-    <div class="content-section">
-        <h2 class="section-title">3. El Lenguaje de los Caracteres: Homología y Homoplasia</h2>
-        <p>
-            La revolución de <em>Hennig (1966)</em> no consistió en usar caracteres, sino en clasificarlos según su origen temporal. No todas las similitudes tienen el mismo valor informativo; para reconstruir la historia de la vida, debemos distinguir entre lo que es heredado de ancestros remotos y lo que es una innovación reciente.
-        </p>
 
-        <div class="concept-box">
-            <h3>La Jerarquía de la Similitud</h3>
-            <ul>
-                <li>
-                    <strong>Plesiomorfía (Simplesiomorfía):</strong> Es el estado ancestral del carácter. Compartir una plesiomorfía no indica parentesco cercano dentro del grupo de estudio porque el rasgo apareció <em>antes</em> del ancestro común más reciente del grupo (ej. la columna vertebral no sirve para clasificar familias de mamíferos).
-                </li>
-                <li>
-                    <strong>Apomorfía (Sinapomorfía):</strong> Es el estado derivado o "novedad evolutiva". Las <strong>sinapomorfías</strong> son las únicas que proporcionan evidencia de monofilia, ya que representan cambios que ocurrieron exclusivamente en el ancestro común del clado.
-                </li>
-                <li>
-                    <strong>Autapomorfía:</strong> Un rasgo derivado presente en un solo taxón terminal. Útil para diagnóstico de especies, pero no para establecer relaciones de hermandad.
-                </li>
-                <li>
-                    <strong>Homoplasia:</strong> Similitud superficial originada de forma independiente. Representa "ruido" en la señal filogenética.
-                </li>
-            </ul>
-        </div>
+    <h3>Tipología de Grupos y su Significado Sistemático</h3>
+    <p>En la sistemática moderna, solo los <strong>grupos naturales (monofiléticos)</strong> poseen validez taxonómica, ya que son los únicos que reflejan una historia evolutiva completa.</p>
 
-        
+    <table>
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Definición Técnica</th>
+                <th>Base de Identificación</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Monofilia</strong></td>
+                <td>Grupo que incluye al ancestro común más reciente (ACMR) y a <strong>TODOS</strong> sus descendientes.</td>
+                <td>Sinapomorfías (Novedades compartidas)</td>
+            </tr>
+            <tr>
+                <td><strong>Parafilia</strong></td>
+                <td>Grupo que incluye al ACMR pero <strong>EXCLUYE</strong> a uno o más descendientes (ej. "Reptiles" sin aves).</td>
+                <td>Simplesiomorfías (Rasgos primitivos)</td>
+            </tr>
+            <tr>
+                <td><strong>Polifilia</strong></td>
+                <td>Grupo cuyos miembros no comparten un ancestro común reciente dentro del grupo (basado en errores).</td>
+                <td>Homoplasias (Convergencias)</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <h3>Tipos de Homoplasia: El desafío de la Convergencia</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Fenómeno</th>
-                    <th>Descripción</th>
-                    <th>Ejemplo Clásico</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Convergencia</strong></td>
-                    <td>Estados similares originados por presiones selectivas iguales en linajes distantes.</td>
-                    <td>Alas de aves vs. alas de insectos.</td>
-                </tr>
-                <tr>
-                    <td><strong>Paralelismo</strong></td>
-                    <td>Evolución independiente de un estado similar a partir de un mismo estado ancestral.</td>
-                    <td>Reducción de dedos en linajes distintos de ungulados.</td>
-                </tr>
-                <tr>
-                    <td><strong>Reversión</strong></td>
-                    <td>Regreso de un estado derivado al estado ancestral (pérdida secundaria).</td>
-                    <td>Pérdida de extremidades en serpientes a partir de ancestros tetrápodos.</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="mermaid">
+    graph TD
+        %% ESTILOS
+        classDef default fill:#fff,stroke:#333,stroke-width:1px;
+        classDef mono fill:#d5f5e3,stroke:#27ae60,stroke-width:2px; %% Verde (Correcto)
+        classDef para fill:#fcf3cf,stroke:#f1c40f,stroke-width:2px; %% Amarillo (Incompleto)
+        classDef poly fill:#fadbd8,stroke:#e74c3c,stroke-width:2px; %% Rojo (Incorrecto)
+        classDef ghost fill:#eee,stroke:#bbb,stroke-dasharray: 5 5; %% Gris (Excluido/Fondo)
 
-        
+        %% 1. MONOFILIA
+        subgraph G_Mono ["MONOFILIA (Clado Válido)"]
+            direction TB
+            M_Anc(( )) --> M_Int(( ))
+            M_Int --> M_A[Taxón A]
+            M_Int --> M_B[Taxón B]
+            M_Anc --> M_Out[Grupo Externo]
+            
+            %% Colores: El nodo y TODOS sus descendientes están en verde
+            class M_Int,M_A,M_B mono;
+            class M_Anc,M_Out ghost;
+        end
 
-        <div class="analysis-box">
-            <span class="analysis-header">ANÁLISIS CRÍTICO 3</span>
-            <p>
-                <strong>P5. Relatividad del Carácter:</strong> El pelo es una <em>sinapomorfía</em> que define al clado Mammalia, pero es una <em>simplesiomorfía</em> si nuestro estudio se restringe al orden Primates. Explique, basándose en el concepto de "nivel de generalidad", por qué un mismo carácter cambia su estatus dependiendo del nodo que estemos analizando.
-            </p>
-            <p>
-                <strong>P6. La Homoplasia como "Ruido":</strong> ¿Por qué el paralelismo y la convergencia son considerados "enemigos" de la reconstrucción filogenética? Proponga un escenario hipotético donde una homoplasia fuerte podría llevar a un algoritmo de Parsimonia a agrupar erróneamente dos especies que no están emparentadas (formando un grupo polifilético).
-            </p>
-        </div>
+        %% 2. PARAFILIA
+        subgraph G_Para ["PARAFILIA (Grado Artificial)"]
+            direction TB
+            P_Anc(( )) --> P_Int(( ))
+            P_Int --> P_A[Taxón A]
+            P_Int --> P_B[Taxón B]
+            P_Int --> P_C[Taxón C]
+            
+            %% Colores: A y B seleccionados (Amarillo), pero C excluido (Gris)
+            class P_Int,P_A,P_B para;
+            class P_C ghost; 
+            class P_Anc ghost;
+        end
+
+        %% 3. POLIFILIA
+        subgraph G_Poly ["POLIFILIA (Error de Agrupamiento)"]
+            direction TB
+            Po_Anc(( )) --> Po_L(( ))
+            Po_Anc --> Po_R(( ))
+            Po_L --> Po_A[Taxón A]
+            Po_L --> Po_B[Taxón B]
+            Po_R --> Po_C[Taxón C]
+            
+            %% Colores: Se agrupan A y C (Rojo) por parecerse, ignorando la genealogía
+            class Po_A,Po_C poly;
+            class Po_Anc,Po_L,Po_R,Po_B ghost;
+        end
     </div>
+
+    <div class="analysis-box">
+        <span class="analysis-header">ANÁLISIS CRÍTICO 2</span>
+        <p>
+            <strong>P3. La Falacia de "Lo Primitivo":</strong> Un estudiante afirma que la especie A es "más primitiva" que la especie B simplemente porque su linaje se ramificó antes (es basal). 
+            Considerando que ambos linajes han seguido evolucionando durante el mismo tiempo desde su separación, ¿por qué es incorrecto confundir una posición <em>basal</em> con una morfología <em>ancestral</em>?
+        </p>
+        <p>
+            <strong>P4. Polaridad y Enraizamiento:</strong> Si eliminamos el grupo externo (outgroup) de un análisis, la topología se convierte en un "árbol sin raíz" (unrooted tree). 
+            ¿Por qué este proceso nos impide identificar cuáles estados de un carácter son <em>plesiomórficos</em> y cuáles son <em>apomórficos</em>?
+        </p>
+    </div>
+</div>
    <div class="content-section">
-        <h2 class="section-title">4. La Naturaleza del Dato Molecular</h2>
-        <p>
-            El ADN no es un carácter, es una sucesión de estados. Según <em>Morrone (2000)</em>, el dato molecular presenta desafíos epistemológicos que la morfología raramente enfrenta: el espacio de estados es extremadamente reducido (A, C, G, T) y la tasa de cambio puede variar drásticamente entre regiones del genoma.
-        </p>
+    <h2 class="section-title">3. El Lenguaje de los Caracteres: Homología y Homoplasia</h2>
+    <p>
+        La revolución de <em>Hennig (1966)</em> no consistió en usar caracteres, sino en clasificarlos según su origen temporal. No todas las similitudes tienen el mismo valor informativo; para reconstruir la historia de la vida, debemos distinguir entre lo que es heredado de ancestros remotos y lo que es una innovación reciente.
+    </p>
 
-        <div class="concept-box">
-            <h3>Homología Posicional y Alineamiento</h3>
-            <p>
-                En sistemática molecular, la <strong>homología primaria</strong> se establece mediante el alineamiento de secuencias. Cada columna de una matriz de datos es una hipótesis de que esos nucleótidos descienden de un ancestro común y ocupan la misma posición funcional. Un error en el alineamiento (debido a inserciones o deleciones/indels) invalida cualquier análisis posterior, ya que estaríamos comparando sitios no homólogos.
-            </p>
-        </div>
-
-        
-
-        <h3>El Fenómeno de la Saturación Molecular</h3>
-        <p>
-            Debido a que solo existen 4 estados posibles, después de un tiempo evolutivo prolongado, una posición puede sufrir <strong>"múltiples golpes"</strong> (multiple hits). Por ejemplo, un sitio puede cambiar de A &rarr; T &rarr; G &rarr; A. Al final, observamos una 'A', pero no es la original; es una <strong>identidad por estado (IBS)</strong> y no por descendencia (IBD). Este ruido borra la señal histórica y puede generar una falsa apariencia de cercanía entre linajes distantes.
-        </p>
-
-        
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Concepto</th>
-                    <th>Implicación Filogenética</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Saturación</strong></td>
-                    <td>Subestima las distancias evolutivas y oculta las sinapomorfías.</td>
-                </tr>
-                <tr>
-                    <td><strong>Transiciones vs. Transversiones</strong></td>
-                    <td>Las transiciones (A&harr;G, C&harr;T) suelen ocurrir más rápido y se saturan antes.</td>
-                </tr>
-                <tr>
-                    <td><strong>Heterogeneidad de Tasas</strong></td>
-                    <td>Diferentes genes o posiciones (ej. 3ra posición del codón) evolucionan a velocidades distintas.</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="analysis-box">
-            <span class="analysis-header">ANÁLISIS CRÍTICO 4</span>
-            <p>
-                <strong>P7. El Límite de la Fenética:</strong> ¿Por qué el criterio de "similitud global" se vuelve progresivamente más engañoso a medida que aumenta el tiempo de divergencia entre dos linajes? Relacione su respuesta con el concepto de <em>saturación</em> y la probabilidad de obtener nucleótidos idénticos por azar.
-            </p>
-            <p>
-                <strong>P8. Homología Primaria:</strong> Si el alineamiento inicial es incorrecto (ej. se alinearon regiones no codificantes con regiones codificantes por error), ¿qué sucede con la topología final del árbol? ¿Puede un algoritmo de optimidad (como ML o Parsimonia) corregir un error de homología cometido en la fase de alineamiento?
-            </p>
-        </div>
+    <div class="concept-box">
+        <h3>La Jerarquía de la Similitud</h3>
+        <ul>
+            <li>
+                <strong>Plesiomorfía (Simplesiomorfía):</strong> Es el estado ancestral del carácter. Compartir una plesiomorfía no indica parentesco cercano dentro del grupo de estudio porque el rasgo apareció <em>antes</em> del ancestro común más reciente del grupo (ej. tener columna vertebral no distingue a un humano de un pez).
+            </li>
+            <li>
+                <strong>Apomorfía (Sinapomorfía):</strong> Es el estado derivado o "novedad evolutiva". Las <strong>sinapomorfías</strong> son las únicas que proporcionan evidencia de monofilia, ya que representan cambios que ocurrieron exclusivamente en el ancestro común del clado.
+            </li>
+            <li>
+                <strong>Autapomorfía:</strong> Un rasgo derivado presente en un solo taxón terminal. Útil para diagnóstico de especies, pero no aporta información para agrupar linajes.
+            </li>
+            <li>
+                <strong>Homoplasia:</strong> Similitud superficial originada de forma independiente (falsa homología). Representa "ruido" en la señal filogenética.
+            </li>
+        </ul>
     </div>
+
+    <h3>Tipos de Homoplasia: El desafío de la Convergencia</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Fenómeno</th>
+                <th>Descripción</th>
+                <th>Ejemplo Clásico</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Convergencia</strong></td>
+                <td>Estados similares originados por presiones selectivas iguales en linajes lejanos.</td>
+                <td>Forma hidrodinámica en Delfines (mamíferos) y Tiburones (peces).</td>
+            </tr>
+            <tr>
+                <td><strong>Paralelismo</strong></td>
+                <td>Evolución independiente de un estado similar en linajes cercanos, partiendo de la misma base genética.</td>
+                <td>Reducción de dedos en distintos linajes de ungulados.</td>
+            </tr>
+            <tr>
+                <td><strong>Reversión</strong></td>
+                <td>Regreso de un estado derivado al estado ancestral (pérdida secundaria).</td>
+                <td>Pérdida de patas en serpientes (retorno al estado ápodo).</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="mermaid">
+    graph TD
+        classDef state fill:#fff,stroke:#333,stroke-width:1px;
+        
+        subgraph SINAPOMORFIA ["Sinapomorfía (Señal Útil)"]
+            direction TB
+            S_Anc((Estado 0)) --"Evolución a 1"--> S_N(( ))
+            S_N --> S_A[Taxón A (1)]
+            S_N --> S_B[Taxón B (1)]
+            S_Anc --> S_Out[Externo (0)]
+            linkStyle 0 stroke:#27ae60,stroke-width:3px;
+        end
+
+        subgraph HOMOPLASIA ["Convergencia (Ruido)"]
+            direction TB
+            C_Anc((Estado 0)) --> C_N1(( ))
+            C_Anc --> C_N2(( ))
+            C_N1 --"Cambio Indep."--> C_A[Taxón A (1)]
+            C_N1 --> C_B[Taxón B (0)]
+            C_N2 --"Cambio Indep."--> C_C[Taxón C (1)]
+            linkStyle 6,8 stroke:#e74c3c,stroke-width:3px,stroke-dasharray: 5 5;
+        end
+
+        subgraph REVERSION ["Reversión (Confusión)"]
+            direction TB
+            R_Anc((Estado 0)) --"Evolución a 1"--> R_N(( ))
+            R_N --> R_A[Taxón A (1)]
+            R_N --"Regreso a 0"--> R_B[Taxón B (0*)]
+            linkStyle 9 stroke:#27ae60,stroke-width:3px;
+            linkStyle 11 stroke:#e74c3c,stroke-width:3px,stroke-dasharray: 5 5;
+        end
+    </div>
+
+    <div class="analysis-box">
+        <span class="analysis-header">ANÁLISIS CRÍTICO 3</span>
+        <p>
+            <strong>P5. Relatividad del Carácter:</strong> El pelo es una <em>sinapomorfía</em> que define al clado Mammalia, pero es una <em>simplesiomorfía</em> si nuestro estudio se restringe al orden Primates. Explique, basándose en el concepto de "nivel de generalidad", por qué un mismo carácter cambia su estatus dependiendo del nodo que estemos analizando.
+        </p>
+        <p>
+            <strong>P6. La Homoplasia como "Ruido":</strong> ¿Por qué el paralelismo y la convergencia son considerados "enemigos" de la reconstrucción filogenética? Analice cómo un exceso de homoplasias podría causar el fenómeno de <em>Atracción de Ramas Largas</em>, llevando a agrupar erróneamente especies no emparentadas solo por sus similitudes superficiales.
+        </p>
+    </div>
+</div>
+<div class="content-section">
+    <h2 class="section-title">4. La Naturaleza del Dato Molecular</h2>
+    <p>
+        El ADN no es un carácter, es una sucesión de estados. Según <em>Morrone (2000)</em>, el dato molecular presenta desafíos epistemológicos que la morfología raramente enfrenta: el espacio de estados es extremadamente reducido (A, C, G, T) y la tasa de cambio puede variar drásticamente entre regiones del genoma.
+    </p>
+
+    <div class="concept-box">
+        <h3>Homología Posicional y Alineamiento</h3>
+        <p>
+            En sistemática molecular, la <strong>homología primaria</strong> se establece mediante el alineamiento de secuencias. Cada columna de una matriz es una hipótesis de que esos nucleótidos descienden de un ancestro común (homología posicional).
+        </p>
+        
+        <div style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; margin: 10px 0;">
+            <p style="margin: 0 0 5px 0; font-size: 0.9em; color: #bdc3c7;">SIN ALINEAR (Homología Falsa):</p>
+            <div>Especie A: A T G <span style="color:#e74c3c">C C G</span> T A</div>
+            <div>Especie B: A T G <span style="color:#e74c3c">G T A</span> ... <span style="font-size:0.8em; color:#f39c12">← Error: Se comparan bases distintas</span></div>
+            <hr style="border-color: #7f8c8d; margin: 10px 0;">
+            <p style="margin: 0 0 5px 0; font-size: 0.9em; color: #bdc3c7;">ALINEADO (Con Gap/Indel):</p>
+            <div>Especie A: A T G <strong>C C G</strong> T A</div>
+            <div>Especie B: A T G <strong>- - -</strong> G T A <span style="font-size:0.8em; color:#2ecc71">← Correcto: Deleción identificada</span></div>
+        </div>
+
+        <p>
+            Un error en el alineamiento invalida cualquier análisis posterior, ya que estaríamos comparando historias evolutivas de sitios no equivalentes.
+        </p>
+    </div>
+
+    <h3>El Fenómeno de la Saturación Molecular</h3>
+    <p>
+        Debido a que solo existen 4 estados posibles, después de un tiempo evolutivo prolongado, una posición puede sufrir <strong>"múltiples golpes"</strong> (multiple hits). Al final, observamos el estado actual, pero la historia intermedia se ha borrado. Esto genera <strong>homoplasia por saturación</strong>.
+    </p>
+
+    <div class="mermaid">
+    graph LR
+        %% ESTILOS
+        classDef hidden fill:#f2f3f4,stroke:#bdc3c7,stroke-dasharray: 5 5;
+        classDef visible fill:#d5f5e3,stroke:#27ae60,stroke-width:2px;
+        
+        subgraph REALIDAD ["Historia Real (Invisible)"]
+            direction LR
+            N1((A)) --"Tiempo 1"--> N2((T))
+            N2 --"Tiempo 2"--> N3((G))
+            N3 --"Tiempo 3"--> N4(A)
+        end
+        
+        subgraph OBS ["Lo que ve el Investigador"]
+            O1[Ancestro: A] --> O2[Actual: A]
+            style O2 fill:#fadbd8,stroke:#e74c3c
+        end
+        
+        N1 -.-> O1
+        N4 -.-> O2
+        
+        %% Notas
+        linkStyle 0,1,2 stroke:#7f8c8d,stroke-width:2px;
+        linkStyle 3 stroke:#333,stroke-width:3px;
+    </div>
+    <p style="font-size: 0.9em; text-align: center; color: #666; margin-top: -10px;">
+        <em>Fig 4.1: Identidad por Estado (IBS). El investigador ve una 'A' y asume que no hubo cambios (0 pasos), cuando en realidad ocurrieron 3 mutaciones (Reversión).</em>
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Implicación Filogenética</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Saturación</strong></td>
+                <td>Subestima las distancias evolutivas reales y oculta la señal filogenética verdadera.</td>
+            </tr>
+            <tr>
+                <td><strong>Transiciones vs. Transversiones</strong></td>
+                <td>Las transiciones (A↔G, C↔T) ocurren más rápido y se saturan antes que las transversiones.</td>
+            </tr>
+            <tr>
+                <td><strong>Heterogeneidad de Tasas</strong></td>
+                <td>Diferentes genes o posiciones (ej. 3ra posición del codón) evolucionan a velocidades distintas, requiriendo modelos de partición.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="analysis-box">
+        <span class="analysis-header">ANÁLISIS CRÍTICO 4</span>
+        <p>
+            <strong>P7. El Límite de la Fenética:</strong> A medida que dos linajes divergen en el tiempo, la similitud genética observada deja de disminuir linealmente y se estanca en una "zona de ruido" (alrededor del 25% de similitud aleatoria). ¿Por qué este fenómeno de saturación hace que los métodos de distancia simple fallen al analizar ancestros muy antiguos?
+        </p>
+        <p>
+            <strong>P8. Homología Primaria y Optimidad:</strong> Si cometemos un error grave de alineamiento (homología primaria incorrecta), ¿puede un algoritmo sofisticado como *Maximum Likelihood* o *Inferencia Bayesiana* corregir ese error durante la construcción del árbol? Justifique su respuesta basándose en el principio de "Basura entra, basura sale" (GIGO).
+        </p>
+    </div>
+</div>
   <div class="content-section">
-        <h2 class="section-title">5. Lógica de la Inferencia y el Modelo de Coalescencia</h2>
-        <p>
-            Una vez obtenida la matriz de datos, el desafío es seleccionar el árbol que mejor represente la realidad histórica. Según <em>De Luna et al. (2005)</em>, la sistemática moderna ha pasado de contar cambios a modelar procesos estocásticos.
-        </p>
+    <h2 class="section-title">5. Lógica de la Inferencia y el Modelo de Coalescencia</h2>
+    <p>
+        Una vez obtenida la matriz de datos, el desafío es seleccionar el árbol que mejor represente la realidad histórica. Según <em>De Luna et al. (2005)</em>, la sistemática moderna ha pasado de contar cambios (Parsimonia) a modelar procesos estocásticos (Verosimilitud y Bayesiana).
+    </p>
 
-        <div class="concept-box">
-            <h3>Paradigmas de Optimidad</h3>
-            <ul>
-                <li>
-                    <strong>Parsimonia (MP):</strong> Basada en el principio filosófico de parsimonia. Busca el árbol que requiere el menor número de transformaciones evolutivas. Es un método no paramétrico (no asume modelos de sustitución).
-                </li>
-                <li>
-                    <strong>Máxima Verosimilitud (ML):</strong> Un enfoque estadístico que busca el árbol y los parámetros del modelo que maximizan la probabilidad de observar los datos actuales ($P(D|H)$). Es computacionalmente intensivo pero robusto ante la saturación.
-                </li>
-                <li>
-                    <strong>Inferencia Bayesiana (BI):</strong> Utiliza el Teorema de Bayes para calcular la <strong>Probabilidad Posterior</strong> ($P(H|D)$). A diferencia de ML, no entrega un único árbol "mejor", sino una muestra de miles de árboles (MCMC) cuya frecuencia representa el soporte estadístico de los clados.
-                </li>
-            </ul>
-        </div>
-
-        
-
-        <h3>La Teoría de la Coalescencia Multiespecífica (MSC)</h3>
-        <p>
-            <em>Edwards (2009)</em> revolucionó la sistemática al proponer que debemos dejar de "concatenar" genes (tratarlos como un solo bloque). La Coalescencia reconoce que <strong>la historia de un gen no siempre coincide con la historia de la especie</strong>.
-        </p>
-
-        <div class="concept-box" style="border-top: 3px solid #8e44ad;">
-            <p>
-                Este modelo es retrospectivo: rastrea las copias génicas hacia el pasado hasta que convergen en un <strong>Ancestro Común Más Reciente (MRCA)</strong>. Es fundamental para manejar el <strong>Sorteo de Linaje Incompleto (ILS)</strong>, que ocurre cuando eventos de especiación son tan rápidos que los alelos no logran coalescer antes de la siguiente división.
-            </p>
-        </div>
-
-        
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Concepto</th>
-                    <th>Definición</th>
-                    <th>Importancia</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>IBD (Identidad por Descendencia)</strong></td>
-                    <td>Alelos idénticos que son copias directas de un mismo ancestro sin mutaciones.</td>
-                    <td>Es la señal real de parentesco.</td>
-                </tr>
-                <tr>
-                    <td><strong>IBS (Identidad por Estado)</strong></td>
-                    <td>Alelos que parecen iguales pero cuya identidad puede ser azarosa o por saturación.</td>
-                    <td>Genera homoplasia y árboles erróneos.</td>
-                </tr>
-                <tr>
-                    <td><strong>Discordancia Genética</strong></td>
-                    <td>Diferencia topológica entre árboles de distintos genes.</td>
-                    <td>Indica ILS, hibridación o duplicación génica.</td>
-                </tr>
-            </tbody>
-        </table>
-
-        
-
-        <div class="analysis-box">
-            <span class="analysis-header">ANÁLISIS CRÍTICO 5</span>
-            <p>
-                <strong>P9. Muestreo de Árboles:</strong> ¿Por qué la Inferencia Bayesiana produce una "distribución de árboles" (posterior distribution) en lugar de un solo árbol óptimo como ML? ¿Cómo ayuda esto al investigador a entender la incertidumbre en nodos difíciles?
-            </p>
-            <p>
-                <strong>P10. Atracción de Ramas Largas (LBA):</strong> El fenómeno LBA (<em>Felsenstein, 1978</em>) ocurre cuando linajes con tasas de evolución rápidas acumulan muchas IBS. Explique por qué el criterio de Parsimonia es especialmente vulnerable a agrupar estas ramas largas por error, mientras que los métodos con modelos (como ML) pueden corregir este sesgo.
-            </p>
-        </div>
+    <div class="concept-box">
+        <h3>Paradigmas de Optimidad</h3>
+        <ul>
+            <li>
+                <strong>Parsimonia (MP):</strong> Basada en la navaja de Ockham. Busca el árbol que requiere el <em>menor número de pasos</em> evolutivos. Es intuitivo pero no paramétrico (no asume modelos de evolución del ADN), por lo que puede fallar ante ramas largas.
+            </li>
+            <li>
+                <strong>Máxima Verosimilitud (ML):</strong> Enfoque estadístico. Busca el árbol y los parámetros (tasa de mutación, frecuencias de bases) que maximizan la probabilidad de observar nuestros datos ($P(D|H)$). Es robusto y consistente.
+            </li>
+            <li>
+                <strong>Inferencia Bayesiana (BI):</strong> Utiliza el Teorema de Bayes para calcular la <strong>Probabilidad Posterior</strong> ($P(H|D)$). No entrega un solo árbol, sino una "nube" de árboles probables (muestreados vía cadenas de Markov - MCMC), permitiendo estimar la incertidumbre de cada nodo.
+            </li>
+        </ul>
     </div>
-    <div class="content-section">
-        <h2 class="section-title">6. Codificación y Construcción de la Matriz de Datos</h2>
+
+    <h3>La Teoría de la Coalescencia Multiespecífica (MSC)</h3>
+    <p>
+        <em>Edwards (2009)</em> revolucionó la sistemática al proponer que debemos dejar de "concatenar" genes como si fueran uno solo. La Coalescencia reconoce una verdad biológica fundamental: <strong>la historia de un gen no siempre coincide con la historia de la especie</strong>.
+    </p>
+
+    <div class="concept-box" style="border-left: 5px solid #8e44ad;">
         <p>
-            La codificación es el puente entre la observación biológica y el análisis computacional. Según <em>Strong & Lipscomb (1999)</em>, este proceso no es un mero trámite técnico; implica decisiones ontológicas fundamentales sobre qué constituye una unidad de cambio independiente en la evolución.
+            <strong>Sorteo de Linaje Incompleto (ILS):</strong> Ocurre cuando dos eventos de especiación son tan rápidos y sucesivos que los alelos ancestrales no tienen tiempo de fijarse (coalescer). Como resultado, un gen puede sugerir que la especie A es hermana de C, cuando en realidad la especie A es hermana de B.
         </p>
-
-        <div class="concept-box">
-            <h3>El Dilema de la Independencia</h3>
-            <p>
-                La mayoría de los modelos filogenéticos asumen que cada carácter (columna) en la matriz evoluciona de manera independiente. Sin embargo, la biología presenta desafíos como la <strong>pleiotropía</strong> (un gen afecta múltiples rasgos) o la <strong>correlación funcional</strong> (dos estructuras deben cambiar juntas para mantener la viabilidad). Codificar estos rasgos como independientes "infla" artificialmente el soporte de ciertos clados, sesgando la topología final.
-            </p>
-        </div>
-
-        
-
-        <h3>Tratamiento de la Ausencia de Información</h3>
-        <p>
-            Uno de los errores más comunes en sistemática es no distinguir la causa de la falta de un dato. Esta distinción es crítica para que el software no asuma transformaciones biológicamente imposibles.
-        </p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Símbolo</th>
-                    <th>Tipo de Incertidumbre</th>
-                    <th>Causa Biológica / Técnica</th>
-                    <th>Interpretación por el Software</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Dato Faltante (?)</strong></td>
-                    <td>Epistemológica</td>
-                    <td>Fósil incompleto, ADN degradado o tejido no disponible.</td>
-                    <td>"El estado existe, pero no ha sido observado".</td>
-                </tr>
-                <tr>
-                    <td><strong>Inaplicable (-)</strong></td>
-                    <td>Ontológica</td>
-                    <td>La estructura madre no existe (ej. "forma de la pluma" en un pez).</td>
-                    <td>"El carácter no tiene sentido biológico en este taxón".</td>
-                </tr>
-            </tbody>
-        </table>
-
-        
-
-        <div class="analysis-box">
-            <span class="analysis-header">ANÁLISIS CRÍTICO 6</span>
-            <p>
-                <strong>P11. El Riesgo de la Codificación Binaria:</strong> ¿Cuál es la consecuencia estadística de codificar un carácter inaplicable con un estado "0" (ausente) en lugar de un "-" (inaplicable)? Explique cómo este error obliga al algoritmo a considerar la "pérdida" de una estructura que el organismo nunca tuvo, y cómo esto altera la longitud del árbol.
-            </p>
-            <p>
-                <strong>P12. Violación de Supuestos:</strong> ¿Por qué la correlación genética o del desarrollo entre dos caracteres viola los supuestos probabilísticos de los algoritmos de Máxima Verosimilitud e Inferencia Bayesiana? ¿Qué pasaría con el valor de <em>bootstrap</em> o la probabilidad posterior de un clado si incluimos múltiples caracteres que en realidad son una sola unidad evolutiva?
-            </p>
-        </div>
     </div>
+
+    <div class="mermaid">
+    graph TD
+        %% ESTILOS
+        classDef species fill:#fff,stroke:#333,stroke-width:2px;
+        classDef gene fill:#e8f8f5,stroke:#1abc9c,stroke-width:2px,stroke-dasharray: 5 5;
+        classDef conflict fill:#fadbd8,stroke:#e74c3c,stroke-width:3px;
+
+        %% SUBGRAFO 1: LA REALIDAD (ESPECIES)
+        subgraph REALIDAD ["Árbol de ESPECIES (Realidad)"]
+            direction TB
+            S_Anc(( )) --> S_N1(( ))
+            S_N1 --> S_C[Especie C]
+            S_N1 --> S_N2(( ))
+            S_N2 --> S_A[Especie A]
+            S_N2 --> S_B[Especie B]
+            
+            %% A y B son hermanas
+            linkStyle 3,4 stroke:#333,stroke-width:4px;
+        end
+
+        %% SUBGRAFO 2: LO QUE DICE EL GEN (ILS)
+        subgraph GEN ["Árbol de UN GEN (Discordante)"]
+            direction TB
+            G_Anc(( )) --> G_N1(( ))
+            G_N1 --> G_B[Especie B]
+            G_N1 --> G_N2(( ))
+            G_N2 --"Coalescencia Profunda"--> G_A[Especie A]
+            G_N2 --> G_C[Especie C]
+            
+            %% El gen agrupa A con C por error (ILS)
+            linkStyle 8,9 stroke:#e74c3c,stroke-width:3px;
+        end
+    </div>
+    <p style="font-size: 0.9em; text-align: center; color: #666; margin-top: -10px;">
+        <em>Fig 5.1: Fenómeno de ILS. A la izquierda, A y B son parientes cercanos. A la derecha, un gen específico cuenta una historia diferente (agrupando A y C) debido a que el ancestro común conservó polimorfismos ancestrales.</em>
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Definición</th>
+                <th>Importancia</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>IBD (Identidad por Descendencia)</strong></td>
+                <td>Alelos idénticos heredados directamente de un ancestro común reciente.</td>
+                <td>Señal filogenética verdadera.</td>
+            </tr>
+            <tr>
+                <td><strong>IBS (Identidad por Estado)</strong></td>
+                <td>Alelos idénticos por azar o convergencia mutacional.</td>
+                <td>Genera ruido y homoplasia.</td>
+            </tr>
+            <tr>
+                <td><strong>Discordancia Genética</strong></td>
+                <td>Cuando distintos genes producen topologías (árboles) diferentes.</td>
+                <td>Señal de ILS, Hibridación o Duplicación.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="analysis-box">
+        <span class="analysis-header">ANÁLISIS CRÍTICO 5</span>
+        <p>
+            <strong>P9. Incertidumbre Bayesiana:</strong> La Inferencia Bayesiana no nos da un "árbol ganador", sino una probabilidad posterior distribuida en miles de árboles. ¿Por qué esta aproximación es más honesta intelectualmente al tratar con zonas del árbol donde los datos son conflictivos o insuficientes?
+        </p>
+        <p>
+            <strong>P10. Atracción de Ramas Largas (LBA):</strong> Imagine dos linajes evolutivos (A y B) que mutan muy rápido pero no están emparentados. Con el tiempo, ambos acumularán muchas mutaciones "A" o "T" en las mismas posiciones por puro azar (Saturación/IBS). ¿Por qué el principio de Parsimonia ("el camino más corto") tenderá a agrupar erróneamente a A y B como hermanos?
+        </p>
+    </div>
+</div>
+<div class="content-section">
+    <h2 class="section-title">6. Codificación y Construcción de la Matriz de Datos</h2>
+    <p>
+        La codificación es el puente entre la observación biológica y el análisis computacional. Según <em>Strong & Lipscomb (1999)</em>, este proceso no es un mero trámite técnico; implica decisiones ontológicas fundamentales sobre qué constituye una unidad de cambio independiente en la evolución.
+    </p>
+
+    <div class="concept-box">
+        <h3>El Dilema de la Independencia</h3>
+        <p>
+            La mayoría de los modelos filogenéticos asumen que cada carácter (columna) en la matriz evoluciona de manera independiente. Sin embargo, la biología presenta desafíos como la <strong>pleiotropía</strong> (un gen afecta múltiples rasgos) o la <strong>correlación funcional</strong>. Codificar estos rasgos como independientes "infla" artificialmente el soporte de ciertos clados (pseudoreplicación), sesgando la topología final.
+        </p>
+    </div>
+
+    <h3>Tratamiento de la Ausencia de Información</h3>
+    <p>
+        Uno de los errores más comunes en sistemática es no distinguir la causa de la falta de un dato. Esta distinción es crítica para que el software no asuma transformaciones biológicamente imposibles.
+    </p>
+
+    <div class="mermaid">
+    graph TD
+        %% ESTILOS
+        classDef q1 fill:#e8f8f5,stroke:#1abc9c,stroke-width:2px;
+        classDef q2 fill:#fcf3cf,stroke:#f1c40f,stroke-width:2px;
+        classDef endNode fill:#fff,stroke:#333,stroke-width:1px;
+        classDef error fill:#fadbd8,stroke:#e74c3c,stroke-width:2px,stroke-dasharray: 5 5;
+
+        subgraph LOGICA ["Lógica de Dependencia (Ej: Alas)"]
+            direction TB
+            C1{¿Tiene Alas?} 
+            C1 --"SÍ (Estado 1)"--> C2{¿Color del Ala?}
+            C1 --"NO (Estado 0)"--> R1["Carácter 2: Inaplicable (-)"]
+            
+            C2 --"Rojas"--> R2[Estado 1]
+            C2 --"Azules"--> R3[Estado 2]
+            
+            %% El error común
+            R1 -.->|ERROR DE CODIFICACIÓN| Err[¿Codificar como '0' o '?']
+            Err -.->|Consecuencia| Con[El software inventa un 'color invisible' o asume pérdida de color]
+        end
+
+        class C1 q1;
+        class C2 q2;
+        class Err,Con error;
+    </div>
+    <p style="font-size: 0.9em; text-align: center; color: #666; margin-top: -10px;">
+        <em>Fig 6.1: Estructura jerárquica de caracteres. Si la estructura principal (padre) está ausente, sus atributos (hijos) no existen ontológicamente y deben codificarse como "-".</em>
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Símbolo</th>
+                <th>Tipo de Incertidumbre</th>
+                <th>Causa Biológica / Técnica</th>
+                <th>Interpretación por el Software</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Dato Faltante (?)</strong></td>
+                <td>Epistemológica (Ignorancia)</td>
+                <td>Fósil incompleto, ADN degradado o tejido no disponible.</td>
+                <td>"El estado existe, pero no lo he visto. El software intentará adivinarlo (optimizarlo)".</td>
+            </tr>
+            <tr>
+                <td><strong>Inaplicable (-)</strong></td>
+                <td>Ontológica (Inexistencia)</td>
+                <td>La estructura madre no existe (ej. "forma de la pluma" en un pez).</td>
+                <td>"El carácter no tiene sentido aquí. El software ignora esta casilla y no cobra costo por el cambio".</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="analysis-box">
+        <span class="analysis-header">ANÁLISIS CRÍTICO 6</span>
+        <p>
+            <strong>P11. El Riesgo de la Codificación Binaria:</strong> Si codificamos la "ausencia de alas" como 0, y el "color de alas" también como 0 (ausente), el algoritmo interpretará matemático que "Ausencia de Color" es un estado homólogo a "Color Rojo". ¿Por qué esto es un error lógico y cómo infla artificialmente la similitud entre especies sin alas?
+        </p>
+        <p>
+            <strong>P12. Violación de Supuestos:</strong> ¿Por qué la correlación genética o del desarrollo entre dos caracteres viola los supuestos probabilísticos de los algoritmos de Máxima Verosimilitud? Si incluimos 5 caracteres que en realidad son controlados por el mismo gen, ¿qué efecto tendrá esto sobre el valor de <em>bootstrap</em> (soporte) de ese clado?
+        </p>
+    </div>
+</div>
+<div class="content-section">
+    <h2 class="section-title">Referencias y Lecturas Recomendadas</h2>
+    <p>
+        Para profundizar en los conceptos discutidos, se sugiere consultar las siguientes fuentes. Se han clasificado según su naturaleza pedagógica.
+    </p>
 
     <div class="biblio-section">
-        <h3>BIBLIOGRAFÍA RECOMENDADA</h3>
-        <div class="bib-item">De Luna, E., et al. (2005). <em>Cladística y bases de la sistemática filogenética</em>.</div>
-        <div class="bib-item">Edwards, S. V. (2009). <em>Is a new and general theory of molecular phylogenetics emerging?</em> Evolution.</div>
-        <div class="bib-item">Felsenstein, J. (1978). <em>Cases in which Parsimony or Maximum Likelihood methods will be intrinsically dishonest</em>.</div>
-        <div class="bib-item">Hennig, W. (1966). <em>Phylogenetic Systematics</em>. University of Illinois Press.</div>
-        <div class="bib-item">Hull, D. L. (1988). <em>Science as a Process</em>. University of Chicago Press.</div>
-        <div class="bib-item">Morrone, J. J. (2000). <em>El lenguaje de la cladística</em>. UNAM.</div>
-        <div class="bib-item">Sokal, R. R., & Sneath, P. H. (1963). <em>Principles of Numerical Taxonomy</em>. Freeman.</div>
-        <div class="bib-item">Strong, E. E., & Lipscomb, D. (1999). <em>Character Coding and Inapplicable Data</em>. Cladistics.</div>
-        <div class="bib-item">Wiley, E. O., & Lieberman, B. S. (2011). <em>Phylogenetics: Theory and Practice</em>. Wiley-Blackwell.</div>
+        
+        <h4 style="color: #2c3e50; border-bottom: 2px solid #bdc3c7; padding-bottom: 5px; margin-top: 20px;">📘 Libros de Texto y Fundamentos</h4>
+        
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Hennig, W. (1966).</strong> <em>Phylogenetic Systematics</em>. University of Illinois Press.
+            <br><small style="color: #7f8c8d;">(La obra fundacional de la cladística moderna. Lectura histórica esencial).</small>
+        </div>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Wiley, E. O., & Lieberman, B. S. (2011).</strong> <em>Phylogenetics: Theory and Practice of Phylogenetic Systematics</em> (2nd ed.). Wiley-Blackwell.
+            <br><small style="color: #7f8c8d;">(El manual de referencia estándar para metodología y teoría).</small>
+        </div>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Morrone, J. J. (2000).</strong> <em>El lenguaje de la cladística</em>. UNAM, México.
+            <br><small style="color: #7f8c8d;">(Excelente recurso en español para dominar la terminología técnica).</small>
+        </div>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Hull, D. L. (1988).</strong> <em>Science as a Process: An Evolutionary Account of the Social and Conceptual Development of Science</em>. University of Chicago Press.
+            <br><small style="color: #7f8c8d;">(Análisis filosófico y sociológico de la "guerra" entre fenéticos y cladistas).</small>
+        </div>
+
+        <h4 style="color: #2c3e50; border-bottom: 2px solid #bdc3c7; padding-bottom: 5px; margin-top: 20px;">📄 Artículos Clásicos y Teóricos</h4>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Felsenstein, J. (1978).</strong> Cases in which Parsimony or Maximum Likelihood methods will be intrinsically dishonest. <em>Systematic Zoology</em>, 27(4), 401–410.
+            <br><small style="color: #7f8c8d;">(Describe por primera vez la "Atracción de Ramas Largas").</small>
+        </div>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Sokal, R. R., & Sneath, P. H. (1963).</strong> <em>Principles of Numerical Taxonomy</em>. W. H. Freeman.
+            <br><small style="color: #7f8c8d;">(El texto base de la escuela fenética).</small>
+        </div>
+        
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>De Luna, E., Guerrero, J. A., & Chew-Taracena, T. (2005).</strong> Cladística y bases de la sistemática filogenética. En: <em>Bautista, F. et al. (Eds.), Técnicas de muestreo para manejadores de recursos naturales</em> (pp. 1-28). UNAM.
+            <br><small style="color: #7f8c8d;">(Una síntesis didáctica muy utilizada en Latinoamérica).</small>
+        </div>
+
+        <h4 style="color: #2c3e50; border-bottom: 2px solid #bdc3c7; padding-bottom: 5px; margin-top: 20px;">🧬 Sistemática Molecular y Codificación</h4>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Edwards, S. V. (2009).</strong> Is a new and general theory of molecular phylogenetics emerging? <em>Evolution</em>, 63(1), 1–19.
+            <br><small style="color: #7f8c8d;">(Introducción clave al paradigma de la Coalescencia Multiespecífica).</small>
+        </div>
+
+        <div class="bib-item" style="margin-bottom: 10px;">
+            <strong>Strong, E. E., & Lipscomb, D. (1999).</strong> Character coding and inapplicable data. <em>Cladistics</em>, 15(4), 363–371.
+            <br><small style="color: #7f8c8d;">(Lectura obligatoria sobre cómo tratar los datos faltantes "-" vs "?").</small>
+        </div>
+<div class="content-section" style="border-top: 4px solid #c0392b; background-color: #fdfefe;">
+    <h2 class="section-title">Instrucciones para la Entrega del Informe</h2>
+    
+    <div class="concept-box" style="background-color: #fff; border: 1px solid #ddd;">
+        <h3 style="color: #c0392b; margin-top: 0;">⚠️ Modalidad: Taller In-Situ</h3>
+        <p>
+            Este laboratorio funciona bajo la modalidad de <strong>entrega inmediata</strong>. El objetivo es fomentar la discusión en tiempo real y la capacidad de síntesis teórica.
+        </p>
+        <ul style="font-size: 0.95em; line-height: 1.6;">
+            <li><strong>Trabajo Grupal:</strong> Máximo 3 estudiantes por informe.</li>
+            <li><strong>Plazo Límite:</strong> El informe debe ser cargado en la plataforma (Moodle) <strong>antes de finalizar las 4 horas de la sesión</strong>. No se aceptarán entregas posteriores.</li>
+            <li><strong>Formato:</strong> Archivo PDF único titulado <code>Apellido1_Apellido2_Apellido3_Sistematica.pdf</code>.</li>
+        </ul>
+    </div>
+
+    <h3>Contenido Requerido: El Cuestionario Teórico</h3>
+    <p>
+        El informe debe contener las respuestas desarrolladas y justificadas a las <strong>12 preguntas de análisis crítico</strong> planteadas a lo largo de la guía. Se evaluará la precisión terminológica y la lógica argumentativa basada en las lecturas suministradas.
+    </p>
+
+    <div style="background: #f4f6f7; padding: 20px; border-radius: 8px; border-left: 5px solid #2c3e50;">
+        <h4 style="margin-top: 0; color: #2c3e50;">Lista de Cotejo (Checklist)</h4>
+        <p>Asegúrese de responder todas las secciones antes de enviar:</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <strong>Sección 1: Escuelas</strong>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><input type="checkbox" disabled> <strong>P1.</strong> Divergencia Aves/Reptiles</li>
+                    <li><input type="checkbox" disabled> <strong>P2.</strong> Algoritmos y Similitud Total</li>
+                </ul>
+                
+                <strong>Sección 2: Tree Thinking</strong>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><input type="checkbox" disabled> <strong>P3.</strong> Falacia de lo Primitivo</li>
+                    <li><input type="checkbox" disabled> <strong>P4.</strong> Polaridad y Outgroup</li>
+                </ul>
+
+                <strong>Sección 3: Caracteres</strong>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><input type="checkbox" disabled> <strong>P5.</strong> Relatividad (Pelo)</li>
+                    <li><input type="checkbox" disabled> <strong>P6.</strong> Homoplasia y Ruido</li>
+                </ul>
+            </div>
+            
+            <div>
+                <strong>Sección 4: Dato Molecular</strong>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><input type="checkbox" disabled> <strong>P7.</strong> Límite de la Fenética</li>
+                    <li><input type="checkbox" disabled> <strong>P8.</strong> Alineamiento y GIGO</li>
+                </ul>
+
+                <strong>Sección 5: Inferencia</strong>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><input type="checkbox" disabled> <strong>P9.</strong> Incertidumbre Bayesiana</li>
+                    <li><input type="checkbox" disabled> <strong>P10.</strong> Atracción de Ramas Largas</li>
+                </ul>
+
+                <strong>Sección 6: Codificación</strong>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><input type="checkbox" disabled> <strong>P11.</strong> Riesgo Binario (0 vs -)</li>
+                    <li><input type="checkbox" disabled> <strong>P12.</strong> Independencia de Caracteres</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 30px;">Rúbrica de Evaluación Rápida</h3>
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+        <thead>
+            <tr style="background-color: #2c3e50; color: white;">
+                <th style="padding: 10px;">Criterio</th>
+                <th style="padding: 10px;">Descripción del Desempeño Esperado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Completitud (20%)</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">Presenta las 12 respuestas. Si falta alguna pregunta, la nota máxima será 4.0.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Rigor Terminológico (40%)</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    Utiliza correctamente términos como <em>Sinapomorfía, Parafilia, Homoplasia, Saturación, ILS</em>, etc. No usa lenguaje coloquial ("más evolucionado", "parecido").
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;">Argumentación (40%)</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                    Las respuestas explican el <strong>mecanismo causal</strong> (el porqué). No se limita a copiar definiciones del texto guía, sino que aplica el concepto al problema planteado.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
     </div>
 </div>
 
