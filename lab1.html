@@ -213,22 +213,19 @@ mermaid.initialize({
         <div class="d-title">Fenética (Similitud)</div>
         <div class="mermaid">
         graph TD
+            %% Definición de estilos
             classDef taxon fill:#f9f9f9,stroke:#333,stroke-width:1px,rx:5,ry:5;
+            classDef node fill:#333,stroke:none,color:#333,width:6px,height:6px;
+
+            %% Nodos (Usamos comillas con espacio para máxima compatibilidad)
+            Root((" ")):::node --- N1((" ")):::node
             
-            %% Usamos un punto dentro del círculo para evitar errores de renderizado
-            Root((.)) --- N1((.))
-            Root --- C[Taxón C]
-            N1 --- A[Taxón A]
-            N1 --- B[Taxón B]
+            Root --- C[Taxón C]:::taxon
+            N1 --- A[Taxón A]:::taxon
+            N1 --- B[Taxón B]:::taxon
             
-            class A,B,C taxon;
-            
-            %% Estilos de línea gris para fenética
+            %% Estilos de las líneas (0,1,2,3)
             linkStyle 0,1,2,3 stroke-width:2px,fill:none,stroke:#555;
-            
-            %% Ocultamos el texto del punto para que parezca vacío
-            style Root fill:#333,stroke:none,color:#333
-            style N1 fill:#333,stroke:none,color:#333
         </div>
         <p style="font-size:0.85em; color:#7f8c8d; margin-top:10px;">
             Agrupamiento por parecido físico (A y B), sin importar la historia.
