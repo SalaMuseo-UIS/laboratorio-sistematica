@@ -518,71 +518,88 @@ mermaid.initialize({
             <br><em>Hipótesis:</em> La Matriz Ingenua agrupará a las especies por lo que "no tienen", en lugar de por sus estructuras compartidas (sinapomorfías).
         </div>
 
-        <h3>Instrucciones del Reto: 2 Matrices, 2 Resultados</h3>
-        <p>
-            Debido a la irregularidad de las manchas en algunas especies, usaremos caracteres visuales más claros. Construya dos archivos NEXUS (<code>Riguroso.nex</code> y <code>Ingenuo.nex</code>) codificando:
+     <h3>Instrucciones del Reto: 2 Matrices, 2 Resultados</h3>
+    <p>
+        Para este experimento, simplificaremos la morfología a 3 rasgos clave. El objetivo es ver cómo el software interpreta los datos dependiendo de cómo usted los codifique. Construya dos archivos NEXUS distintos (<code>Riguroso.nex</code> y <code>Ingenuo.nex</code>).
+    </p>
+
+    <table class="code-table">
+        <thead>
+            <tr>
+                <th style="width: 30%;">Rasgo Biológico</th>
+                <th>Variación Observada en los Especímenes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Extremidades</strong></td>
+                <td>
+                    Existen tres estados biológicos reales:<br>
+                    A. <strong>Aletas</strong> (Fósil 73)<br>
+                    B. <strong>Tentáculos</strong> (Especie 1)<br>
+                    C. <strong>Dedos/Garras</strong> (Especies 2, 3, 4, 12)
+                </td>
+            </tr>
+            <tr>
+                <td><strong>2. Pigmentación</strong></td>
+                <td>
+                    A. <strong>Punteado Fino</strong> (Fósil 73, Especie 1)<br>
+                    B. <strong>Parches Sólidos</strong> (Especies 2, 3, 4, 12)
+                </td>
+            </tr>
+            <tr>
+                <td><strong>3. Ojos</strong></td>
+                <td>
+                    A. <strong>Sésiles/Pegados</strong> (73, 2, 3, 4, 12)<br>
+                    B. <strong>Pedunculados/Tallo</strong> (Especie 1)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="experiment-box">
+        <span class="exp-title">MATRIZ A: RIGUROSA (6 Columnas)</span>
+        <p><strong>Lógica: Codificación Reductiva (Inaplicables).</strong><br>
+        Aquí trataremos las estructuras nuevas (Dedos, Parches) como novedades evolutivas, y usaremos el guion (<code>-</code>) para indicar que una propiedad no aplica.</p>
+        
+        <div style="font-family: monospace; background: white; padding: 15px; border: 1px solid #ddd; font-size: 0.95em;">
+            <strong>[Grupo 1: Extremidades]</strong><br>
+            C1: <strong>Dedos_Presencia</strong> (0=Ausente, 1=Presente)<br>
+            C2: <strong>Forma_Basal</strong> (<strong>-</strong>=Inaplicable/Tiene Dedos, 0=Aleta, 1=Tentáculo)<br><br>
+            
+            <strong>[Grupo 2: Pigmentación]</strong><br>
+            C3: <strong>Parches_Grandes</strong> (0=Ausente, 1=Presente)<br>
+            C4: <strong>Punteado_Fondo</strong> (<strong>-</strong>=Inaplicable/Tiene Parches, 0=Ausente, 1=Presente)<br><br>
+            
+            <strong>[Grupo 3: Ojos]</strong><br>
+            C5: <strong>Ojos_Tallo</strong> (0=Ausente, 1=Presente)<br>
+            C6: <strong>Posicion_Sésil</strong> (<strong>-</strong>=Inaplicable/Tiene Tallo, 0=Lateral, 1=Dorsal)
+        </div>
+        <p style="font-size: 0.9em; margin-top: 5px; color: #27ae60;">
+            <strong>✔ Acierto Teórico:</strong> Al usar el guion (-), el software ignora la comparación. No forzamos similitudes donde no las hay.
         </p>
+    </div>
 
-        <table class="code-table">
-            <thead>
-                <tr>
-                    <th>Rasgo Biológico</th>
-                    <th>Variación Observada (Codificación Sugerida)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>1. Apéndices (Dedos)</strong></td>
-                    <td>
-                        Este rasgo es clave. Observe las extremidades anteriores:<br>
-                        - <strong>Aletas:</strong> (Fósil 73)<br>
-                        - <strong>Tentáculos:</strong> (Especie 1)<br>
-                        - <strong>Dedos/Garras:</strong> (Especies 2, 3, 4, 12)
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>2. Tipo de Pigmentación</strong></td>
-                    <td>
-                        En lugar de forma geométrica, mire la <strong>cobertura</strong>:<br>
-                        - <strong>Punteado/Poros:</strong> Puntos pequeños dispersos (Fósil 73, Especie 1)<br>
-                        - <strong>Parches Sólidos:</strong> Grandes bloques negros (Especies 2, 3, 4, 12)
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>3. Estructura Ocular</strong></td>
-                    <td>
-                        - <strong>Ojos Sésiles:</strong> Pegados a la cabeza (73, 2, 3, 4, 12)<br>
-                        - <strong>Ojos Pedunculados:</strong> Salen en un tallo (Especie 1)
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="experiment-box">
-            <span class="exp-title">MATRIZ A: RIGUROSA (6 Caracteres Totales)</span>
-            <p>Use la lógica de <strong>Independencia</strong>. Separe la existencia de la forma usando datos inaplicables (<code>-</code>).</p>
-            <div style="font-family: monospace; background: white; padding: 15px; border: 1px solid #ddd;">
-                <strong>[Apéndices]</strong> C1: Dedos_Presencia (0=No, 1=Sí) | C2: Forma_Basal (<strong>-</strong>=Inap, 0=Aleta, 1=Tentáculo)<br>
-                <strong>[Pigmentación]</strong> C3: Parches_Grandes (0=No, 1=Sí) | C4: Punteado_Fondo (<strong>-</strong>=Inap, 0=Ausente, 1=Presente)<br>
-                <strong>[Ojos]</strong> C5: Ojos_Tallo (0=No, 1=Sí) | C6: Ojos_Posicion (0=Lateral, 1=Dorsal)
-            </div>
-            <p style="font-size: 0.9em; margin-top: 5px; color: #555;">
-                <strong>*Nota Conceptual Importante:</strong> El código <strong>0</strong> en "Dedos_Presencia" no significa que el organismo no tenga brazos. Significa que el estado derivado ("Dedos") está ausente, aunque tenga otra estructura ancestral (Aleta o Tentáculo).
-            </p>
+    <div class="experiment-box" style="border-color: #c0392b; background: #fdedec;">
+        <span class="exp-title" style="color: #c0392b;">MATRIZ B: INGENUA (3 Columnas)</span>
+        <p><strong>Lógica: Ausencia Genérica (La Trampa del Cero).</strong><br>
+        Aquí cometeremos el error de simplificar todo a "Presencia/Ausencia", ignorando la naturaleza de lo que está ausente.</p>
+        
+        <div style="font-family: monospace; background: white; padding: 15px; border: 1px solid #ddd; font-size: 0.95em;">
+            C1: <strong>Tiene_Dedos</strong> (0=No, 1=Sí)<br>
+            <span style="color:#c0392b; font-size:0.85em;">(Aquí pondrá 0 tanto si tiene Aletas como si tiene Tentáculos)</span><br><br>
+            
+            C2: <strong>Tiene_Parches</strong> (0=No, 1=Sí)<br>
+            <span style="color:#c0392b; font-size:0.85em;">(Aquí pondrá 0 si tiene Punteado)</span><br><br>
+            
+            C3: <strong>Tiene_Ojos_Tallo</strong> (0=No, 1=Sí)<br>
+            <span style="color:#c0392b; font-size:0.85em;">(Aquí pondrá 0 si tiene Ojos Sésiles)</span>
         </div>
-
-        <div class="experiment-box" style="border-color: #c0392b; background: #fdedec;">
-            <span class="exp-title" style="color: #c0392b;">MATRIZ B: INGENUA (3 Caracteres Totales)</span>
-            <p>Use la lógica de <strong>Serie de Transformación Forzada</strong>. Cometa el error de meter todo en una sola columna lineal.</p>
-            <div style="font-family: monospace; background: white; padding: 15px; border: 1px solid #ddd;">
-                C1: Apéndices (0=Aletas, 1=Tentáculos, 2=Dedos)<br>
-                C2: Pigmentación (0=Ausente, 1=Punteado, 2=Parches)<br>
-                C3: Ojos (0=Ausente, 1=Sésiles, 2=Pedunculados)
-            </div>
-            <p style="margin-top:10px; font-size: 0.9em; color: #c0392b;">
-                <em><strong>Importante:</strong> En el menú <code>List of Characters</code>, marque estos caracteres como <strong>ORDERED</strong>. Esto forzará al software a creer que para tener "Dedos" (2), evolutivamente se debió pasar por tener "Tentáculos" (1), lo cual es biológicamente falso.</em>
-            </p>
-        </div>
+        
+        <p style="margin-top:10px; font-size: 0.9em; color: #c0392b;">
+            <strong>☠️ El Error Fatal:</strong> Observe la Columna 1. El Fósil 73 (Aleta) y la Especie 1 (Tentáculo) recibirán el mismo código: <strong>0</strong>. 
+            <br>El algoritmo matemático (Parsimonia) creerá ciegamente que son parientes cercanos porque comparten el estado "0", ignorando que una aleta y un tentáculo son estructuras completamente distintas.
+        </p>
     </div>
 
     <div class="content-section" style="background-color: #f4fbf4; border-bottom: 4px solid #2ecc71;">
