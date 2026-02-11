@@ -623,46 +623,93 @@ mermaid.initialize({
         </div>
     </div>
 
-    <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff;">
-        <h2 class="section-title">Entregable y Discusión Filogenética</h2>
-        <p>
-            El objetivo final no es obtener un árbol, sino entender la evolución de los caracteres sobre él. Para las siguientes preguntas, utilice la visualización generada en la Fase 4.
-        </p>
-
-        <div class="warning-box" style="border-left-color: #8e44ad; background-color: #f5eef8;">
-            <strong>Requisito del Informe (PDF):</strong>
-            <br>El documento debe presentarse con los siguientes puntos obligatorios:
+  <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff;">
+        <h2 class="section-title">Instrucciones para la Entrega del Informe</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Modalidad: Taller In-Situ</h3>
+            <p style="margin-bottom: 10px;">Este laboratorio funciona bajo la modalidad de <strong>entrega inmediata</strong>. El objetivo es fomentar la discusión en tiempo real y la capacidad de síntesis teórica.</p>
+            <ul style="list-style: none; padding: 0; margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
+                <li style="margin-bottom: 5px;">👥 <strong>Trabajo Grupal:</strong> Máximo 3 estudiantes por informe.</li>
+                <li style="margin-bottom: 5px;">⏱️ <strong>Plazo Límite:</strong> Carga en Moodle antes de finalizar la sesión (4 horas).</li>
+                <li style="margin-bottom: 5px;">📄 <strong>Formato:</strong> PDF único titulado <code>Apellido1_Apellido2_Lab2_Caminalcules.pdf</code>.</li>
+            </ul>
         </div>
 
-        <ol style="line-height: 1.8; color: #444;">
-            <li>
-                <strong>Evidencia de Matrices (Data):</strong> 
-                Capturas de pantalla legibles de la <em>Matriz Ingenua</em> y la <em>Matriz Rigurosa</em>, resaltando visualmente la diferencia en el tratamiento de los ceros (0) y los inaplicables (-).
-            </li>
-            
-            <li>
-                <strong>Comparación Topológica (Trees):</strong> 
-                Presente los dos cladogramas resultantes (Árbol Ingenuo vs. Árbol Riguroso) generados en la Fase 4. 
-                <br><em>¿Son congruentes las topologías? ¿Qué clados monofiléticos se mantienen y cuáles se rompen al cambiar la codificación?</em>
-            </li>
+        <h3 style="color: #e67e22;">Contenido Requerido: Análisis Filogenético</h3>
+        <p>El informe debe contener las respuestas desarrolladas y justificadas a los siguientes <strong>4 puntos de análisis crítico</strong>, basados en la evidencia generada en Mesquite:</p>
 
-            <li>
-                <strong>Mapeo y Terminología Cladística (Interpretation):</strong>
-                <br>Sobre el <strong>Árbol Riguroso</strong>, mapee el carácter "Parches_Grandes" e indique:
-                <ul style="margin-top:5px; font-size: 0.95em;">
-                    <li>¿El estado "Presente" se comporta como una <strong>Sinapomorfía</strong> del clado (2+3+4+12)? Justifique basándose en la optimización del nodo ancestral.</li>
-                    <li>Identifique en el árbol si existe algún caso de <strong>Homoplasia</strong> (convergencia o reversión) en cualquiera de los caracteres analizados.</li>
-                </ul>
-            </li>
+        <div style="margin-left: 20px;">
+            <h4 style="color: #34495e;">1. Evidencia de Matrices (Data)</h4>
+            <p>Incluya capturas de pantalla legibles de la <em>Matriz Ingenua</em> y la <em>Matriz Rigurosa</em>. Debe resaltar visualmente (con círculos o flechas) la diferencia en el tratamiento de los ceros (<code>0</code>) y los inaplicables (<code>-</code>).</p>
 
-            <li>
-                <strong>Reflexión Teórica (The "Zero" Problem):</strong>
-                <br>En el Árbol Ingenuo, observe cómo se agrupan las especies que tienen códigos bajos (ceros y unos). 
-                <br><em>Pregunta Crítica: ¿El agrupamiento forzado de especies dispares (como la 1 y la 73) se debe a parentesco real o a un "artefacto metodológico" por usar series ordenadas incorrectas?</em>
-            </li>
-        </ol>
+            <h4 style="color: #34495e;">2. Comparación Topológica (Trees)</h4>
+            <p>Presente los dos cladogramas resultantes (Árbol Ingenuo vs. Árbol Riguroso) generados en la Fase 4. <br><em>Pregunta: ¿Son congruentes las topologías? ¿Qué clados monofiléticos se mantienen y cuáles se rompen al cambiar la codificación?</em></p>
+
+            <h4 style="color: #34495e;">3. Mapeo y Terminología Cladística (Interpretation)</h4>
+            <p>Sobre el <strong>Árbol Riguroso</strong>, mapee el carácter "Parches_Grandes" e indique:</p>
+            <ul>
+                <li>¿El estado "Presente" se comporta como una <strong>Sinapomorfía</strong> del clado (2+3+4+12)? Justifique basándose en la optimización del nodo ancestral.</li>
+                <li>Identifique en el árbol si existe algún caso de <strong>Homoplasia</strong> (convergencia o reversión).</li>
+            </ul>
+
+            <h4 style="color: #34495e;">4. Reflexión Teórica (The "Zero" Problem)</h4>
+            <p>En el Árbol Ingenuo, observe cómo se agrupan las especies que tienen códigos bajos (ceros y unos). <br><em>Pregunta Crítica: ¿El agrupamiento forzado de especies dispares (como la 1 y la 73) se debe a parentesco real o a un "artefacto metodológico" por usar series ordenadas incorrectas?</em></p>
+        </div>
+
+        <div style="background-color: #eafaf1; border: 1px solid #d5f5e3; padding: 20px; margin-top: 30px; border-radius: 8px;">
+            <h3 style="margin-top: 0; color: #27ae60; border-bottom: none;">✅ Lista de Cotejo (Checklist)</h3>
+            <p style="font-size: 0.9em; margin-bottom: 15px;">Asegúrese de responder todas las secciones antes de enviar:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                <div>
+                    <strong>Sección 1: Datos</strong><br>
+                    ⬜ Captura Matriz Ingenua<br>
+                    ⬜ Captura Matriz Rigurosa
+                </div>
+                <div>
+                    <strong>Sección 2: Topología</strong><br>
+                    ⬜ Árbol Ingenuo vs Riguroso<br>
+                    ⬜ Análisis de Congruencia
+                </div>
+                <div>
+                    <strong>Sección 3: Mapeo</strong><br>
+                    ⬜ Sinapomorfías identificadas<br>
+                    ⬜ Homoplasias señaladas
+                </div>
+                <div>
+                    <strong>Sección 4: Teoría</strong><br>
+                    ⬜ Discusión sobre el "Cero"<br>
+                    ⬜ Argumento Ontológico
+                </div>
+            </div>
+        </div>
+
+        <h3 style="color: #2c3e50;">Rúbrica de Evaluación Rápida</h3>
+        <table class="code-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 75%;">Descripción del Desempeño Esperado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Completitud (20%)</strong></td>
+                    <td>Presenta los 4 puntos solicitados. Si faltan capturas de pantalla o un árbol, la nota máxima será 4.0.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rigor Terminológico (40%)</strong></td>
+                    <td>Utiliza correctamente términos como <strong>Sinapomorfía, Parafilia, Homoplasia, Plesiomorfía</strong>. No usa lenguaje coloquial ("más evolucionado", "parecido").</td>
+                </tr>
+                <tr>
+                    <td><strong>Argumentación (40%)</strong></td>
+                    <td>
+                        Las respuestas explican el <strong>efecto metodológico</strong> de la codificación. No se limita a describir el árbol ("A está con B"), sino que explica <em>por qué</em> el algoritmo los agrupó así (tratamiento de inaplicables vs. ceros).
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
 </div>
 </body>
 </html>
