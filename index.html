@@ -61,6 +61,7 @@
     .inactive {
         opacity: 0.7;
         cursor: default;
+        pointer-events: none; /* Evita clics en inactivos */
     }
     .inactive:hover { transform: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     .inactive .status { color: #999; font-size: 0.8em; float: right; }
@@ -99,7 +100,6 @@
 <div class="container">
     <div class="grid">
         
-        <!-- LABORATORIO 1 (ACTIVO) -->
         <a href="lab1.html" class="card active">
             <span class="status">Disponible</span>
             <span style="color: #666; font-size: 0.9em;">Semana 1</span>
@@ -107,22 +107,20 @@
             <span class="lab-desc">Fundamentos Históricos, Lógicos y Teóricos.</span>
         </a>
 
-        <!-- LABORATORIO 2 (PRÓXIMAMENTE) -->
         <a href="lab2.html" class="card active">
-          <span class="status">Disponible</span>
+            <span class="status">Disponible</span>
             <span style="color: #666; font-size: 0.9em;">Semana 2</span>
             <span class="lab-title">Laboratorio 2</span>
             <span class="lab-desc">Arquitectura de la Matriz y Caminalcules</span>
         </a>
 
-        <!-- LABORATORIO 3 -->
-        <div class="card inactive">
-            <span class="status">Bloqueado</span>
+        <a href="lab3.html" class="card active">
+            <span class="status">Disponible</span>
+            <span style="color: #666; font-size: 0.9em;">Semana 3</span>
             <span class="lab-title">Laboratorio 3</span>
             <span class="lab-desc">Búsqueda de Árboles y Parsimonia.</span>
-        </div>
+        </a>
 
-        <!-- Placeholder para los demás labs -->
         <div class="card inactive"><span class="lab-title">Laboratorio 4</span></div>
         <div class="card inactive"><span class="lab-title">Laboratorio 5</span></div>
         <div class="card inactive"><span class="lab-title">Laboratorio 6</span></div>
