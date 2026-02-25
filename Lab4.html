@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Lab 4: Homología, Codificación y Caminalcules</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', flowchart: { curve: 'linear' } });</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+    .info-box strong { color: #2980b9; }
+
+    /* GALERÍA CAMINALCULES */
+    .gallery-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+    .gallery-item {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        z-index: 10;
+    }
+    .gallery-item img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        border: 1px solid #eee;
+    }
+    .gallery-caption {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #34495e;
+        font-size: 0.9em;
+    }
+
+    /* TUTORIAL Y PASOS */
+    .tutorial-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s;
+    }
+    .tutorial-step:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-number {
+        background: #2980b9;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    .cmd {
+        background: #f4f4f4;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #c0392b;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+    .rubric-pts { font-weight: bold; color: #27ae60; text-align: center !important; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Lab 4 - Homología y Caracteres: Filosofía de codificación; outgroups</span>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">1. Introducción y Fundamentación Teórica</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivos de Aprendizaje</h3>
+            <ul>
+                <li><strong>Evaluar</strong> caracteres morfológicos para distinguir entre variabilidad individual y caracteres filogenéticamente informativos.</li>
+                <li><strong>Construir</strong> una serie de transformación (matriz) aplicando criterios de discretización para datos cuantitativos y cualitativos.</li>
+                <li><strong>Implementar</strong> el criterio del grupo externo (<em>Outgroup Rule</em>) para polarizar estados de carácter.</li>
+                <li><strong>Contrastar</strong> los conceptos de homología primaria y secundaria mediante el mapeo de caracteres en topologías alternativas.</li>
+            </ul>
+        </div>
+
+        <h3>1.1. El Organismo y la Homología</h3>
+        <p>
+            Para un biólogo sistemático, el árbol filogenético no es solo un diagrama, es una <strong>hipótesis de homología secundaria</strong>. Basándonos en el marco teórico de <strong>Wiley & Lieberman (2011)</strong> y el rigor algorítmico de <strong>Wheeler (2012)</strong>, definimos los siguientes conceptos críticos:
+        </p>
+        <ul>
+            <li><strong>Holomorfología:</strong> La totalidad de los caracteres de un individuo a lo largo de su ontogenia. En este laboratorio, representaremos la holomorfología mediante la morfología externa de los Caminalcules adultos.</li>
+            <li><strong>Homología Primaria:</strong> Es la hipótesis inicial de que dos estructuras en diferentes taxones son el "mismo" carácter debido a similitud topográfica o composición. Es el dato crudo que codificamos.</li>
+            <li><strong>Homología Secundaria:</strong> Es la homología confirmada por el <strong>criterio de congruencia</strong> tras el análisis filogenético (es decir, representa una sinapomorfía en el árbol).</li>
+            <li><strong>Homoplasia:</strong> Similitud que no es resultado de un ancestro común directo (convergencia o reversión). Representa el "ruido" o conflicto en nuestra matriz.</li>
+        </ul>
+
+        <div class="theory-box">
+            <strong>Lógica de Codificación (Series de Transformación)</strong>
+            <br>No comparamos "organismos", comparamos estados de un carácter.
+            <ul>
+                <li><strong>Cualitativos vs Cuantitativos:</strong> Los atributos continuos (ej. longitud) requieren ser discretizados rigurosamente para ser incorporados.</li>
+                <li><strong>Carácter Binario:</strong> Presencia/ausencia ($0$ y $1$).</li>
+                <li><strong>Multiestado No Ordenado:</strong> Tres o más estados donde el costo evolutivo es simétrico.</li>
+                <li><strong>Multiestado Ordenado (Aditivo):</strong> Se asume una ruta evolutiva obligatoria (ej. $0 \leftrightarrow 1 \leftrightarrow 2$).</li>
+            </ul>
+        </div>
+        
+        <h3>1.2. La Regla del Grupo Externo (Outgroup Rule)</h3>
+        <p>
+            La polarización determina qué estado es plesiomórfico (ancestral) y cuál es apomórfico (derivado). La <em>Outgroup Rule</em> establece que si un estado de carácter varía dentro de nuestro grupo de estudio (<em>ingroup</em>), pero un estado idéntico está presente en el <em>outgroup</em>, este último se considera la condición ancestral. Sin un outgroup, el árbol carece de raíz y dirección temporal.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">2. Material de Estudio: Catálogo de Caminalcules</h2>
+        <p>Los <em>Caminalcules</em> (Sokal, 1983) son organismos "artificiales" diseñados para probar metodologías sistemáticas. Al no existir sesgos preconcebidos sobre su biología, usted deberá confiar puramente en la lógica de su observación y codificación.</p>
+        
+        <div class="info-box">
+            <strong>🔍 Regla de Nomenclatura de los Caminalcules:</strong>
+            <br>Para poder plantear hipótesis de ancestría correctas, es vital distinguir entre los organismos actuales y los extintos:
+            <ul style="margin-top: 5px; margin-bottom: 0;">
+                <li><strong>Especies Recientes (Vivas):</strong> Están identificadas con los números del <strong>1 al 29</strong>.</li>
+                <li><strong>Especies Fósiles (Ancestrales):</strong> Están identificadas con los números del <strong>30 al 77</strong>. <em>(Utilícelos para establecer la raíz de su árbol).</em></li>
+            </ul>
+        </div>
+
+        <div class="gallery-container">
+            <div class="gallery-item">
+                <img src="lamina1.jpg" alt="Lámina 1 de Caminalcules">
+                <div class="gallery-caption">Lámina 1: Diversidad Morfológica</div>
+            </div>
+            <div class="gallery-item">
+                <img src="lamina2.jpg" alt="Lámina 2 de Caminalcules">
+                <div class="gallery-caption">Lámina 2: Variaciones de Linaje</div>
+            </div>
+            <div class="gallery-item">
+                <img src="lamina3.jpg" alt="Lámina 3 de Caminalcules ancestrales y recientes">
+                <div class="gallery-caption">Lámina 3: Formas Adicionales y Ancestrales</div>
+            </div>
+        </div>
+        <p style="font-size: 0.9em; color: #7f8c8d; text-align: center;"><em>Nota: Puede hacer zoom en el navegador para detallar las estructuras morfológicas.</em></p>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">3. Metodología: El Experimento Caminalcule</h2>
+
+        <div class="tutorial-step">
+            <div class="step-number">I</div>
+            <div class="step-content">
+                <strong>Fase I: Observación y Selección de Taxones</strong>
+                <p>Antes de abrir el software, es fundamental organizar la información biológica. Utilizando el catálogo superior y respetando la regla de nomenclatura:</p>
+                <ul>
+                    <li><strong>Selección del Ingroup:</strong> Seleccione <strong>8 taxones recientes</strong> (números del 1 al 29). Estos representan el grupo cuyo parentesco quiere resolver.</li>
+                    <li><strong>Selección del Outgroup:</strong> Seleccione <strong>1 taxón fósil</strong> (números del 30 al 77). Este actuará como el punto de referencia externo para "enraizar" el árbol.</li>
+                    <li><strong>Definición de Caracteres:</strong> Identifique y defina explícitamente <strong>15 caracteres morfológicos</strong> comparables entre todos los individuos elegidos (ej. forma de la cabeza, presencia de apéndices).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">II</div>
+            <div class="step-content">
+                <strong>Fase II: Construcción de la Matriz en Mesquite (.nex)</strong>
+                <p>Abra el software <strong>Mesquite</strong> y siga estos pasos para estructurar su matriz:</p>
+                <ol>
+                    <li><strong>Configuración Inicial:</strong> Vaya a <span class="cmd">File > New</span>, asigne un nombre (ej. Caminalcules_Proyecto.nex) y guarde. En la ventana, ingrese el <span class="cmd">Number of Taxa</span> (9 en total) y haga clic en <span class="cmd">Make Character Matrix</span> para ingresar el <span class="cmd">Number of Characters</span> (15). En Data Type, seleccione estrictamente <span class="cmd">Standard Categorical Data</span>.</li>
+                    <li><strong>Edición y Codificación:</strong> Haga clic en las celdas de <em>Taxon</em> o <em>Character</em> para escribir los nombres. Para definir qué significa cada número (ej. forma de la cabeza: redondeada [0], cuadrada [1]), vaya a <span class="cmd">Matrix > Edit State Names</span>. Gestione los <strong>Datos Inaplicables</strong> con un guion medio (<span class="cmd">-</span>), no como un estado nuevo ni dato faltante (?).</li>
+                    <li><strong>Propiedades de Caracteres:</strong> Vaya a <span class="cmd">Character > List of Characters</span>. En la columna <em>Parsimony Model</em>, cambie a <span class="cmd">Ordered (Wagner)</span> si el rasgo sigue una progresión lineal (0 → 1 → 2) o mantenga <span class="cmd">Unordered (Fitch)</span> si el cambio puede ser directo.</li>
+                    <li><strong>Anotaciones:</strong> Active <span class="cmd">View > Note Window</span> (o el icono de post-it amarillo). Haga clic en un carácter y redacte la justificación técnica de su elección de ordenamiento.</li>
+                </ol>
+                
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">III</div>
+            <div class="step-content">
+                <strong>Fase III: Inferencia del Árbol y Enraizamiento en Mesquite</strong>
+                <p>Una vez completada la matriz, generaremos la filogenia basada en distancias:</p>
+                <ol>
+                    <li><strong>Ejecutar el Análisis:</strong> Vaya a <span class="cmd">Analyses > Tree inference > Distance analysis > NJ</span>. Seleccione <span class="cmd">Distance for Character matrix</span> y luego <span class="cmd">Uncorrected distance (general)</span>.</li>
+                    <li><strong>Experimento de Enraizamiento:</strong> El árbol generado suele aparecer "sin raíz". Ubique a su taxón fósil. Seleccione la herramienta <span class="cmd">Retree</span> (icono de flecha en la barra izquierda) y haga clic sobre la rama que conduce a su taxón fósil. Exporte el árbol (<span class="cmd">File > Save Tree as PDF</span> o captura de pantalla).</li>
+                    <li><strong>El Efecto del Outgroup:</strong> Ahora, fuerce la raíz en un miembro interno del <em>ingroup</em> (una especie reciente) usando la misma herramienta <span class="cmd">Retree</span>. Note cómo las sinapomorfías se colapsan y las relaciones de parentesco se invierten biológicamente. Guarde también este árbol modificado.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number" style="background-color: #d35400;">IV</div>
+            <div class="step-content">
+                <strong>Fase IV: Homología Secundaria y Conflicto</strong>
+                <p>Sobre la ventana del árbol correctamente enraizado (con el fósil) en Mesquite:</p>
+                <ul>
+                    <li>Utilice la función <span class="cmd">Trace Character History</span> (menú <em>Analysis</em>) sobre los nodos del árbol.</li>
+                    <li>Identifique al menos dos caracteres que exhiban <strong>Homoplasia</strong> (que requieran más pasos evolutivos de los esperados y aparezcan convergentemente en ramas distintas).</li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff; padding-bottom: 10px;">
+        <h2 class="section-title">4. Instrucciones para la Entrega</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
+            <p style="margin-bottom: 10px; font-size: 0.95em;">El entregable debe evidenciar la correcta ejecución de las <strong>4 fases</strong> metodológicas. Entregue un archivo comprimido (.zip o .rar) titulado <code>Apellidos_Lab4_Caminalcules</code> que contenga:</p>
+            <ul style="list-style: none; padding: 0; margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
+                <li style="margin-bottom: 5px;">📄 <strong>1. Matriz de Datos:</strong> Archivo .NEX original (Mesquite).</li>
+                <li>📄 <strong>2. Informe de Laboratorio:</strong> Único archivo PDF estructurado según las indicaciones inferiores.</li>
+            </ul>
+        </div>
+
+        <h3 style="color: #d35400;">Estructura del Informe de Laboratorio (PDF):</h3>
+        <div style="margin-left: 20px;">
+            
+            <h4 style="color: #34495e;">1. Evidencia de la Fase I & II (Definición de Caracteres)</h4>
+            <p>Incluya una tabla detallando los <strong>15 caracteres</strong> formulados y sus respectivos estados (ej. <em>Carácter 1: Forma de cabeza. Estados: 0: Cuadrada, 1: Ovalada</em>). Especifique claramente cuáles son los 8 taxones de su <em>Ingroup</em> y cuál es su <em>Outgroup</em> (con sus respectivos números).</p>
+
+            <h4 style="color: #34495e;">2. Evidencia de la Fase III (El Efecto de la Raíz)</h4>
+            <p>Incluya <strong>dos imágenes</strong> de topologías generadas en Mesquite y acompáñelas con un párrafo de análisis:</p>
+            <ul>
+                <li><strong>Árbol A:</strong> Su árbol enraizado correctamente utilizando el fósil.</li>
+                <li><strong>Árbol B:</strong> El mismo árbol enraizado artificialmente con una especie reciente.</li>
+                <li><strong>Análisis:</strong> Discuta brevemente qué sucedió con las relaciones de parentesco en el Árbol B. ¿Qué grupos monofiléticos del Árbol A se rompieron al cambiar la polaridad?</li>
+            </ul>
+
+            <h4 style="color: #34495e;">3. Evidencia de la Fase IV (Homoplasia y Discusión)</h4>
+            <p>Responda puntualmente a las siguientes preguntas, apoyándose en la visualización de Mesquite:</p>
+            <ul>
+                <li>Inserte una captura de pantalla usando <em>Trace Character History</em> que muestre claramente un carácter con <strong>Homoplasia</strong> en su árbol.</li>
+                <li>Basado en esa imagen, argumente: ¿Considera que esta homoplasia es un fenómeno de evolución convergente "real" en sus Caminalcules o refleja un error sistemático al proponer su <em>Homología Primaria</em>? Justifique.</li>
+                <li>¿Cómo impactó en la estructura general de la matriz y el análisis el tratamiento que le dio a los <strong>datos inaplicables</strong> (caracteres ausentes)?</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">5. Rúbrica de Evaluación</h2>
+        <p>A continuación se presentan los criterios con los que se evaluará su entregable final (Escala 0.0 - 5.0):</p>
+        
+        <table class="code-table" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 30%;">Excelente (4.5 - 5.0)</th>
+                    <th style="width: 30%;">Aceptable (3.5 - 4.4)</th>
+                    <th style="width: 15%;">Insuficiente (&lt; 3.5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Calidad de la Matriz (.NEX) (20%)</strong></td>
+                    <td>La matriz contiene 15 caracteres correctamente codificados. Se incluyen al menos 3 multiestados justificados. Uso impecable de datos inaplicables (-).</td>
+                    <td>La matriz está completa pero presenta fallos menores en la codificación de multiestados o en la diferenciación entre ausencias e inaplicables.</td>
+                    <td>Matriz incompleta, con menos de 15 caracteres o con errores críticos de dependencia lógica entre caracteres.</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Selección y Definición de Taxones (20%)</strong></td>
+                    <td>Tabla clara y exhaustiva en el PDF. Cumple estrictamente la regla de 8 recientes (1-29) y 1 fósil (30-77) como Outgroup.</td>
+                    <td>Tabla presente pero con descripciones de caracteres ambiguas o poco claras. Cumple la regla de selección de taxones.</td>
+                    <td>No se incluye la tabla de caracteres o se infringe la regla de selección (ej. usar un reciente como outgroup).</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Efecto del Enraizamiento (Mesquite) (30%)</strong></td>
+                    <td>Presenta ambos árboles generados (A y B). El análisis discute con precisión técnica cómo el cambio forzado de la raíz altera la polaridad y destruye clados específicos.</td>
+                    <td>Presenta ambos árboles pero el análisis descriptivo es superficial, limitándose a decir "los árboles son diferentes" sin explicar el porqué filogenético.</td>
+                    <td>Solo presenta un árbol o no realiza el experimento de forzar la raíz en el ingroup. Ausencia de análisis.</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Análisis de Homoplasia (Mesquite) (30%)</strong></td>
+                    <td>Captura clara del mapeo de caracteres. La discusión argumenta sólidamente usando los conceptos de homología primaria vs secundaria, demostrando pensamiento crítico.</td>
+                    <td>Incluye la captura de homoplasia, pero la discusión teórica es débil o no logra conectar el resultado con un posible error metodológico o biológico.</td>
+                    <td>No logra identificar la homoplasia en el software o el análisis carece de todo fundamento teórico revisado en clase.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
