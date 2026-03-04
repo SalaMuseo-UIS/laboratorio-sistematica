@@ -5,152 +5,193 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistemática 20070 - Manual de Laboratorio</title>
 <style>
+    /* --- ESTILO ACADÉMICO UIS (Diseño Original Lab 5) --- */
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f0f2f5;
-        color: #333;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
         margin: 0;
-        padding: 0;
+        padding: 40px;
     }
-    .hero {
-        background: linear-gradient(135deg, #003366 0%, #00509e 100%);
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+        padding-bottom: 50px;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
         color: white;
-        padding: 60px 20px;
+        padding: 45px;
         text-align: center;
+        border-bottom: 5px solid #e67e22;
         margin-bottom: 40px;
     }
-    .hero h1 { margin: 0; font-size: 2.5em; letter-spacing: 1px; }
-    .hero p { font-size: 1.2em; opacity: 0.9; margin-top: 10px; }
-    
-    .container {
-        max-width: 1000px;
-        margin: 0 auto 40px;
-        padding: 0 20px;
-    }
-    
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+
+    /* GRID DE LABORATORIOS */
     .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        padding: 0 50px;
     }
-    
+
+    /* TARJETAS */
     .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        padding: 20px;
-        transition: transform 0.2s, box-shadow 0.2s;
-        border-left: 5px solid #ccc; /* Default color for inactive */
+        background: #fff;
+        border-radius: 6px;
+        padding: 25px;
         text-decoration: none;
         color: inherit;
         display: block;
+        border: 1px solid #e0e0e0;
+        transition: all 0.2s ease-in-out;
+        position: relative;
     }
     
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    /* ESTADOS DE LAS TARJETAS */
+    .card.active {
+        border-left: 5px solid #e67e22; /* Borde naranja del banner */
+    }
+    .card.active:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transform: translateY(-3px);
+    }
+    
+    .card.inactive {
+        opacity: 0.6;
+        pointer-events: none;
+        border-left: 5px solid #bdc3c7;
+        background-color: #fdfdfd;
     }
 
-    /* Estilo para laboratorios activos (como el 1) */
-    .active {
-        border-left-color: #28a745;
-    }
-    .active .status { color: #28a745; font-weight: bold; font-size: 0.8em; text-transform: uppercase; float: right;}
-
-    /* Estilo para laboratorios futuros */
-    .inactive {
-        opacity: 0.7;
-        cursor: default;
-        pointer-events: none; /* Evita clics en inactivos */
-    }
-    .inactive:hover { transform: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .inactive .status { color: #999; font-size: 0.8em; float: right; }
-
-    .lab-title {
-        font-size: 1.2em;
+    /* ETIQUETAS DE TEXTO INTERNAS */
+    .status {
+        font-size: 0.75em;
         font-weight: bold;
-        margin-top: 10px;
+        text-transform: uppercase;
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+    .active .status {
+        background-color: #eafaf1; /* Verde usado en Lab 5 */
+        color: #27ae60;
+        border: 1px solid #abebc6;
+    }
+    .inactive .status {
+        color: #95a5a6;
+    }
+
+    .lab-week {
+        color: #7f8c8d;
+        font-size: 0.85em;
+        font-family: monospace;
         display: block;
-        color: #003366;
+        margin-bottom: 8px;
+    }
+    .lab-title {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: #2c3e50;
+        display: block;
+        margin-bottom: 8px;
     }
     .lab-desc {
-        font-size: 0.9em;
-        color: #666;
-        margin-top: 5px;
+        font-size: 0.95em;
+        color: #555;
         display: block;
+        line-height: 1.4;
     }
-    
+
+    /* PIE DE PÁGINA */
     .footer {
         text-align: center;
-        padding: 20px;
-        color: #777;
+        padding-top: 30px;
+        color: #7f8c8d;
         font-size: 0.9em;
-        border-top: 1px solid #ddd;
+        border-top: 1px solid #eee;
+        margin: 40px 50px 0 50px;
     }
 </style>
 </head>
 <body>
 
-<div class="hero">
-    <h1>Sistemática 20070</h1>
-    <p>Manual Digital de Prácticas de Laboratorio</p>
-    <small>Escuela de Biología - Universidad Industrial de Santander</small>
-</div>
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1 | Manual Digital de Prácticas de Laboratorio</h2>
+    </div>
 
-<div class="container">
     <div class="grid">
         
         <a href="lab1.html" class="card active">
             <span class="status">Disponible</span>
-            <span style="color: #666; font-size: 0.9em;">Semana 1</span>
+            <span class="lab-week">Semana 1</span>
             <span class="lab-title">Laboratorio 1</span>
             <span class="lab-desc">Fundamentos Históricos, Lógicos y Teóricos.</span>
         </a>
 
         <a href="lab2.html" class="card active">
             <span class="status">Disponible</span>
-            <span style="color: #666; font-size: 0.9em;">Semana 2</span>
+            <span class="lab-week">Semana 2</span>
             <span class="lab-title">Laboratorio 2</span>
             <span class="lab-desc">Arquitectura de la Matriz y Caminalcules</span>
         </a>
 
         <a href="lab3.html" class="card active">
             <span class="status">Disponible</span>
-            <span style="color: #666; font-size: 0.9em;">Semana 3</span>
+            <span class="lab-week">Semana 3</span>
             <span class="lab-title">Laboratorio 3</span>
             <span class="lab-desc">Métodos de Distancia - UPGMA y Neighbor-Joining (MEGA)</span>
         </a>
 
         <a href="lab4.html" class="card active">
             <span class="status">Disponible</span>
-            <span style="color: #666; font-size: 0.9em;">Semana 4</span>
+            <span class="lab-week">Semana 4</span>
             <span class="lab-title">Laboratorio 4</span>
             <span class="lab-desc">Homología y Caracteres: Filosofía de codificación; outgroups</span>
         </a>
 
         <a href="lab5.html" class="card active">
             <span class="status">Disponible</span>
-            <span style="color: #666; font-size: 0.9em;">Semana 5</span>
+            <span class="lab-week">Semana 5</span>
             <span class="lab-title">Laboratorio 5</span>
             <span class="lab-desc">Análisis Filogenético Avanzado por Parsimonia y Consensos (TNT)</span>
         </a>
 
-        <div class="card inactive"><span class="lab-title">Laboratorio 6</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 7</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 8</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 9</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 10</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 11</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 12</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 13</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 14</span></div>
-        <div class="card inactive"><span class="lab-title">Laboratorio 15</span></div>
+        <div class="card inactive">
+            <span class="status">Pronto</span>
+            <span class="lab-week">Semana 6</span>
+            <span class="lab-title">Laboratorio 6</span>
+        </div>
+        <div class="card inactive"><span class="lab-week">Semana 7</span><span class="lab-title">Laboratorio 7</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 8</span><span class="lab-title">Laboratorio 8</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 9</span><span class="lab-title">Laboratorio 9</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 10</span><span class="lab-title">Laboratorio 10</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 11</span><span class="lab-title">Laboratorio 11</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 12</span><span class="lab-title">Laboratorio 12</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 13</span><span class="lab-title">Laboratorio 13</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 14</span><span class="lab-title">Laboratorio 14</span></div>
+        <div class="card inactive"><span class="lab-week">Semana 15</span><span class="lab-title">Laboratorio 15</span></div>
 
     </div>
-</div>
 
-<div class="footer">
-    &copy; 2026 Curso de Sistemática y Biogeografía.
+    <div class="footer">
+        &copy; 2026 Curso de Sistemática y Biogeografía | Escuela de Biología - UIS
+    </div>
 </div>
 
 </body>
