@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Lab 7: Alineamiento Múltiple y Curación (MAFFT, trimAl, BioEdit)</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', flowchart: { curve: 'linear' } });</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+    .info-box strong { color: #2980b9; }
+
+    /* CODIGO Y BLOQUES */
+    pre {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.9em;
+    }
+    .cmd {
+        background: #f4f4f4;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #c0392b;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
+
+    /* TUTORIAL Y PASOS */
+    .tutorial-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s;
+    }
+    .tutorial-step:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-number {
+        background: #2980b9;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Lab 7 - Alineamiento Múltiple de Secuencias y Curación (MAFFT / trimAl)</span>
+    </div>
+
+   <div class="content-section">
+        <h2 class="section-title">1. Fundamentación Teórica y Epistemológica</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivos de Aprendizaje</h3>
+            <ol>
+                <li><strong>Comprender</strong> el alineamiento múltiple de secuencias (MSA) no como un ajuste de texto, sino como la postulación de una matriz de <em>homologías primarias posicionales</em>.</li>
+                <li><strong>Reconocer</strong> los desafíos biológicos en la identificación de homología, diagnosticando el ruido provocado por la heteroplasmia y la introgresión de pseudogenes (NUMTs).</li>
+                <li><strong>Diferenciar</strong> matemáticamente los algoritmos progresivos clásicos (Clustal) de los algoritmos iterativos modernos basados en Transformada Rápida de Fourier (MAFFT) y justificar el uso de parámetros como <code>L-INS-i</code>.</li>
+                <li><strong>Ejecutar</strong> curaduría estandarizada, contrastando la subjetividad del recorte manual (BioEdit) frente a la lógica estadística del parámetro <code>gappyout</code> de trimAl sobre los datos de su proyecto final.</li>
+            </ol>
+        </div>
+        
+        <h3>1.1. El Alineamiento es una Hipótesis de Homología Primaria</h3>
+        <p>
+            Un error frecuente en bioinformática es considerar el Alineamiento Múltiple de Secuencias (MSA) como un simple proceso de "hacer que las letras coincidan". Epistemológicamente, al poner una Adenina de la Especie A en la misma columna que una Adenina de la Especie B, estamos planteando una hipótesis científica audaz: <strong>afirmamos que ambos nucleótidos descienden exactamente de la misma molécula ancestral en el mismo locus genómico</strong>.
+        </p>
+        <p>
+            Si el alineamiento es erróneo, introducimos homología falsa en nuestra matriz. Dado que los programas de filogenia asumen que las columnas ya están homologadas, "basura al entrar significa basura al salir" (<em>Garbage in, garbage out</em>).
+        </p>
+
+        <h3>1.2. Desafíos en la Homología: Pseudogenes y Heteroplasmia</h3>
+        <p>Al postular homologías primarias, asumimos que estamos comparando copias ortólogas funcionales. Sin embargo, la dinámica del genoma presenta trampas evolutivas críticas que pueden arruinar un alineamiento en cuestión de segundos:</p>
+        
+        <div style="margin: 20px 0; padding: 15px; border-left: 4px solid #8e44ad; background-color: #f5eef8;">
+            <p><strong>A. Pseudogenes y NUMTs (Nuclear Mitochondrial DNA):</strong> Ocasionalmente, fragmentos del genoma mitocondrial se transfieren e insertan aleatoriamente en el genoma nuclear. Al carecer de función y presión selectiva, estos NUMTs mutan libremente, acumulando <em>indels</em> y codones de parada (Stop Codons) anticipados.</p>
+            <p>Si usted descarga secuencias crudas y termina alineando genes mitocondriales funcionales (ej. COI) con un NUMT amplificado por error, está alineando secuencias <strong>parálogas</strong>, violando el supuesto básico de la sistemática.</p>
+            
+            <p><strong>B. Heteroplasmia:</strong> Es la coexistencia natural de múltiples variantes del genoma mitocondrial dentro de un mismo individuo o incluso dentro de la misma célula. En procesos de secuenciación (como Sanger), la heteroplasmia se manifiesta como picos superpuestos y bases ambiguas (N, Y, R, etc.). Esto genera ambigüedad analítica y dificulta establecer cuál es la verdadera variante "homóloga" poblacional a comparar.</p>
+        </div>
+
+        <h3>1.3. El Costo Evolutivo de los Gaps (Indels)</h3>
+        <p>
+            Para alinear secuencias de distinta longitud debido a eventos mutacionales de inserción o deleción (<em>indels</em>), los algoritmos insertan espacios o <strong>gaps (-)</strong> basándose en un <strong>modelo de penalización afín</strong>:
+        </p>
+        <p style="text-align: center; font-size: 1.1em;">
+            $$W = \gamma + \delta(k - 1)$$
+        </p>
+        <p>
+            Donde se castiga fuertemente la apertura del gap ($\gamma$) por ser un evento evolutivo raro, pero se castiga moderadamente su extensión ($\delta$) una vez que la hebra de ADN ya se "rompió".
+        </p>
+    </div>
+
+  <div class="content-section">
+        <h2 class="section-title">2. El Estándar de Publicación: Las Cajas Negras del Alineamiento</h2>
+
+        <p>
+            Durante décadas, ClustalW fue el rey del alineamiento usando un <strong>algoritmo progresivo</strong>. BioEdit incluye ClustalW nativamente en su menú de aplicaciones accesorias. Sin embargo, su defecto fatal es que es "codicioso" (<em>greedy</em>): <strong>los errores cometidos en las primeras etapas del alineamiento nunca se corrigen</strong> y se propagan masivamente en los nodos profundos. Por lo tanto, aunque ClustalW esté a un clic de distancia en BioEdit, el estándar actual exige utilizar algoritmos iterativos.
+        </p>
+
+        <h3>2.1. Desempaquetando MAFFT y el parámetro <code>L-INS-i</code></h3>
+        <p>
+            MAFFT (Multiple Alignment using Fast Fourier Transform) es el estándar de oro actual por su velocidad y precisión. Sin embargo, no opera con un solo algoritmo, sino que ofrece diferentes "estrategias" matemáticas según el tipo de datos biológicos.
+        </p>
+        
+        <div class="theory-box" style="border-left-color: #27ae60; background-color: #eafaf1;">
+            <h4 style="color: #1e8449; margin-top: 0;">¿Qué significa exactamente L-INS-i?</h4>
+            <p>Las siglas significan <strong>Local alignment with INtegrative Strategy and iterative refinement</strong>. A diferencia de las estrategias rápidas de MAFFT que alinean secuencias completas de un extremo a otro (alineamiento global), <code>L-INS-i</code> incorpora el clásico <strong>Algoritmo de Smith-Waterman</strong> en sus primeras fases.</p>
+            <ul>
+                <li><strong>Local:</strong> Busca exhaustivamente las "islas" de similitud (ej. dominios conservados del gen) ignorando temporalmente los extremos hipervariables.</li>
+                <li><strong>Iterativo:</strong> Repite el alineamiento múltiples veces corrigiendo errores topológicos.</li>
+                <li><strong>Aplicación:</strong> Es computacionalmente muy pesado, por lo que se recomienda para conjuntos de menos de 200 secuencias. Es insuperable identificando homologías cuando las secuencias tienen grandes deleciones internas o regiones no codificantes altamente divergentes.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">3. Curación de la Matriz: De la Subjetividad a la Reproducibilidad</h2>
+        <p>
+            Ningún algoritmo computacional devuelve un alineamiento perfecto, especialmente en los extremos 5' y 3', donde las diferencias en la longitud de secuenciación generan "colas" de ruido (missing data). Dejar este ruido altera drásticamente los cálculos de distancia y parsimonia.
+        </p>
+
+        <h3>3.1. Curación Manual (BioEdit)</h3>
+        <p>
+            El investigador inspecciona visualmente el bloque alineado y recorta ("trimming") las regiones con alta ambigüedad.<br>
+            <strong>Desventaja Epistemológica:</strong> Es inherentemente <strong>subjetiva e irreproducible</strong>. Dos científicos distintos cortarán la matriz en columnas diferentes. Es imposible de justificar en la sección de "Materiales y Métodos" de un artículo moderno.
+        </p>
+
+        <h3>3.2. Curación Automática y el parámetro <code>gappyout</code> de trimAl</h3>
+        <p>
+            Para garantizar la reproducibilidad científica, se emplean algoritmos que eliminan el ruido de forma matemática. El programa más robusto en la actualidad es <strong>trimAl</strong>.
+        </p>
+        
+        <div class="info-box" style="border-left-color: #f39c12; background-color: #fcf3cf;">
+            <h4 style="color: #d68910; margin-top: 0;">La Lógica Estadística detrás de <code>-gappyout</code></h4>
+            <p>Antiguamente, los programas como Gblocks requerían que el usuario introdujera un porcentaje rígido y arbitrario (ej. "Elimine columnas con más de 50% de gaps"). Esto a menudo borraba señal filogenética biológicamente real.</p>
+            <p>El comando <code>gappyout</code> de trimAl es una <strong>heurística dinámica</strong>. No utiliza un umbral predefinido. En su lugar:</p>
+            <ol>
+                <li>Lee toda la matriz y grafica la distribución estadística de todos los gaps por columna.</li>
+                <li>Identifica la asimetría de sus datos específicos.</li>
+                <li>Calcula un punto de corte (threshold) dinámico óptimo.</li>
+                <li>Expulsa (<strong>out</strong>) solo aquellas columnas que superen estadísticamente el umbral calculado por ser excesivamente ruidosas (<strong>gappy</strong>), reteniendo la máxima señal evolutiva posible.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">4. Metodología y Práctica Guiada</h2>
+
+        <div class="info-box" style="border-left-color: #c0392b; background-color: #fdedec;">
+            <strong style="color: #c0392b;">⚠️ CONTINUIDAD DEL PROYECTO FINAL:</strong> Para esta práctica, usted <strong>debe utilizar el archivo FASTA crudo que extrajo de NCBI en el Laboratorio 6</strong>. Aplicará todos estos métodos de curación directamente a sus propios datos.
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">0</div>
+            <div class="step-content">
+                <strong>Fase 0: Instalación de BioEdit y Estandarización de Etiquetas</strong>
+                <p>Las bases de datos exportan nombres excesivamente largos y con espacios que colapsan los programas de filogenia. Usaremos BioEdit para limpiar los nombres de forma masiva.</p>
+                <ol>
+                    <li><strong>Instalación:</strong> Descargue el instalador de BioEdit proporcionado en Moodle (o desde un repositorio académico). Ejecute el archivo <code>.exe</code> y siga el asistente estándar de Windows.</li>
+                    <li>Abra BioEdit. Vaya a <span class="cmd">File > Open</span> y seleccione su archivo <code>.fasta</code> crudo del Lab 6. (Asegúrese de cambiar el filtro a "All Files (*.*)").</li>
+                    <li><strong>Estandarización masiva:</strong> Vaya al menú superior <span class="cmd">Edit > Search > Find / Replace in titles</span>.</li>
+                    <li>En la ventana emergente, en el campo superior (lo que se quiere buscar), presione la barra espaciadora una vez.</li>
+                    <li>En el campo inferior (por lo que se quiere reemplazar), escriba un guion bajo (<code>_</code>).</li>
+                    <li>Haga clic en <strong>Replace All</strong> (Reemplazar todo).</li>
+                    <li>BioEdit reemplazará todos los espacios por guiones bajos de forma instantánea. <strong>Asegúrese de que sus nombres sigan una estructura coherente con el enfoque de su proyecto final:</strong>
+                        <ul>
+                            <li><strong>A. Filogeografía:</strong> La geografía es vital. Use <code>>Genero_especie_Accesion_Pais</code> <br><em>(Ej: >Fusarium_oxysporum_MT123_Colombia)</em></li>
+                            <li><strong>B. Sistemática Filogenética:</strong> El linaje y el espécimen son vitales. Use <code>>Genero_especie_Accesion_Voucher</code> <br><em>(Ej: >Globodera_pallida_OP987_UIS045)</em></li>
+                            <li><strong>C. Evolución Molecular:</strong> La identidad del gen/copia es vital. Use <code>>Genero_especie_Accesion_Copia</code> <br><em>(Ej: >Epiperipatus_biolleyi_AB456_Paralogo2)</em></li>
+                        </ul>
+                    Guarde su archivo final estandarizado como <code>FASTA_Limpio.fas</code>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">I</div>
+            <div class="step-content">
+                <strong>Fase I: Flujo Unificado en NGPhylogeny.fr (MAFFT + trimAl)</strong>
+                <p>En lugar de utilizar múltiples programas instalados o servidores aislados, utilizaremos la potente plataforma bioinformática francesa NGPhylogeny.fr, que nos permite ensamblar un flujo de trabajo a la medida ("A la carte").</p>
+                <ol>
+                    <li>Diríjase a <a href="https://ngphylogeny.fr/" target="_blank">ngphylogeny.fr</a>. En la página principal, haga clic en la opción <strong>A la carte</strong> (o <em>Advanced</em>).</li>
+                    <li>Aparecerá un diagrama de flujo. Debemos configurarlo:
+                        <ul>
+                            <li>En <strong>Alignment</strong>, haga clic y seleccione <strong>MAFFT</strong>. Haga clic en el ícono de engranaje (configuración) de MAFFT y asegúrese de buscar/seleccionar la estrategia <code>L-INS-i</code> si está disponible.</li>
+                            <li>En <strong>Alignment Curation</strong>, haga clic y seleccione <strong>trimAl</strong>. En su engranaje de configuración, busque la opción <em>Threshold method</em> y asegúrese de que esté en <code>gappyout</code>.</li>
+                            <li><strong>Desmarque</strong> las opciones de <em>Tree Inference</em> y <em>Tree Rendering</em> (las veremos en próximos laboratorios).</li>
+                        </ul>
+                    </li>
+                    <li>Desplácese hacia abajo, cargue su archivo <code>FASTA_Limpio.fas</code> en la zona de subida de archivos y presione <strong>Submit</strong>.</li>
+                    <li><strong>Descarga de Resultados:</strong> Cuando el análisis termine, NGPhylogeny le mostrará diferentes pestañas. 
+                        <ul>
+                            <li>Vaya a la pestaña de <strong>Alignment</strong> (el resultado crudo de MAFFT) y descargue el archivo FASTA. Llámelo <code>MAFFT_Crudo.fas</code>.</li>
+                            <li>Vaya a la pestaña de <strong>Alignment Curation</strong> (el resultado filtrado por trimAl) y descargue ese FASTA. Llámelo <code>trimAl_Curado.fas</code>.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">II</div>
+            <div class="step-content">
+                <strong>Fase II: Evaluación Manual y Biológica en BioEdit</strong>
+                <p>Ahora compararemos el trabajo de la máquina frente al nuestro y verificaremos la integridad biológica de la matriz.</p>
+                <ol>
+                    <li>Abra BioEdit. Abra el archivo <code>MAFFT_Crudo.fas</code>.</li>
+                    <li><strong>Diagnóstico Biológico (Traducción):</strong> Para realizar el ejercicio de traducir, seleccione primero todas las secuencias yendo al menú <span class="cmd">Edit > Select all sequences</span>. Luego, en el menú superior <span class="cmd">Sequence</span>, busque y seleccione <span class="cmd">Toggle Translation</span>. Verifique si en el interior de su alineamiento aparecen asteriscos (<strong>*</strong>). De ser así, ha detectado un Stop Codon y esa secuencia debe ser eliminada (posible NUMT o Frameshift).</li>
+                    <li><strong>Recorte Subjetivo:</strong> En la barra superior, cambie <em>"Mode"</em> a <strong>Edit</strong>. Desplácese a los extremos 5' y 3'. Sombreé las columnas irregulares ("colas" con missing data) y elimínelas con la tecla <kbd>Supr</kbd>.</li>
+                    <li>Abra una nueva ventana en BioEdit y cargue su archivo <code>trimAl_Curado.fas</code>. Compare visualmente: ¿El algoritmo retuvo más o menos columnas que usted en su curación manual?</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">5. El Estándar de Publicación Científica</h2>
+        
+        <p>Uno de los mayores retos en la sistemática es traducir el trabajo bioinformático a prosa científica formal. Revistas de alto impacto en nuestra área, como <em>Molecular Ecology</em>, exigen un lenguaje sobrio, directo y cuantitativo, donde se reporten las herramientas, versiones y parámetros exactos sin recurrir a analogías coloquiales. A continuación, se presenta un modelo estandarizado de cómo se redactaría la metodología y los resultados de este laboratorio:</p>
+
+        <div class="info-box" style="border-left-color: #003366;">
+            <strong style="color: #003366;">📝 Extracto Tipo: Materiales y Métodos</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444;">
+                "Las secuencias crudas del gen [Nombre del Gen, ej. COI] fueron editadas y estandarizadas preliminarmente en BioEdit v.7.0.9 (Hall, 1999). El alineamiento múltiple de secuencias (MSA) se ejecutó empleando el algoritmo MAFFT v.7 (Katoh et al., 2002) a través del servidor NGPhylogeny.fr (Lemoine et al., 2019), aplicando la estrategia iterativa de alineamiento local L-INS-i. Para descartar la amplificación de pseudogenes nucleares mitocondriales (NUMTs) o errores de secuenciación, las secuencias codificantes fueron traducidas in silico a aminoácidos para confirmar la ausencia de codones de parada prematuros. Finalmente, las regiones ambiguamente alineadas y los extremos con alta proporción de datos faltantes (missing data) fueron removidos automatizadamente utilizando trimAl v.1.4 (Capella-Gutiérrez et al., 2009) bajo la heurística empírica <code>-gappyout</code>."
+            </p>
+        </div>
+
+        <div class="theory-box" style="border-left-color: #27ae60; background-color: #eafaf1;">
+            <strong style="color: #1e8449;">📊 Extracto Tipo: Resultados (Descripción de la Matriz)</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444;">
+                "El conjunto de datos final consistió en 45 secuencias homólogas. El alineamiento inicial arrojó una longitud de 715 pares de bases (pb). Tras la curación espacial y la eliminación de columnas ambiguas mediante trimAl, la matriz final utilizada para las reconstrucciones filogenéticas subsecuentes presentó una longitud de 658 pb, confirmándose el mantenimiento del marco de lectura abierto (ORF) ininterrumpido a lo largo de todo el bloque alineado."
+            </p>
+        </div>
+    </div>
+
+  <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff; padding-bottom: 10px;">
+        <h2 class="section-title">6. Instrucciones para la Entrega y Cuestionario</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
+            <p style="margin-bottom: 10px; font-size: 0.95em;">Entregue un archivo PDF titulado <code>Apellidos_Lab7_Alineamiento.pdf</code> que contenga:</p>
+            <ol style="margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
+                <li style="margin-bottom: 5px;">📄 <strong>1. Captura de Etiquetas Estandarizadas:</strong> Pantallazo de su FASTA evidenciando el renombramiento de secuencias sin espacios usando Search & Replace (Fase 0).</li>
+                <li style="margin-bottom: 5px;">📄 <strong>2. Captura de Curación Manual:</strong> Pantallazo demostrando el "Trimming" realizado a ojo en BioEdit sobre el archivo crudo de MAFFT (Fase II).</li>
+                <li style="margin-bottom: 5px;">📄 <strong>3. Captura de Curación trimAl:</strong> Pantallazo del FASTA final devuelto por trimAl abierto en BioEdit (Fase II).</li>
+                <li>📝 <strong>4. Análisis Crítico:</strong> Respuestas argumentadas a las siguientes 3 preguntas.</li>
+            </ol>
+        </div>
+
+        <h3 style="color: #d35400;">Preguntas de Análisis Crítico:</h3>
+        <div style="margin-left: 20px;">
+            <p><strong>P1. Trampas de Homología (Pseudogenes y Heteroplasmia):</strong> Tomando en cuenta las etiquetas de su dataset, explique cómo la aparición de Stop Codons tras la traducción en BioEdit falsaría sus homologías primarias. ¿Por qué la introgresión de un NUMT viola la premisa de la ortología y cómo la heteroplasmia complica la asignación del nucleótido correcto?</p>
+            
+            <p><strong>P2. Análisis de Algoritmos (Clustal vs MAFFT L-INS-i):</strong> Describa el defecto "codicioso" (greedy) de los algoritmos progresivos como Clustal (disponible en los accesorios de BioEdit). Luego, justifique biológicamente por qué el enfoque local (Smith-Waterman) del parámetro <code>L-INS-i</code> de MAFFT es tan eficiente resolviendo alineamientos con grandes deleciones frente a estrategias de alineamiento global.</p>
+            
+            <p><strong>P3. Redacción Científica y Reproducibilidad:</strong> Con base en los extractos de la Sección 5 y contrastando sus capturas de la curación manual con el resultado de trimAl, explique cómo la heurística de <code>-gappyout</code> resuelve el problema de la arbitrariedad. Redacte su propio párrafo de "Resultados" (siguiendo el modelo de la guía) informando la longitud cruda de su alineamiento de MAFFT y la longitud final exacta tras aplicar trimAl sobre los datos de su proyecto.</p>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">7. Rúbrica de Evaluación</h2>
+        
+        <table class="code-table" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 30%;">Excelente (4.5 - 5.0)</th>
+                    <th style="width: 30%;">Aceptable (3.5 - 4.4)</th>
+                    <th style="width: 15%;">Insuficiente (&lt; 3.5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Estandarización y MSA (30%)</strong></td>
+                    <td>Usa BioEdit para estandarizar headers. Configura el flujo NGPhylogeny "A la carte" correctamente. Sube capturas comparativas (manual vs trimAl) usando los datos de su proyecto.</td>
+                    <td>Alinea las secuencias, pero olvida renombrar los headers o falla en la extracción de los resultados intermedios de NGPhylogeny.</td>
+                    <td>No presenta capturas, no usa los datos de su proyecto final del Lab 6 o falla al configurar la plataforma NGPhylogeny.</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Pseudogenes e Identidad (P1) (20%)</strong></td>
+                    <td>Justifica biológicamente qué es un NUMT y la heteroplasmia, argumentando sólidamente cómo alinearlos con ortólogos anula el análisis filogenético.</td>
+                    <td>Menciona superficialmente la homología, pero no logra vincular los asteriscos de BioEdit con el concepto de pseudogenización.</td>
+                    <td>Omite la respuesta o no logra entender la diferencia fundamental entre una secuencia funcional y un parálogo introgresado.</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Algoritmos y MAFFT L-INS-i (P2) (25%)</strong></td>
+                    <td>Articula la falla "greedy" de Clustal y explica cómo el enfoque local y de iteración de <code>L-INS-i</code> previene la propagación de errores.</td>
+                    <td>Identifica que MAFFT es "mejor", pero su explicación sobre la fase de refinamiento iterativo o el alineamiento local carece de precisión.</td>
+                    <td>Asume que todos los algoritmos actúan igual y no logra diferenciar un árbol guía progresivo de un realineamiento por función objetivo.</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Redacción y Reproducibilidad (P3) (25%)</strong></td>
+                    <td>Argumenta el valor epistemológico de la heurística estadística dinámica (gappyout) y redacta el párrafo de resultados con precisión cuantitativa sobre su dataset.</td>
+                    <td>Explica la utilidad de trimAl, pero el párrafo redactado omite los números reales de su curación o no respeta el formato científico.</td>
+                    <td>No comprende el objetivo de la curación automática ni logra redactar el párrafo de resultados, limitándose a copiar textualmente el ejemplo de la guía.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">8. Bibliografía Citada</h2>
+        
+        <div style="padding-left: 20px; text-indent: -20px; font-size: 0.95em; line-height: 1.8;">
+            <p>Capella-Gutiérrez, S., Silla-Martínez, J. M., & Gabaldón, T. (2009). trimAl: a tool for automated alignment trimming in large-scale phylogenetic analyses. <em>Bioinformatics</em>, 25(15), 1972-1973.</p>
+
+            <p>Castresana, J. (2000). Selection of conserved blocks from multiple alignments for their use in phylogenetic analysis. <em>Molecular Biology and Evolution</em>, 17(4), 540-552.</p>
+            
+            <p>Edgar, R. C. (2004). MUSCLE: multiple sequence alignment with high accuracy and high throughput. <em>Nucleic Acids Research</em>, 32(5), 1792-1797.</p>
+            
+            <p>Hall, T. A. (1999). BioEdit: a user-friendly biological sequence alignment editor and analysis program for Windows 95/98/NT. <em>Nucleic Acids Symposium Series</em>, 41, 95-98.</p>
+
+            <p>Katoh, K., Misawa, K., Kuma, K., & Miyata, T. (2002). MAFFT: a novel method for rapid multiple sequence alignment based on fast Fourier transform. <em>Nucleic Acids Research</em>, 30(14), 3059-3066.</p>
+
+            <p>Lemoine, F., Correia, D., Lefort, V., Doppelt-Azeroual, O., Mareuil, F., Cohen-Boulakia, S., & Gascuel, O. (2019). NGPhylogeny.fr: new generation phylogenetic services for non-specialists. <em>Nucleic Acids Research</em>, 47(W1), W260-W265.</p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
