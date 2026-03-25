@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Lab 8: Modelos de Evolución Molecular (ModelFinder e IQ-TREE)</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', flowchart: { curve: 'linear' } });</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+    .info-box strong { color: #2980b9; }
+
+    /* CODIGO Y BLOQUES */
+    pre {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.9em;
+    }
+    .cmd {
+        background: #f4f4f4;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #c0392b;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
+
+    /* TUTORIAL Y PASOS */
+    .tutorial-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s;
+    }
+    .tutorial-step:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-number {
+        background: #2980b9;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Lab 8 - Modelos de Evolución Molecular (ModelFinder e IQ-TREE 3)</span>
+    </div>
+
+   <div class="content-section">
+        <h2 class="section-title">1. Fundamentación Teórica y Epistemológica</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivos de Aprendizaje</h3>
+            <ol>
+                <li><strong>Descomponer</strong> la anatomía de un modelo evolutivo paramétrico: frecuencias de bases, matrices de sustitución y heterogeneidad de tasas entre sitios ($+\Gamma, +I, +R$).</li>
+                <li><strong>Comprender</strong> matemáticamente el riesgo del "sobreajuste" (<em>overfitting</em>) y justificar el uso de Criterios de Información (AIC, BIC) como expresiones estadísticas de la Navaja de Ockham.</li>
+                <li><strong>Evaluar</strong> la necesidad biológica de utilizar esquemas de partición (por loci concatenados integrando marcos de lectura codificantes y secuencias no codificantes).</li>
+                <li><strong>Ejecutar</strong> análisis de selección de modelos utilizando ModelFinder (IQ-TREE 3) mediante la interfaz de línea de comandos (CLI) en Windows, utilizando editores de texto plano avanzados.</li>
+            </ol>
+        </div>
+        
+        <h3>1.1. Modelando la Probabilidad Evolutiva</h3>
+        <p>
+            Como hemos discutido previamente, la sistemática moderna ha transitado hacia métodos paramétricos como la <strong>Máxima Verosimilitud (ML)</strong>, la <strong>Inferencia Bayesiana (BI)</strong> y los análisis de <strong>Coalescencia</strong>. A diferencia de los enfoques deterministas o de parsimonia estricta, estas metodologías comparten una virtud epistemológica: requieren un <strong>Modelo de Evolución Molecular</strong> explícito. Estos modelos dictan las reglas probabilísticas del cambio (reconociendo, por ejemplo, que las transiciones ocurren con mayor frecuencia que las transversiones) para calcular matemáticamente la probabilidad de observar nuestros datos dado un árbol específico.
+        </p>
+
+        <h3>1.2. Anatomía de un Modelo de Evolución</h3>
+        <p>Un modelo estadístico se compone de tres bloques matemáticos fundamentales:</p>
+        
+        <table class="code-table">
+            <thead>
+                <tr>
+                    <th>Componente</th>
+                    <th>ADN / Nucleótidos</th>
+                    <th>Proteínas / Aminoácidos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Frecuencias Base ($\pi$)</strong><br><em>¿Hay el mismo % de cada letra?</em></td>
+                    <td>Asumir igualdad (25% cada base) o utilizar frecuencias empíricas de la matriz $(+F)$.</td>
+                    <td>La distribución de los 20 aminoácidos varía según la proteína (usualmente se calculan frecuencias empíricas $+F$).</td>
+                </tr>
+                <tr>
+                    <td><strong>Matriz de Sustitución ($Q$)</strong><br><em>¿Cuál es la tasa de cambio entre bases?</em></td>
+                    <td><strong>JC69:</strong> 1 sola tasa para todo.<br><strong>HKY85:</strong> 2 tasas (Distingue Transiciones/Transversiones).<br><strong>GTR:</strong> 6 tasas independientes (el más complejo).</td>
+                    <td><strong>JTT / WAG / LG:</strong> Matrices empíricas $20 \times 20$ construidas observando miles de proteínas reales.</td>
+                </tr>
+                <tr>
+                    <td><strong>Heterogeneidad de Tasas</strong><br><em>¿Evolucionan todos los sitios a igual velocidad?</em></td>
+                    <td colspan="2">
+                        <strong>$+I$ (Sitios Invariables):</strong> Porción del gen que nunca muta por alta presión selectiva.<br>
+                        <strong>$+\Gamma$ (Distribución Gamma):</strong> Modela tasas variables en el resto del gen.<br>
+                        <strong>$+R$ (FreeRate):</strong> Relaja el modelo Gamma, ajustándose a datos altamente complejos.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>1.3. Particiones: Combinando la Evolución Multilocus</h3>
+        <p>
+            Obligar a toda una matriz a evolucionar bajo un único modelo suele ser un error biológico. Las presiones selectivas varían radicalmente a lo largo del genoma. Modelar esto requiere <strong>particionar</strong> la matriz. En la era de la sistemática integrativa, es común tener matrices concatenadas ("supermatrices") que mezclan diferentes tipos de ADN:
+        </p>
+        <ul>
+            <li><strong>Genes Codificantes para Proteínas:</strong> La degeneración del código genético provoca que la <em>tercera posición</em> mute a velocidades vertiginosas (mutaciones sinónimas), mientras que la segunda posición es sumamente conservada. Debemos separarlos en 3 particiones (Posición 1, 2 y 3).</li>
+            <li><strong>Loci No Codificantes (Ribosomales/Intrones):</strong> Genes estructurales como el 16S o el 18S no tienen codones de lectura, por lo que toda la secuencia evoluciona como un único bloque bajo presiones de plegamiento de ARN.</li>
+        </ul>
+        
+
+        <h3>1.4. La Navaja de Ockham Estadística: AIC y BIC</h3>
+        <p>
+            Existe un dilema analítico: un modelo altamente complejo (ej. asignar GTR+$I$+$G$ a cada codón por separado) siempre tendrá un mejor puntaje de Verosimilitud ($L$) que uno simple, porque tiene más parámetros para forzar un ajuste a los datos. Si siempre elegimos la máxima complejidad, caemos en el <strong>sobreajuste (overfitting)</strong>, modelando el ruido aleatorio de la muestra en lugar de la señal evolutiva real.
+        </p>
+        <p>
+            Para penalizar matemáticamente la complejidad innecesaria, utilizamos Criterios de Información. Ambos buscan el modelo que minimice el valor final, premiando la Verosimilitud ($L$), pero castigando severamente la adición de parámetros extra ($k$):
+        </p>
+        
+        <div class="theory-box" style="border-left-color: #3498db; background-color: #ebf5fb;">
+            <p><strong>Criterio de Información de Akaike (AIC):</strong></p>
+            $$AIC = -2\ln(L) + 2k$$
+            <p><strong>Criterio de Información Bayesiano (BIC):</strong></p>
+            $$BIC = -2\ln(L) + k\ln(n)$$
+            <p><em>(Donde $n$ es el tamaño de la muestra, ej. longitud del alineamiento).</em></p>
+            <p style="margin-top: 10px;"><strong>¿Cuál usar?</strong> El BIC castiga mucho más severamente la complejidad en alineamientos largos, siendo el preferido en la sistemática para evitar la parametrización excesiva y evaluar si justifica fusionar particiones redundantes.</p>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">2. El Estándar de Publicación en Revistas de Alto Impacto</h2>
+        <p>
+            El estándar de oro actual es <strong>ModelFinder</strong> (Kalyaanamoorthy et al., 2017), incorporado directamente dentro del motor filogenético <strong>IQ-TREE</strong> (cuya versión más reciente es la v3). A diferencia de programas antiguos, ModelFinder evalúa modelos de "FreeRate" ($+R$) y posee un algoritmo inteligente (<code>MF+MERGE</code>) capaz de fusionar particiones estadísticamente redundantes para prevenir el <em>overfitting</em>. 
+        </p>
+        <p>A continuación se presenta un modelo riguroso de cómo justificar estos análisis y cómo reportar cuantitativamente los hallazgos ante pares evaluadores expertos:</p>
+
+        <div class="info-box" style="border-left-color: #003366;">
+            <strong style="color: #003366;">📝 Extracto Tipo: Materiales y Métodos</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444;">
+                "El esquema óptimo de partición y los modelos de sustitución evolutiva más adecuados fueron seleccionados utilizando ModelFinder (Kalyaanamoorthy et al., 2017) implementado nativamente en IQ-TREE v.3.1.0 (Minh et al., 2020). El alineamiento concatenado se dividió a priori por posiciones del codón para los genes codificantes y por locus completo para los genes ribosomales. Se empleó el algoritmo de fusión heurística de particiones (comando <code>-m MF+MERGE</code>) bajo el Criterio de Información Bayesiano (BIC). El análisis evaluó matrices de sustitución estándar combinadas con distribuciones de heterogeneidad de tasas entre sitios (modelos Gamma discretos $+G$ y FreeRate $+R$) así como la incorporación de frecuencias de bases empíricas $+F$ (Soubrier et al., 2012)."
+            </p>
+        </div>
+
+        <div class="theory-box" style="border-left-color: #27ae60; background-color: #eafaf1;">
+            <strong style="color: #1e8449;">📊 Extracto Tipo: Resultados (Modelos y Particiones)</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444;">
+                "El alineamiento concatenado final abarcó un total de 3,000 pares de bases (pb), correspondientes al gen mitocondrial codificante COI (658 pb) y a los fragmentos ribosomales 16S (542 pb) y 18S (1,800 pb). El análisis en ModelFinder rechazó la parametrización máxima; el Criterio de Información Bayesiano (BIC = 15432.18) dictaminó la fusión de las cinco particiones iniciales en un esquema óptimo final de tres bloques evolutivos. Las posiciones 1 y 2 del codón del gen COI se fusionaron estadísticamente con el locus 16S bajo el modelo HKY+F+I+G4, reportando frecuencias nucleotídicas empíricas de $\pi_A=0.32, \pi_C=0.25, \pi_G=0.21, \pi_T=0.22$. Por el contrario, la tercera posición del gen COI retuvo una partición independiente bajo el modelo GTR+F+R3, reflejando altos niveles de sustitución sinónima. Finalmente, el marcador nuclear 18S se modeló según TIM2+I+G4 ($\alpha=0.48$). Este esquema particionado óptimo fue empleado para la subsecuente topología de Máxima Verosimilitud."
+            </p>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">3. Preparación del Entorno Computacional</h2>
+        
+        <p>A partir de este momento, abandonaremos los editores básicos de Windows. El Bloc de Notas (Notepad) tiene el mal hábito de añadir la extensión oculta <code>.txt</code> a los archivos científicos, arruinando los análisis de consola. Utilizaremos herramientas de desarrollo reales.</p>
+
+        <div class="tutorial-step">
+            <div class="step-number">0</div>
+            <div class="step-content">
+                <strong>Fase 0: Instalación de Sublime Text e IQ-TREE</strong>
+                <ol>
+                    <li><strong>El Editor:</strong> Descargue e instale <a href="https://www.sublimetext.com/" target="_blank">Sublime Text</a>. Este editor de código respeta las extensiones biológicas (como <code>.fas</code> o <code>.nex</code>) y no contamina los archivos con formato oculto.</li>
+                    <li><strong>El Motor Filogenético:</strong> Diríjase a la página oficial: <a href="http://www.iqtree.org/#download" target="_blank">iqtree.org/#download</a>. Descargue la versión para Windows (ZIP).</li>
+                    <li>Extraiga el archivo ZIP. Ingrese a la carpeta extraída y busque la subcarpeta llamada <strong><code>bin</code></strong>.</li>
+                    <li>Allí encontrará el archivo ejecutable <code>iqtree3.exe</code>. <strong>Este es el núcleo del programa.</strong></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="theory-box" style="border-left-color: #c0392b; background-color: #fdedec;">
+            <h4 style="color: #c0392b; margin-top: 0;">⛔ ADVERTENCIA CRÍTICA: ¡No haga doble clic en el programa!</h4>
+            <p>IQ-TREE es un programa de consola (CLI). Si usted le hace doble clic, el programa abrirá una pantalla negra indicando un error (<em>"You seem to have click-started this program..."</em>) y se detendrá. <strong>Debe ignorar esto, cerrar esa ventana y seguir estrictamente los pasos de la Fase I.</strong></p>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">I</div>
+            <div class="step-content">
+                <strong>Fase I: El "Truco" del Entorno de Trabajo (CMD)</strong>
+                <p>Para indicarle al programa qué debe hacer sin equivocarnos en las rutas, usaremos un atajo de Windows:</p>
+                <ol>
+                    <li>Ubique la matriz final curada de su proyecto del Laboratorio 7 (ej. <code>sus_datos_curados.fas</code>).</li>
+                    <li><strong>Cópiela y péguela dentro de la carpeta <code>bin</code></strong> (debe quedar justo al lado de <code>iqtree3.exe</code>).</li>
+                    <li>Haga clic en la barra de direcciones superior del Explorador de Archivos de Windows (donde dice la ruta de la carpeta).</li>
+                    <li>Borre todo el texto de la ruta, escriba <span class="cmd">cmd</span> y presione <kbd>Enter</kbd>.</li>
+                    <li>Se abrirá una ventana negra de Símbolo del Sistema lista para recibir nuestros comandos bioinformáticos.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">4. Metodología y Práctica Guiada</h2>
+
+        <div class="tutorial-step">
+            <div class="step-number">II</div>
+            <div class="step-content">
+                <strong>Fase II: Creación del Archivo de Particiones (Formato NEXUS Híbrido)</strong>
+                <p>Abra <strong>Sublime Text</strong> y construya un archivo de texto definiendo las fronteras de sus secuencias. Si su proyecto concatena genes codificantes (con codones) y genes no codificantes (ribosomales/intrones), el formato NEXUS permite mezclar ambas instrucciones de partición sin problema.</p>
+                
+                <div style="display: flex; gap: 20px; margin-top: 15px;">
+                    <div style="flex: 1; background: #f8f9fa; padding: 15px; border: 1px solid #ddd; border-radius: 6px;">
+                        <h4 style="margin-top: 0; color: #2c3e50;">Ejemplo: Gen Único Codificante</h4>
+                        <p style="font-size: 0.9em; color: #555;">Se particiona solo por codones (usando <code>\3</code> para saltos). <em>Asumiendo un COI de 658 pb:</em></p>
+<pre style="margin: 0; padding: 10px;">
+#nexus
+begin sets;
+    charset COI_pos1 = 1-658\3;
+    charset COI_pos2 = 2-658\3;
+    charset COI_pos3 = 3-658\3;
+end;
+</pre>
+                    </div>
+                    <div style="flex: 1; background: #f8f9fa; padding: 15px; border: 1px solid #ddd; border-radius: 6px;">
+                        <h4 style="margin-top: 0; color: #2c3e50;">Ejemplo: Matriz Multilocus Híbrida</h4>
+                        <p style="font-size: 0.9em; color: #555;">Mezcla saltos de codones para el gen codificante (COI) y bloques completos para los genes estructurales (16S y 18S).</p>
+<pre style="margin: 0; padding: 10px;">
+#nexus
+begin sets;
+    charset COI_pos1 = 1-658\3;
+    charset COI_pos2 = 2-658\3;
+    charset COI_pos3 = 3-658\3;
+    charset 16S_rRNA = 659-1200;
+    charset 18S_rRNA = 1201-3000;
+end;
+</pre>
+                    </div>
+                </div>
+                <p style="margin-top: 15px;">Vaya a <em>File > Save As</em> en Sublime Text. Guárdelo en su carpeta <code>bin</code> con el nombre estricto de <code>particiones.nex</code>.</p>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">III</div>
+            <div class="step-content">
+                <strong>Fase III: Ejecución de ModelFinder en la Consola</strong>
+                <p>La sintaxis básica de la línea de comandos exige llamar al programa (<code>iqtree3</code>), indicarle su matriz (<code>-s</code>), sus particiones (<code>-p</code>) y el comando del modelo (<code>-m</code>).</p>
+                
+                <div class="info-box" style="border-left-color: #f39c12; background-color: #fcf3cf;">
+                    <strong>⚙️ Entendiendo el comando <code>-m</code> (Model):</strong>
+                    <ul style="margin-bottom: 0;">
+                        <li><code>-m TEST</code>: Ejecuta la selección clásica de modelos (estilo jModelTest).</li>
+                        <li><code>-m MF</code>: Ejecuta ModelFinder moderno para matrices simples sin particiones.</li>
+                        <li><code>-m MF+MERGE</code>: Es la opción más avanzada. Evalúa modelos independientes para cada una de sus particiones definidas en el NEXUS y luego <strong>fusiona estadísticamente</strong> aquellas particiones que actúen igual (redundantes) para evitar el <em>overfitting</em> según el criterio BIC.</li>
+                    </ul>
+                </div>
+
+                <ol>
+                    <li>En su ventana negra de CMD (abierta en la Fase I), escriba el siguiente comando. <strong>¡Atención! Usted debe reemplazar los corchetes por el nombre exacto de su archivo FASTA curado del Lab 7:</strong>
+                        <br><br>
+                        <code style="background-color:#1e2b3c; color:#a9dfbf; padding: 15px; border-radius: 4px; display: block; font-size: 1.1em;">iqtree3 -s [EL_NOMBRE_DE_SU_MATRIZ.fas] -p particiones.nex -m MF+MERGE</code>
+                        <br>
+                        <em>Ejemplo real: <code>iqtree3 -s Nemesiidae_Curado.fas -p particiones.nex -m MF+MERGE</code></em>
+                    </li>
+                    <li>Presione <kbd>Enter</kbd>. <br>
+                    <strong>🛡️ Nota de Seguridad:</strong> Windows Defender detendrá la ejecución por ser un programa científico por consola. Haga clic en <strong>"Más información"</strong> y luego en <strong>"Ejecutar de todas formas"</strong>.</li>
+                    <li>Verá cómo IQ-TREE comienza a evaluar matemáticamente las particiones. Al finalizar el análisis, el programa arrojará el mensaje "Analysis results written to...". Tome una <strong>captura de pantalla</strong> de la consola demostrando el éxito del análisis.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">IV</div>
+            <div class="step-content">
+                <strong>Fase IV: Extracción e Interpretación del Mejor Modelo (.iqtree)</strong>
+                <p>IQ-TREE generó varios archivos de resultados en su carpeta. El archivo con terminación <code>.log</code> es útil para ver qué ocurrió paso a paso, pero los resultados biológicos consolidados están en el archivo <code>.iqtree</code>.</p>
+                <ol>
+                    <li>Localice el archivo que termina en <strong><code>.iqtree</code></strong> (ej. <code>particiones.nex.iqtree</code>).</li>
+                    <li>Ábralo arrastrándolo a <strong>Sublime Text</strong>. Desplácese hacia abajo hasta encontrar el título <strong>ModelFinder</strong>.</li>
+                </ol>
+                
+                <div class="info-box" style="border-left-color: #9b59b6; background-color: #f4ecf7;">
+                    <strong>🔍 Ejemplo Real de Interpretación de Resultados:</strong>
+                    <p>A continuación, se muestra un extracto real de lo que usted debería buscar en su archivo <code>.iqtree</code>:</p>
+<pre style="background-color: #1e2b3c; color: #ecf0f1; padding: 15px; border-radius: 6px; font-size: 0.85em; overflow-x: auto;">
+ModelFinder
+-----------
+
+Best-fit model according to BIC: TIM2+G4:COI_pos1+COI_pos2+COI_pos3
+
+List of best-fit models per partition:
+ ID  Model               LogL         AIC        BIC
+  1  TIM2+G4          -1070.696    2151.393   2165.534
+
+SUBSTITUTION PROCESS
+--------------------
+Edge-linked-proportional partition model with separate substitution models and separate rates across sites
+ ID  Model             Speed  Parameters
+  1  TIM2+F+G4        1.0000  TIM2{3.9,7.3,28.3}+F{0.3,0.2,0.2,0.2}+G4{0.48}
+</pre>
+                    <p style="margin-top: 10px;"><strong>¿Qué nos dice el algoritmo (Navaja de Ockham)?</strong> <br>En este ejemplo, el comando <code>MF+MERGE</code> evaluó las tres posiciones del codón del gen COI. Determinó estadísticamente que, aunque mantener las 3 posiciones separadas arrojaba un "mejor" puntaje bruto de Verosimilitud, generaba un sobreajuste innecesario (overfitting). El criterio BIC las agrupó obligándolas a fusionarse (<code>COI_pos1+COI_pos2+COI_pos3</code>) indicando que un solo modelo paramétrico (<strong><code>TIM2+F+G4</code></strong>) es suficiente para explicar eficientemente la evolución de todo el gen.</p>
+                    <p><em>⚠️ Nota: Al final de su archivo <code>.iqtree</code> verá dibujado un pequeño árbol filogenético. <strong>NO LO USE.</strong> Ese es solo un árbol inicial de parsimonia rápida utilizado como "andamio" para calcular la verosimilitud de los modelos. Construiremos el árbol real de Máxima Verosimilitud (ML) en el Laboratorio 9.</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff; padding-bottom: 10px;">
+        <h2 class="section-title">5. Instrucciones para la Entrega y Cuestionario</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
+            <p style="margin-bottom: 10px; font-size: 0.95em;">Entregue un archivo PDF titulado <code>Apellidos_Lab8_Modelos.pdf</code> que contenga:</p>
+            <ol style="margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
+                <li style="margin-bottom: 5px;">📄 <strong>1. Captura del Intérprete de Comandos:</strong> Pantallazo de su consola CMD mostrando el comando digitado correctamente con el nombre de sus propios datos y la ejecución terminada de IQ-TREE 3.</li>
+                <li style="margin-bottom: 5px;">📄 <strong>2. Extracto del Archivo .iqtree:</strong> Copie y pegue en su PDF las líneas de texto de su archivo <code>.iqtree</code> donde el software declara el mejor esquema de partición y los modelos ganadores según BIC.</li>
+                <li>📝 <strong>3. Análisis Crítico:</strong> Respuestas argumentadas a las siguientes 3 preguntas.</li>
+            </ol>
+        </div>
+
+        <h3 style="color: #d35400;">Preguntas de Análisis Crítico:</h3>
+        <div style="margin-left: 20px;">
+            <p><strong>P1. Biología Evolutiva de las Particiones:</strong> Justifique en términos genéticos por qué es un error metodológico obligar a que las 3 posiciones del codón o que un set de genes concatenados (ej. mitocondriales vs nucleares ribosomales) evolucionen bajo una misma matriz de sustitución única. ¿Por qué la tercera posición suele requerir modelos paramétricos más complejos y veloces?</p>
+            
+            <p><strong>P2. El Problema del Overfitting (Ockham y MF+MERGE):</strong> Suponga que IQ-TREE evaluó mantener sus particiones separadas y descubrió que el puntaje puro de Verosimilitud ($L$) era mucho más alto de esa forma. Sin embargo, el comando <code>-m MF+MERGE</code> dictaminó a través del BIC que dos particiones debían fusionarse. Referenciando la ecuación del BIC de la Sección 1.4, explique matemáticamente por qué el programa rechazó la complejidad pura y de qué manera esto opera como una "Navaja de Ockham" estadística.</p>
+            
+            <p><strong>P3. Redacción Científica de su Modelo:</strong> Con base en los modelos ganadores arrojados por su análisis en el archivo <code>.iqtree</code>, redacte un párrafo de "Resultados" (siguiendo estrictamente el tono y formato de la Sección 2). Debe reportar de manera rigurosa la longitud de su gen o supermatriz, el esquema final de fusión dictaminado por el BIC, y el desglose de sus modelos (las frecuencias empíricas de bases $+F$ exactas reportadas por el software y el tipo de heterogeneidad de tasas $+I, +G, +R$ que le fue asignado).</p>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">6. Rúbrica de Evaluación</h2>
+        
+        <table class="code-table" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 30%;">Excelente (4.5 - 5.0)</th>
+                    <th style="width: 30%;">Aceptable (3.5 - 4.4)</th>
+                    <th style="width: 15%;">Insuficiente (&lt; 3.5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Práctica CLI y Archivos NEXUS (30%)</strong></td>
+                    <td>Reemplaza el código genérico por el archivo real de su proyecto. Usa Sublime Text. Ejecuta la consola exitosamente y extrae el esquema ganador del archivo <code>.iqtree</code>.</td>
+                    <td>Ejecuta el programa, pero usa Notepad y genera un error <code>.txt</code> en el NEXUS, o no reemplaza los corchetes genéricos en la línea de comando.</td>
+                    <td>No presenta capturas, cae en el error del doble clic sin corregirlo, o es incapaz de operar la línea de comandos en Windows.</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Presiones Selectivas (P1) (20%)</strong></td>
+                    <td>Argumenta sólidamente la degeneración del código genético, presiones estructurales o las tasas de mutación sinónimas justificando la partición de la matriz.</td>
+                    <td>Menciona superficialmente que las tasas son distintas, pero no conecta esto con la biología de los codones o los loci concatenados.</td>
+                    <td>No comprende la diferencia. Asume que todo el genoma muta a la misma velocidad independientemente de la proteína que codifique.</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Overfitting y Criterio BIC (P2) (25%)</strong></td>
+                    <td>Explica impecablemente cómo la penalización en la ecuación BIC castiga los parámetros extras ($k$), justificando la función MERGE para prevenir sobreajuste.</td>
+                    <td>Explica la Navaja de Ockham de manera cualitativa, pero no la relaciona con cómo el BIC castiga matemáticamente la Verosimilitud en la selección de modelos.</td>
+                    <td>Falla en entender el <em>overfitting</em>, asumiendo que un mayor valor de verosimilitud bruta siempre justifica no fusionar particiones.</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Redacción de Modelos (P3) (25%)</strong></td>
+                    <td>Redacta el párrafo de resultados con rigor de publicación científica, reportando el tamaño de matriz, el esquema de fusión exacto y las frecuencias $\pi$ de su output.</td>
+                    <td>Intenta redactar los resultados, pero su explicación sobre qué es el +G, +R o la matriz base resulta errónea o su tono es coloquial e impreciso.</td>
+                    <td>Copia el resultado ciegamente desde el archivo de texto pero es incapaz de conectarlo en un párrafo narrativo coherente.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">7. Bibliografía Citada</h2>
+        
+        <div style="padding-left: 20px; text-indent: -20px; font-size: 0.95em; line-height: 1.8;">
+            <p>Akaike, H. (1974). A new look at the statistical model identification. <em>IEEE Transactions on Automatic Control</em>, 20(6), 716-723.</p>
+            
+            <p>Kalyaanamoorthy, S., Minh, B. Q., Wong, T. K., von Haeseler, A., & Jermiin, L. S. (2017). ModelFinder: fast model selection for accurate phylogenetic estimates. <em>Nature Methods</em>, 14(6), 587-589.</p>
+            
+            <p>Minh, B. Q., Schmidt, H. A., Chernomor, O., Schrempf, D., Woodhams, M. D., von Haeseler, A., & Lanfear, R. (2020). IQ-TREE 2: new models and efficient methods for phylogenetic inference in the genomic era. <em>Molecular Biology and Evolution</em>, 37(5), 1530-1534.</p>
+            
+            <p>Schwarz, G. (1978). Estimating the dimension of a model. <em>The Annals of Statistics</em>, 3(2), 461-464.</p>
+
+            <p>Soubrier, J., Steel, M., Lee, M. S., Der Sarkissian, C., Guindon, S., Ho, S. Y., ... & Cooper, A. (2012). The influence of rate heterogeneity among sites on the time dependence of molecular rates. <em>Molecular Biology and Evolution</em>, 29(11), 3345-3358.</p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
