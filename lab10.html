@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Lab 10: Inferencia Bayesiana (MrBayes, MCMC y Tracer)</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', flowchart: { curve: 'linear' } });</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+    .info-box strong { color: #2980b9; }
+
+    /* CODIGO Y BLOQUES */
+    pre {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.9em;
+    }
+    .cmd {
+        background: #f4f4f4;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #c0392b;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
+
+    /* TUTORIAL Y PASOS */
+    .tutorial-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s;
+    }
+    .tutorial-step:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-number {
+        background: #2980b9;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Lab 10 - Inferencia Bayesiana (MrBayes), Priors, MCMC y Tracer</span>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">1. Fundamentación Teórica y Epistemológica</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivos de Aprendizaje</h3>
+            <ol>
+                <li><strong>Comprender</strong> la formalización matemática del Teorema de Bayes en filogenética, integrando la Topología, los Parámetros del Modelo y los Datos Empíricos.</li>
+                <li><strong>Desmitificar</strong> el concepto de "Prior" (Probabilidad a priori), reconociendo las curvas de distribución estadística (Uniforme, Normal, Lognormal) aplicadas a parámetros biológicos.</li>
+                <li><strong>Diferenciar</strong> entre el Árbol de Consenso (Majority-Rule) que resume la varianza topológica, y el Árbol de Máxima Probabilidad (MAP Tree).</li>
+                <li><strong>Convertir</strong> formatos empíricos (FASTA a NEXUS) y estructurar bloques manuales declarando particiones, modelos y priors.</li>
+                <li><strong>Diagnosticar</strong> la convergencia MCMC calculando el ESS en Tracer e identificar problemas de sobreparametrización.</li>
+            </ol>
+        </div>
+        
+        <h3>1.1. El Salto Epistemológico: El Teorema de Bayes Filogenético</h3>
+        <p>
+            La Máxima Verosimilitud (ML) se pregunta: <em>"Dado un árbol y un modelo, ¿cuál es la probabilidad estadística de que el ADN haya mutado hasta formar el alineamiento que observo?"</em>. La <strong>Inferencia Bayesiana (BI)</strong> invierte la lógica para responder la verdadera pregunta biológica: <strong>"Considerando el ADN empírico secuenciado y el modelo de evolución, ¿cuál es la probabilidad de que esta topología específica sea la historia real?"</strong>
+        </p>
+        <p>
+            Esta inversión se logra mediante la versión expandida del Teorema de Bayes adaptada para la filogenética (Huelsenbeck et al., 2001):
+        </p>
+        
+        <div class="theory-box" style="border-left-color: #8e44ad; background-color: #f5eef8; padding: 25px;">
+            <p style="text-align: center; font-size: 1.3em; margin-bottom: 20px;">
+                $$P(\tau, \theta \mid X, M) = \frac{P(X \mid \tau, \theta, M) \times P(\tau \mid M) \times P(\theta \mid M)}{P(X \mid M)}$$
+            </p>
+            <ul style="margin-top: 10px; line-height: 1.8;">
+                <li><strong>$P(\tau, \theta \mid X, M)$ [Probabilidad Posterior]:</strong> El resultado buscado. La probabilidad conjunta de una Topología ($\tau$) y unas longitudes de rama/tasas ($\theta$), dado nuestro alineamiento empírico ($X$) y el Modelo ($M$).</li>
+                <li><strong>$P(X \mid \tau, \theta, M)$ [La Verosimilitud]:</strong> El cálculo de ajuste empírico estándar (idéntico al de IQ-TREE).</li>
+                <li><strong>$P(\tau \mid M)$ y $P(\theta \mid M)$ [Los Priors]:</strong> Nuestras hipótesis o creencias de probabilidad <em>antes</em> de mirar el alineamiento de ADN.</li>
+                <li><strong>$P(X \mid M)$ [Probabilidad Marginal]:</strong> Constante de normalización.</li>
+            </ul>
+        </div>
+
+        <h3>1.2. La Naturaleza de los Priors y sus Distribuciones</h3>
+        <p>
+            En estadística Bayesiana, el resultado (Posterior) es un compromiso entre <strong>la evidencia actual (los datos empíricos) y nuestro conocimiento previo (el Prior)</strong>. Le comunicamos al software nuestro "conocimiento previo" asignando una <strong>distribución matemática de probabilidad</strong> al parámetro de interés. Comprender estas distribuciones es fundamental para el laboratorio de hoy, y será el pilar absoluto de nuestro próximo laboratorio de relojes moleculares en BEAST. 
+        </p>
+        
+        <table class="code-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Tipo de Prior</th>
+                    <th style="width: 40%;">Geometría de la Curva</th>
+                    <th style="width: 40%;">Aplicación Biológica (Comando en NEXUS)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Uniforme (Plano)</strong></td>
+                    <td>Un rectángulo plano. Todos los valores dentro de un rango mínimo y máximo tienen exactamente la misma probabilidad.</td>
+                    <td><strong>Asume ignorancia total.</strong> Es el prior por defecto de MrBayes para las topologías (<code>prset topologypr=uniform;</code>). Al asumir que todos los árboles son inicialmente iguales, permite que los datos empíricos dominen la decisión final.</td>
+                </tr>
+                <tr>
+                    <td><strong>Normal (Campana)</strong></td>
+                    <td>Curva de Gauss simétrica. Define un valor promedio altamente probable, decayendo uniformemente hacia los extremos.</td>
+                    <td>Útil cuando se conoce un valor promedio exacto con varianza simétrica. (Ej. Se asume que una tasa de mutación ronda el 2% por millón de años, permitiendo fluctuaciones leves).</td>
+                </tr>
+                <tr>
+                    <td><strong>Lognormal</strong></td>
+                    <td>Curva asimétrica con una "cola" larga hacia la derecha. Su característica matemática más importante es que <strong>jamás cruza el cero</strong> (no admite números negativos).</td>
+                    <td><strong>El rey de los Relojes Moleculares.</strong> Obligatorio para fijar la edad de un clado usando calibraciones fósiles. ¿La razón? El tiempo evolutivo y las distancias de rama jamás pueden ser valores negativos.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>1.3. Mapeando el Paisaje Evolutivo: MCMC y $MC^3$</h3>
+        <p>
+            El denominador de la ecuación exige calcular todos los árboles posibles (imposible analíticamente). La Inferencia Bayesiana aproxima la solución usando <strong>Cadenas de Markov Monte Carlo (MCMC)</strong>. Imagine el espacio topológico como una cordillera. El MCMC lanza "robots ciegos" que caminan hacia las cimas más altas. Para evitar quedar atascados en colinas falsas (óptimos locales), MrBayes emplea <strong>$MC^3$ (Metropolis-Coupled MCMC)</strong>: lanza un robot "frío" que anota el paisaje, y tres "calientes" que dan saltos masivos, intercambiando posiciones.
+        </p>
+
+        <div class="mermaid" style="text-align: center; margin: 30px 0; background-color: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+            flowchart LR
+                A["Inicio Aleatorio"] -->|Pasos descartados| B("Fase de Burn-in<br>(Escalando la montaña)")
+                B -.->|¡Eliminar!| X[Basurero Analítico]
+                B --> C{"Estacionariedad<br>(Caminando la cima)"}
+                C -->|Muestreo| D["Árboles Válidos<br>(Posterior)"]
+                
+                style A fill:#fadbd8,stroke:#c0392b,stroke-width:2px
+                style B fill:#fdebd0,stroke:#f39c12,stroke-width:2px
+                style C fill:#d4efdf,stroke:#27ae60,stroke-width:2px
+                style D fill:#a9cce3,stroke:#2980b9,stroke-width:2px
+        </div>
+        <p>
+            <strong>El Burn-in (Calentamiento):</strong> Los primeros miles de pasos se descartan obligatoriamente (usualmente el 25% inicial), ya que el robot aún subía desde un punto aleatorio subóptimo.
+        </p>
+
+        <h3>1.4. Topología: Consenso de Regla de Mayoría vs. Árbol MAP</h3>
+        <p>El MCMC genera una "nube" de miles de árboles válidos en la cima. Existen dos formas de resumirla:</p>
+        <ul>
+            <li><strong>Árbol MAP (Maximum A Posteriori):</strong> La topología individual con la Probabilidad Posterior más alta. Rara vez se publica sola porque ignora la varianza topológica.</li>
+            <li><strong>Árbol de Consenso (Majority-Rule Consensus):</strong> <strong>Estándar de publicación.</strong> Promedia los clados que superan el 50% de frecuencia en la nube de árboles. Los soportes se reportan como <strong>Probabilidades Posteriores (PP)</strong>.</li>
+        </ul>
+        <p><em>Regla: En estadística Bayesiana, solo clados con PP $\ge 0.95$ son estadísticamente robustos.</em></p>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">2. Metodología: Operando MrBayes (NEXUS y CLI)</h2>
+
+        <div class="info-box" style="border-left-color: #c0392b; background-color: #fdedec;">
+            <strong style="color: #c0392b;">⚠️ ADVERTENCIA CRÍTICA: Modelos Evolutivos Manuales.</strong>
+            <p>MrBayes no integra ModelFinder. Si no declara el modelo evolutivo explícitamente en el código, el programa asumirá Jukes-Cantor por defecto. Usted <strong>debe</strong> traducir los resultados de su Lab 8 e inyectarlos con el comando <code>lset</code>.</p>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">I</div>
+            <div class="step-content">
+                <strong>Fase I: Transformación del Alineamiento (FASTA a NEXUS)</strong>
+                <p>MrBayes no lee archivos FASTA. Requiere un formato estructurado llamado <strong>NEXUS</strong>, el cual está dividido en bloques lógicos. En la parte superior irá el bloque de datos (<code>begin data;</code>) con su alineamiento, y al final adjuntaremos las instrucciones de MrBayes. Para evitar errores contando nucleótidos manualmente, use herramientas automáticas:</p>
+                
+                <div style="display: flex; gap: 20px; margin-top: 15px;">
+                    <div style="flex: 1; background: #e8f4f8; padding: 15px; border: 1px solid #bce0fd; border-radius: 6px;">
+                        <h4 style="margin-top: 0; color: #2980b9;">Opción A: Web (Phylogeny.fr)</h4>
+                        <ol style="padding-left: 20px; margin-bottom: 0;">
+                            <li>Ingrese a <a href="http://phylogeny.lirmm.fr/phylo_cgi/data_converter.cgi" target="_blank">Data Converter (Phylogeny.fr)</a>.</li>
+                            <li>Suba su archivo FASTA o pegue las secuencias en la caja.</li>
+                            <li>En Formato de Salida (Output Format), seleccione <strong>NEXUS</strong>.</li>
+                            <li>Haga clic en <em>Submit</em> y guarde el texto resultante como <code>matriz.nex</code>.</li>
+                        </ol>
+                    </div>
+                    <div style="flex: 1; background: #fdf2e9; padding: 15px; border: 1px solid #fae5d3; border-radius: 6px;">
+                        <h4 style="margin-top: 0; color: #d35400;">Opción B: Usando MEGA (Local)</h4>
+                        <ol style="padding-left: 20px; margin-bottom: 0;">
+                            <li>Abra MEGA en su computador.</li>
+                            <li>Vaya a <em>File > Open A File/Session</em> y cargue su <code>.fas</code> curado.</li>
+                            <li>Vaya a <em>Data > Export Alignment > NEXUS format</em>.</li>
+                            <li>Guárdelo como <code>matriz.nex</code>.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">II</div>
+            <div class="step-content">
+                <strong>Fase II: Traducción de ModelFinder a MrBayes</strong>
+                <table class="code-table" style="font-size: 0.9em; margin-bottom: 15px;">
+                    <thead>
+                        <tr>
+                            <th style="background-color: #34495e; color: white;">Modelo Óptimo (IQ-TREE)</th>
+                            <th style="background-color: #34495e; color: white;">Traducción al Comando MrBayes (lset)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>JC / F81</td><td><code>lset nst=1;</code></td></tr>
+                        <tr><td>HKY / K80</td><td><code>lset nst=2;</code></td></tr>
+                        <tr><td>GTR / TIM / SYM</td><td><code>lset nst=6;</code> <em>(Los modelos de múltiples tasas se anidan en GTR).</em></td></tr>
+                        <tr><td>+G (Distribución Gamma)</td><td>Añada: <code>rates=gamma;</code></td></tr>
+                        <tr><td>+I+G (Inv. + Gamma)</td><td>Añada: <code>rates=invgamma;</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">III</div>
+            <div class="step-content">
+                <strong>Fase III: El Bloque de Comando Avanzado en NEXUS</strong>
+                <p>Abra su nueva matriz <code>.nex</code> en Sublime Text. Vaya hasta la última línea (después del <code>end;</code> de sus datos) y construya el bloque lógico. Ejemplo para dos genes particionados (Note el uso de <code>prset</code> para desvincular priors):</p>
+
+<pre style="background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; font-family: 'Consolas', monospace; font-size: 0.85em; overflow-x: auto;">
+[EL BLOQUE DE DATOS DE ADN ESTÁ ARRIBA]
+...
+;
+end;
+
+[AQUÍ INICIA SU BLOQUE DE INSTRUCCIONES ESTADÍSTICAS]
+begin mrbayes;
+    [1. DEFINICIÓN DEL OUTGROUP]
+    outgroup Nombre_Especie_Externa;
+
+    [2. DECLARACIÓN DE PARTICIONES (Si tiene múltiples loci)]
+    charset gen_COI = 1-658;
+    charset gen_18S = 659-2000;
+    partition mis_genes = 2: gen_COI, gen_18S;
+    set partition = mis_genes;
+
+    [3. MODELOS (M) Y PRIORS]
+    [Ejemplo: COI usará HKY+G (nst=2) y 18S usará GTR+I+G (nst=6)]
+    lset applyto=(1) nst=2 rates=gamma;
+    lset applyto=(2) nst=6 rates=invgamma;
+    
+    [Desvincular Priors: Permite que las frecuencias y tasas de cada gen muten independientemente]
+    unlink statefreq=(all) revmat=(all) shape=(all) pinvar=(all);
+    prset applyto=(all) ratepr=variable;
+    
+    [4. CONFIGURACIÓN DEL ROBOT MCMC]
+    mcmcp ngen=10000000 samplefreq=1000 printfreq=1000 nchains=4 temp=0.2;
+    
+    [5. ORDEN DE EJECUCIÓN]
+    mcmc;
+    sumt burninfrac=0.25;
+    sump burninfrac=0.25;
+end;
+</pre>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">IV</div>
+            <div class="step-content">
+                <strong>Fase IV: Ejecución mediante CLI en Windows</strong>
+                <ol>
+                    <li>Descargue <strong>MrBayes</strong> (<a href="https://nbisweden.github.io/MrBayes/download.html" target="_blank">nbisweden.github.io/MrBayes</a>) y extraiga la carpeta.</li>
+                    <li><strong>Paso Crítico:</strong> Copie su archivo <code>matriz.nex</code> (con el bloque añadido) <strong>exactamente dentro de la misma carpeta</strong> donde reside el ejecutable <code>mb.exe</code>.</li>
+                    <li><strong>El Atajo CLI:</strong> Abra esa carpeta, haga clic en la barra de direcciones superior de Windows, borre el texto, escriba <span class="cmd">cmd</span> y presione <kbd>Enter</kbd> para anclar la terminal a esa ruta.</li>
+                    <li>En la consola negra, escriba <span class="cmd">mb</span>. El cursor cambiará a <code>MrBayes ></code>.</li>
+                    <li>Digite: <span class="cmd">execute matriz.nex</span></li>
+                    <li>El algoritmo $MC^3$ comenzará a evaluar el paisaje de probabilidad. Déjelo terminar (horas).</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">3. Diagnóstico Clínico de Convergencia: Uso de Tracer</h2>
+        <p>
+            Al finalizar, MrBayes genera un árbol de consenso (<code>.con.tre</code>) y archivos de parámetros (<code>.p</code>). <strong>Antes de mirar el árbol</strong>, la ciencia exige auditar el archivo <code>.p</code> en <strong>Tracer</strong> para certificar matemáticamente que el MCMC alcanzó la estacionariedad.
+        </p>
+
+        <div class="tutorial-step">
+            <div class="step-number">V</div>
+            <div class="step-content">
+                <strong>Fase V: Instalación de Tracer en Windows (Dependencia Java)</strong>
+                <p>Tracer está programado en Java. Para que funcione en Windows:</p>
+                <ol>
+                    <li>Asegúrese de tener instalado <strong>Java (JRE)</strong> (si no, instálelo gratuitamente desde <code>java.com</code>).</li>
+                    <li>Descargue Tracer desde <a href="http://beast.community/tracer" target="_blank">beast.community/tracer</a> (Archivo Windows ZIP).</li>
+                    <li>Extraiga la carpeta y ejecute el archivo <strong><code>Tracer.exe</code></strong> (o el archivo <code>tracer.jar</code>).</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">VI</div>
+            <div class="step-content">
+                <strong>Fase VI: Tamaño Efectivo de Muestra (ESS) y el "Gusano Peludo"</strong>
+                <ol>
+                    <li>En Tracer, arrastre sus archivos <strong><code>.p</code></strong>. Seleccione ambos <em>runs</em> con la tecla Shift para combinarlos visualmente.</li>
+                    <li>Observe la columna <strong>ESS</strong>. Mide cuántas muestras "puramente independientes" recolectó el robot descartando la autocorrelación. <strong>La regla exige que TODO parámetro biológico (LnL, frecuencias, alpha) reporte un ESS $\ge 200$.</strong></li>
+                    <li>Vaya a la pestaña <strong>Trace</strong>. La gráfica de una buena convergencia debe lucir como un "gusano peludo" (banda horizontal densa y estable).</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">VII</div>
+            <div class="step-content">
+                <strong>Fase VII: El Síndrome de la Sobreparametrización</strong>
+                <p>Si tras correr millones de generaciones, Tracer sigue marcando parámetros en rojo (ESS < 100), revise <em>cuál</em> está fallando. Si la Verosimilitud (LnL) es estable pero un parámetro de mutación (ej. el parámetro <code>alpha</code> de la distribución Gamma) está colapsado, usted padece de <strong>Sobreparametrización Biológica</strong>.</p>
+                <p>Usted obligó al MCMC a estimar un modelo hipercomplejo (GTR+I+G) sobre un fragmento de ADN corto o altamente conservado que carece de la variabilidad empírica para sostener tantas matemáticas. El robot se "atasca" adivinando valores. <br><strong>Solución clínica:</strong> Abra su bloque NEXUS, reduzca drásticamente la dimensión paramétrica (ej. baje a <code>nst=2</code> y borre <code>+I</code>) y corra MrBayes de cero.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">4. Filtrado de Soportes y Visualización en R (ggtree)</h2>
+        <p>Las revistas Q1 desaprueban los filogramas saturados de números. El estándar es mostrar únicamente las Probabilidades Posteriores relevantes (PP $\ge 0.90$ o $0.95$), ocultando estéticamente la incertidumbre de los clados dudosos. Filtraremos esto mediante condicionales lógicos en R.</p>
+
+        <div class="tutorial-step">
+            <div class="step-number">VIII</div>
+            <div class="step-content">
+                <strong>Fase VIII: Script de R para Filogramas Bayesianos Condicionales</strong>
+                <p>Abra RStudio. Asegúrese de tener <code>ape</code> y <code>ggtree</code> instalados. Ejecute la sintaxis ajustando su directorio:</p>
+
+<pre style="background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; font-family: 'Consolas', monospace; font-size: 0.85em; overflow-x: auto;">
+# 1. Cargar las librerías
+library(ape)
+library(ggtree)
+library(ggplot2)
+
+# 2. SETWD: Indicar el directorio exacto de los archivos
+setwd("C:/Usuarios/SuNombre/Sistematica/Lab10/MrBayes")
+
+# 3. Importar el Árbol de Consenso Bayesiano (.con.tre)
+# read.nexus captura automáticamente las Probabilidades Posteriores de MrBayes
+arbol <- read.nexus("matriz.nex.con.tre")
+
+# 4. ENRAIZAMIENTO DIRECCIONAL (Outgroup)
+arbol_enraizado <- root(arbol, outgroup = "Nombre_Outgroup", resolve.root = TRUE)
+
+# 5. GRAFICACIÓN CONDICIONAL (Filtro Inteligente de Soportes)
+grafico <- ggtree(arbol_enraizado, layout = "rectangular", right = TRUE) +
+  
+  # Etiquetas alineadas
+  geom_tiplab(size=3.5, fontface="italic", align=TRUE, linesize=0.2) + 
+  
+  # CONDICIONAL (IFELSE): Solo imprime el número si el PP es >= 0.90
+  geom_nodelab(aes(label=ifelse(!is.na(as.numeric(label)) & as.numeric(label) >= 0.90, label, "")), 
+               hjust=-0.2, vjust=-0.5, size=3, color="#8e44ad", fontface="bold") + 
+  
+  # MARCADOR ABSOLUTO: Círculo negro a los nodos con PP perfecto (1.0)
+  geom_nodepoint(aes(subset = as.numeric(label) == 1.0), color="black", size=2) + 
+  
+  # Tema científico y ajuste de márgenes (aumente xlim si corta los nombres)
+  theme_tree2() +
+  xlim(0, 1.5)
+
+# 6. Previsualizar y Exportar a PDF Vectorial
+print(grafico)
+ggsave("Arbol_Bayes_Final.pdf", plot=grafico, width=10, height=8, dpi=300)
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">5. El Manuscrito: Redacción de Resultados Bayesianos</h2>
+        <p>
+            La sección de Resultados debe reportar asépticamente la configuración del modelo, el manejo de Priors, el filtro de Burn-in y la validación del ESS, <strong>separando tajantemente la probabilidad matemática observada de las inferencias biológicas o conclusiones (que corresponden a Discusión).</strong>
+        </p>
+
+        <div class="info-box" style="border-left-color: #003366;">
+            <strong style="color: #003366;">📝 Extracto Tipo: Materiales y Métodos</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
+                "La Inferencia Bayesiana se ejecutó en MrBayes v.3.2.7 empleando el esquema particionado (GTR+I+G para COI; HKY+G para 16S). Se asignaron distribuciones previas planas (priors no informativos) para la topología. La exploración del paisaje de probabilidad se aproximó mediante $MC^3$ configurando dos corridas independientes de cuatro cadenas (temperatura=0.2). Se ejecutaron 10 millones de iteraciones MCMC, muestreando topologías cada 1,000 pasos. La convergencia estacionaria se certificó en Tracer v.1.7, garantizando que el Tamaño Efectivo de Muestra (ESS) de todos los parámetros superara el umbral de 200. Las Probabilidades Posteriores (PP) topológicas se extrajeron del árbol de consenso de regla de mayoría (50%) tras un periodo estricto de descarte (burn-in del 25%)."
+            </p>
+        </div>
+
+        <p>Ejemplos de redacción topológica de acuerdo al enfoque de su proyecto (note la referencia a la figura y a los colores de los nodos):</p>
+
+        <div style="margin-bottom: 30px; border: 1px solid #bdc3c7; border-radius: 6px; overflow: hidden;">
+            <div style="background-color: #34495e; color: white; padding: 10px 20px; font-weight: bold;">Enfoque A: Filogenética de Especies (Taxonomía)</div>
+            <div style="padding: 20px; background-color: #f9fbfb;">
+                <p style="font-size: 0.95em; color: #2c3e50; text-align: justify; margin-bottom: 15px;"><strong>Texto de Resultados:</strong><br>
+                "El consenso Bayesiano validó la monofilia infragenérica de <em>Nemesia</em> con probabilidad absoluta (PP = 1.0). Al interior de este clado, <em>Nemesia floribunda</em> se posicionó como taxón hermano de <em>N. pallida</em> (PP = 0.96). La arquitectura topológica basal entre los tres subgéneros resultó en una politomía blanda, reportando probabilidades marginales por debajo del umbral estadístico de robustez (PP < 0.90) <strong>(Figura 1)</strong>."</p>
+                <div style="background-color: #ecf0f1; padding: 10px; border-left: 4px solid #7f8c8d; font-family: 'Times New Roman', serif; font-size: 0.9em;">
+                    <strong>Leyenda:</strong> Figura 1. Filograma de consenso (Regla de Mayoría al 50%) derivado de Inferencia Bayesiana para el género <em>Nemesia</em>. Los números nodales indican Probabilidades Posteriores (PP) $\ge$ 0.90; los círculos negros sólidos denotan nodos con soporte absoluto (PP = 1.0).
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 30px; border: 1px solid #bdc3c7; border-radius: 6px; overflow: hidden;">
+            <div style="background-color: #27ae60; color: white; padding: 10px 20px; font-weight: bold;">Enfoque B: Filogeografía Poblacional</div>
+            <div style="padding: 20px; background-color: #f9fbfb;">
+                <p style="font-size: 0.95em; color: #2c3e50; text-align: justify; margin-bottom: 15px;"><strong>Texto de Resultados:</strong><br>
+                "La distribución posterior de árboles MCMC segregó los haplotipos secuenciados en dos clados fuertemente estructurados geográficamente <strong>(Figura 2)</strong>. Las poblaciones recolectadas en la vertiente occidental conformaron un agrupamiento monofilético con alto soporte Bayesiano (PP = 0.99), divergente del clado aglomerando la vertiente oriental (PP = 0.97). No se infirió estructuración terminal estadísticamente robusta (nodos colapsados con PP < 0.95) entre los individuos muestreados intra-vertiente."</p>
+                <div style="background-color: #ecf0f1; padding: 10px; border-left: 4px solid #7f8c8d; font-family: 'Times New Roman', serif; font-size: 0.9em;">
+                    <strong>Leyenda:</strong> Figura 2. Consenso topológico MCMC de los haplotipos mitocondriales para poblaciones de <em>Especie x</em>. Se reportan los valores de Probabilidad Posterior excluyendo soportes topológicos marginales (PP &lt; 0.90).
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 30px; border: 1px solid #bdc3c7; border-radius: 6px; overflow: hidden;">
+            <div style="background-color: #8e44ad; color: white; padding: 10px 20px; font-weight: bold;">Enfoque C: Evolución Molecular (Historia de un Gen)</div>
+            <div style="padding: 20px; background-color: #f9fbfb;">
+                <p style="font-size: 0.95em; color: #2c3e50; text-align: justify; margin-bottom: 15px;"><strong>Texto de Resultados:</strong><br>
+                "La inferencia paramétrica de la familia génica hemocianina recuperó tres grupos parálogos mayores correspondientes a las subunidades anotadas de la proteína <strong>(Figura 3)</strong>. Las copias ortólogas de la subunidad alfa conformaron un linaje monofilético absoluto (PP = 1.0). El mapeo de probabilidades anidó las secuencias del <em>Taxón A</em> de forma intra-clado junto con copias catalogadas como subunidad beta en otras especies, relación fuertemente respaldada por la cadena de Markov (PP = 0.98)."</p>
+                <div style="background-color: #ecf0f1; padding: 10px; border-left: 4px solid #7f8c8d; font-family: 'Times New Roman', serif; font-size: 0.9em;">
+                    <strong>Leyenda:</strong> Figura 3. Árbol Bayesiano de relaciones ortólogas y parálogas de la familia génica de la hemocianina. Se exponen Probabilidades Posteriores $\ge$ 0.90 asociadas a los clados principales.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff; padding-bottom: 10px;">
+        <h2 class="section-title">6. Instrucciones para la Entrega y Cuestionario</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
+            <p style="margin-bottom: 10px; font-size: 0.95em;">Entregue un archivo PDF titulado <code>Apellidos_Lab10_Bayes.pdf</code> que contenga:</p>
+            <ol style="margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
+                <li style="margin-bottom: 5px;">📄 <strong>1. Auditoría MCMC en Tracer:</strong> Pantallazo nítido de Tracer evidenciando la columna ESS certificando que todos sus parámetros superan el umbral 200, junto a la ventana "Trace" exhibiendo el perfil estacionario ("gusano peludo") de su LnL.</li>
+                <li style="margin-bottom: 5px;">📄 <strong>2. Filograma Exportado (R):</strong> El gráfico vectorial enraizado (Outgroup basal) generado con ggtree, exhibiendo la retención condicional de nodos numéricos (PP $\ge 0.90$) y el marcador negro para los nodos de probabilidad absoluta.</li>
+                <li>📝 <strong>3. Análisis Crítico y Redacción Científica:</strong> Respuestas redactadas bajo el formato estricto exigido a las siguientes 3 preguntas.</li>
+            </ol>
+        </div>
+
+        <h3 style="color: #d35400;">Preguntas de Evaluación:</h3>
+        <div style="margin-left: 20px;">
+            <p><strong>P1. Epistemología, Priors y Lognormal:</strong> Basado en la formulación del Teorema de Bayes (Sección 1.1), argumente filosóficamente la diferencia entre calcular la Verosimilitud y la Probabilidad Posterior. Además, explique qué es un "Prior Uniforme", cuál es el objetivo metodológico de utilizarlo por defecto en las topologías de MrBayes, y por qué será matemáticamente obligatorio reemplazar este prior uniforme por una curva "Lognormal" cuando intentemos inferir edades de divergencia fósiles en el próximo laboratorio.</p>
+            
+            <p><strong>P2. Diagnóstico de Sobreparametrización Topológica (Tracer):</strong> Suponga que ejecutó MCMC por 150 millones de iteraciones extremas, pero al analizar Tracer, la variable "alpha" correspondiente a la distribución Gamma exhibe un ESS crónico atascado en 45 (zona roja). Diagnostique estadísticamente el fenómeno biológico que causa este estancamiento paramétrico y argumente la corrección metodológica que aplicaría dentro de la sintaxis <code>lset</code> en su bloque NEXUS para forzar la convergencia.</p>
+            
+            <p><strong>P3. Reporte de Artículo Científico:</strong> Redacte un párrafo aséptico integrando los <strong>"Métodos y Resultados Topológicos Bayesianos"</strong> definitivos para el MCMC de su proyecto final. Emplee el formato riguroso de la Sección 5 y asegúrese de redactar su <strong>Leyenda</strong>. Incluya el estatus de monofilia general y reporte las Probabilidades Posteriores (PP) de sus clados, absteniéndose totalmente de especular conclusiones en este párrafo. Discuta matemáticamente si las ramificaciones internas superan el umbral exigido para publicación Bayesiana ($\ge 0.95$).</p>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">7. Rúbrica de Evaluación</h2>
+        
+        <table class="code-table" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 30%;">Excelente (4.5 - 5.0)</th>
+                    <th style="width: 30%;">Aceptable (3.5 - 4.4)</th>
+                    <th style="width: 15%;">Insuficiente (&lt; 3.5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Código MCMC, Tracer y R (30%)</strong></td>
+                    <td>Convergencia analítica impecable en Tracer (ESS > 200 general). El script ggtree filtró limpiamente clados con PP &lt; 0.90 y coloreó nodos absolutos, aplicando enraizamiento (root) sin cortar tip labels.</td>
+                    <td>Ejecuta MrBayes, pero Tracer señala parámetros atascados (ESS < 100) y no intenta simplificar el bloque NEXUS. O bien, el gráfico R retiene toda la "basura" numérica saturando visualmente las politomías.</td>
+                    <td>Es incapaz de configurar rutas CMD o asume erróneamente que MrBayes halla e implementa modelos GTR automáticamente sin incluirlos con el comando <code>lset</code>, invalidando el experimento.</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Epistemología y Priors (P1) (20%)</strong></td>
+                    <td>Articula la Ecuación de Bayes. Justifica que el prior plano asume ignorancia para no sesgar datos, y razona lógicamente que las edades fósiles exigen Lognormal porque el tiempo no admite valores negativos.</td>
+                    <td>Logra diferenciar Posterior de Verosimilitud, pero evade o no comprende el rol estadístico de "asumir un Prior plano", omitiendo la relación matemática entre el Lognormal y la calibración temporal.</td>
+                    <td>Extrapola la Máxima Verosimilitud hacia BI ignorando el Teorema de Bayes, o confunde un Prior con el resultado estadístico de las cadenas MCMC finalizadas.</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Síndrome del ESS Crónico (P2) (20%)</strong></td>
+                    <td>Diagnostica profundamente la sobreparametrización: la matriz genética carece de la variabilidad suficiente para que el MCMC estime hipercomplejidad algorítmica, demandando reducir <code>nst</code> o <code>rates</code>.</td>
+                    <td>Asocia el ESS crónico con la necesidad de "cambiar el modelo" del NEXUS, pero falla en diagnosticar la carencia de variabilidad empírica intrínseca en el ADN que causa el estancamiento paramétrico.</td>
+                    <td>Se aferra a la idea falaz de que un ESS colapsado se resuelve extendiendo a billones las generaciones, ignorando que existe un techo de información biológica subyacente.</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Redacción Científica Rigurosa (P3) (30%)</strong></td>
+                    <td>Redacción nivel Manuscrito Q1. Expone la configuración MCMC y Burn-in. Reporta PP clave, adjunta Leyenda gráfica completa y se abstiene estrictamente de formular hipótesis biológicas (Discusión) en los Resultados.</td>
+                    <td>Integra Resultados topológicos aceptables, pero relaja el rigor Bayesiano, asumiendo o describiendo Probabilidades Posteriores de 0.80 como "nodos de fuerte soporte" para el proyecto.</td>
+                    <td>Escritura informal; evade la parametrización de las cadenas, omite la leyenda de figura, o dedica toda la sección a elaborar conclusiones evolutivas prematuras sin describir fríamente las matemáticas del árbol.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">8. Bibliografía Citada</h2>
+        
+        <div style="padding-left: 20px; text-indent: -20px; font-size: 0.95em; line-height: 1.8;">
+            <p>Drummond, A. J., Suchard, M. A., Xie, D., & Rambaut, A. (2012). Bayesian phylogenetics with BEAUti and the BEAST 1.7. <em>Molecular Biology and Evolution</em>, 29(8), 1969-1973.</p>
+
+            <p>Huelsenbeck, J. P., & Ronquist, F. (2001). MRBAYES: Bayesian inference of phylogenetic trees. <em>Bioinformatics</em>, 17(8), 754-755.</p>
+            
+            <p>Ronquist, F., Teslenko, M., van der Mark, P., Ayres, D. L., Darling, A., Höhna, S., ... & Huelsenbeck, J. P. (2012). MrBayes 3.2: efficient Bayesian phylogenetic inference and model choice across a large model space. <em>Systematic Biology</em>, 61(3), 539-542.</p>
+            
+            <p>Yang, Z., & Rannala, B. (2012). Molecular phylogenetics: principles and practice. <em>Nature Reviews Genetics</em>, 13(5), 303-314.</p>
+
+            <p>Yu, G., Smith, D. K., Zhu, H., Guan, Y., & Lam, T. T. Y. (2017). ggtree: an r package for visualization and annotation of phylogenetic trees. <em>Methods in Ecology and Evolution</em>, 8(1), 28-36.</p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
