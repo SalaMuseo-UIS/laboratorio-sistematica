@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Lab 11: Reloj Molecular (BEAST2), Datación y Fósiles</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', flowchart: { curve: 'linear' } });</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+    .info-box strong { color: #2980b9; }
+
+    /* CODIGO Y BLOQUES */
+    pre {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.9em;
+    }
+    .cmd {
+        background: #f4f4f4;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #c0392b;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
+
+    /* TUTORIAL Y PASOS */
+    .tutorial-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s;
+    }
+    .tutorial-step:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-number {
+        background: #2980b9;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Lab 11 - Reloj Molecular (BEAST2), Datación Nodal y Priors Biológicos</span>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">1. Fundamentación Teórica e Histórica</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivos de Aprendizaje</h3>
+            <ol>
+                <li><strong>Reconocer</strong> el paradigma histórico establecido por Zuckerkandl, Pauling y Hennig para la integración de moléculas y fósiles.</li>
+                <li><strong>Contrastar</strong> las capacidades de IQ-TREE, MrBayes y BEAST2, entendiendo cómo este último separa la Tasa de Mutación del Tiempo Geológico.</li>
+                <li><strong>Comprender</strong> la justificación biológica y matemática detrás de los modelos de Reloj Molecular (Estricto vs. Relajado).</li>
+                <li><strong>Diferenciar</strong> conceptualmente los <em>Tree Priors</em> (Coalescencia Poblacional vs. Especiación Birth-Death) según el nivel taxonómico de su investigación.</li>
+                <li><strong>Dominar</strong> la calibración fósil asimétrica utilizando curvas Lognormales en BEAUti y graficar cronogramas publicables en R.</li>
+            </ol>
+        </div>
+        
+        <h3>1.1. El Paradigma Histórico: Moléculas como Semántidas (Zuckerkandl & Pauling, 1962)</h3>
+        <p>Durante más de un siglo, la biología evolutiva dependió exclusivamente de la paleontología para fechar el árbol de la vida. Sin embargo, el registro fósil es fragmentario. El gran salto paradigmático ocurrió en 1962, cuando Emile Zuckerkandl y Linus Pauling, estudiando secuencias de hemoglobina, propusieron que las macromoléculas actuaban como <strong>"semántidas" (documentos históricos portadores de información)</strong>.</p>
+        <p>Ellos descubrieron que los linajes acumulaban mutaciones a un ritmo sorprendentemente constante. Al comparar humanos y caballos, estimaron que ocurría una sustitución aminoacídica cada ~14.5 millones de años. Había nacido la idea del <strong>Reloj Molecular</strong>: la posibilidad de medir el tiempo geológico directamente desde el genoma, sin necesidad de encontrar un fósil para cada especie extinta.</p>
+
+        <h3>1.2. La Paradoja de la Tasa y el Tiempo (El aporte de BEAST2)</h3>
+        <p>A pesar del optimismo inicial, pronto surgió un obstáculo matemático fundamental. En un árbol filogenético (como los de IQ-TREE o MrBayes), la longitud de una rama representa la <strong>cantidad total de cambio genético</strong> (sustituciones por sitio). Sin embargo, esa cantidad de cambio es el producto de dos incógnitas indivisibles:</p>
+        <p style="text-align: center; font-size: 1.1em; font-family: monospace; font-weight: bold; margin: 20px 0;">Cambio Genético = Tasa Mutacional (Velocidad) × Tiempo Transcurrido</p>
+        <p>Para resolver esta ecuación, necesitamos anclar una de las variables. <strong>BEAST2 (Bayesian Evolutionary Analysis Sampling Trees)</strong> resuelve este problema mediante co-estimación Bayesiana. Utiliza "Priors" (creencias previas) derivados de calibraciones fósiles para anclar el Tiempo en nodos específicos. Al fijar el tiempo, el algoritmo MCMC puede despejar la Tasa Mutacional y extrapolarla al resto del árbol, generando un <strong>Cronograma</strong> calibrado en Millones de Años (Ma).</p>
+
+        <h3>1.3. La Calibración Paleontológica y el Principio de Hennig (1966)</h3>
+        <p>¿Cómo se introduce correctamente un fósil en el árbol? Willi Hennig, el padre de la sistemática filogenética, estableció reglas estrictas. Un fósil jamás es el ancestro común exacto de dos linajes; para poder asignar un fósil a un nodo, este debe poseer <strong>sinapomorfías</strong> (caracteres derivados compartidos) inequívocas de ese clado.</p>
+        <p>Debido a lo fragmentario de la fosilización, <strong>el ancestro biológico real siempre originó las apomorfías millones de años antes de que el primer organismo se fosilizara</strong>. Por lo tanto, un fósil solo nos otorga una <strong>edad mínima absoluta</strong> (Hard Minimum Bound).</p>
+        
+        <div class="theory-box" style="border-left-color: #e67e22; background-color: #fdf2e9;">
+            <p><strong>🦴 La Matemática del Fósil: La Curva Lognormal</strong></p>
+            <p>Para reflejar la lógica de Hennig en BEAST2, está prohibido calibrar fósiles con Priors Uniformes (rango plano) o curvas Normales (Campana de Gauss simétrica que admite valores negativos). El estándar científico exige la curva <strong>Lognormal</strong>:</p>
+            <ul>
+                <li><strong>Offset (Límite Rígido):</strong> El muro de la distribución se ajusta a la edad del fósil. La probabilidad estadística de que el clado sea más joven que la piedra descubierta cae a cero abruptamente.</li>
+                <li><strong>Cola Asimétrica:</strong> La curva decae lentamente hacia el pasado (la derecha), indicando matemáticamente que el ancestro real fue más antiguo, ajustándose a la incompletitud paleontológica de Hennig.</li>
+            </ul>
+        </div>
+
+        <h3>1.4. Modelos de Reloj Molecular</h3>
+        <table class="code-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Modelo de Reloj</th>
+                    <th style="width: 75%;">Descripción Teórica y Diagnóstico</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Strict Clock (Estricto)</strong></td>
+                    <td>Asume una tasa de evolución idéntica en todo el árbol de la vida. Biológicamente es improbable porque la eficacia de reparación del ADN cambia (un ratón muta más rápido que una ballena por año). Solo se usa en brotes de virus (ej. COVID-19).</td>
+                </tr>
+                <tr>
+                    <td><strong>Relaxed Clock (Relajado)</strong></td>
+                    <td>Permite que cada rama evolucione a su propio ritmo. El modelo <strong>Uncorrelated Lognormal (UCLN)</strong> asume que las tasas varían extrayéndose de una distribución matemática. <em>Auditoría:</em> Se aprueba empíricamente si el parámetro <code>ucldStdev</code> en Tracer no toca el cero absoluto.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>1.5. Priors de Árbol: Microevolución vs. Macroevolución</h3>
+        <p>Antes de leer el ADN, BEAST2 exige declarar un "Prior de Árbol" que gobierne la topología:</p>
+        <ul>
+            <li><strong>Modelos de Especiación (Birth-Death / Yule):</strong> Modelan la macroevolución (origen y extinción de linajes divergentes). <strong>Uso Obligatorio:</strong> Cuando su matriz contiene <em>especies diferentes</em> aisladas reproductivamente.</li>
+            <li><strong>Modelos Coalescentes:</strong> Rastrean la microevolución: cómo las copias de un gen (alelos) convergen hacia atrás en el tiempo hasta un ancestro común dentro de un grupo que aún se reproduce (panmixia). <strong>Uso Obligatorio:</strong> Cuando su matriz contiene <em>individuos de una misma especie o población</em>.</li>
+        </ul>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">2. Ecosistema de Software e Instalación (Windows)</h2>
+        <p>Hemos revisado los links oficiales para asegurar el ensamblaje de su "cadena de montaje" bioinformática. <strong>Asegúrese de instalar Java primero.</strong></p>
+
+        <table class="code-table">
+            <thead>
+                <tr>
+                    <th style="background-color: #2980b9; width: 20%;">Programa</th>
+                    <th style="background-color: #2980b9; width: 80%;">Función y Enlace</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Java (JRE)</strong></td>
+                    <td>La máquina virtual base necesaria para correr toda la suite Bayesiana.<br>📥 <a href="https://www.java.com/es/download/" target="_blank">java.com/es/download/</a></td>
+                </tr>
+                <tr>
+                    <td><strong>BEAST2 (Suite)</strong></td>
+                    <td>Incluye <strong>BEAUti</strong> (interfaz gráfica XML), <strong>BEAST</strong> (el motor MCMC) y <strong>TreeAnnotator</strong>.<br>📥 <a href="https://www.beast2.org/" target="_blank">www.beast2.org/</a></td>
+                </tr>
+                <tr>
+                    <td><strong>BEAGLE Library</strong></td>
+                    <td><em>¡Esencial!</em> Librería de cálculo que optimiza las funciones MCMC. <strong>Nota:</strong> Incluso si su computador no tiene una tarjeta gráfica dedicada (NVIDIA/AMD), <strong>instale BEAGLE de todos modos</strong>; el programa también acelerará enormemente los cálculos usando el procesador multinúcleo (CPU) convencional mediante instrucciones SSE/AVX.<br>📥 <a href="https://github.com/beagle-dev/beagle-lib/wiki" target="_blank">github.com/beagle-dev/beagle-lib</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Tracer</strong></td>
+                    <td>El laboratorio clínico. Visualizador estadístico indispensable para auditar el ESS.<br>📥 <a href="https://github.com/beast-dev/tracer/releases/latest" target="_blank">github.com/beast-dev/tracer/releases</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">3. Metodología Paso a Paso: BEAUti y MCMC</h2>
+
+        <div class="tutorial-step">
+            <div class="step-number">I</div>
+            <div class="step-content">
+                <strong>Fase I: Prueba de Reloj en MEGA (Likelihood Ratio Test)</strong>
+                <p>Validaremos empíricamente la hipótesis del reloj molecular mediante la Razón de Verosimilitud.</p>
+                <ol>
+                    <li>Abra su alineamiento final en <strong>MEGA</strong>. Vaya a <em>"Analyze" > "Clocks" > "Test Molecular Clock (ML)"</em>.</li>
+                    <li>En <em>Tree to Use</em>, cargue la topología <code>.treefile</code> de IQ-TREE (Lab 9). Seleccione su modelo evolutivo (ej. GTR+G) y presione OK.</li>
+                    <li><strong>Análisis Matemático:</strong> MEGA calcula la Verosimilitud de su árbol con tasas libres y lo compara con un árbol forzado a reloj estricto (ultramétrico). Si el "P-value" es $< 0.05$, el reloj estricto se rechaza estadísticamente: usted <strong>debe obligatoriamente parametrizar un Reloj Relajado</strong>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">II</div>
+            <div class="step-content">
+                <strong>Fase II: El Gestor de Paquetes (`bModelTest`)</strong>
+                <p>En lugar de forzar a BEAST a correr un solo modelo evolutivo, le instalaremos la habilidad de hacer <em>Reversible Jump MCMC</em>: saltar estadísticamente entre todos los modelos de ADN (JC, HKY, GTR) evaluando su incertidumbre.</p>
+                <ol>
+                    <li>Abra <strong>BEAUti</strong>. Vaya a <em>File > Manage Packages</em>.</li>
+                    <li>Busque <strong>bModelTest</strong>, selecciónelo y pulse <em>Install</em>. Reinicie el programa.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">III</div>
+            <div class="step-content">
+                <strong>Fase III: Configuración de Datos, Modelos y Reloj (BEAUti)</strong>
+                <ol>
+                    <li><strong>Alineamiento (Concatenación):</strong> Vaya a <em>File > Import Alignment</em> y cargue su archivo NEXUS o FASTA. <em>Nota:</em> Si cargó múltiples marcadores (ej. genes mitocondriales que no recombinan), selecciónelos todos con la tecla <em>Shift</em> y pulse <strong>"Link Clock Models"</strong> y <strong>"Link Trees"</strong> (garantizando matemáticamente una única historia filogenética subyacente).</li>
+                    <li><strong>Site Model:</strong> Vaya a la pestaña <em>Site Model</em>. En el menú desplegable superior, cambie el modelo predeterminado a <strong>bModelTest</strong>. Active la casilla del parámetro Gamma empírico.</li>
+                    <li><strong>Clock Model:</strong> Vaya a la pestaña <em>Clock Model</em>. Sustituya el <em>Strict Clock</em> por <strong>Relaxed Clock Log Normal</strong>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">IV</div>
+            <div class="step-content">
+                <strong>Fase IV: Priors de Árbol y Calibración Fósil</strong>
+                <ol>
+                    <li>Pestaña <strong>Priors</strong>. En el parámetro superior (<em>Tree.t</em>), asigne la biología de la matriz: <strong>Birth-Death Model</strong> (para macroevolución de especies) o <strong>Coalescent Constant Population</strong> (para demografía microevolutiva).</li>
+                    <li>Pulse el botón <strong>"+ Add Prior"</strong> (abajo). Nómbrelo (ej. <code>Origen_Primates</code>). Traslade las especies descendientes del fósil a la columna de la derecha, <strong>marque la casilla Monophyletic obligatoriamente</strong>, y pulse OK.</li>
+                    <li>A la derecha del nuevo prior listado, cambie <em>[none]</em> por la distribución <strong>Lognormal</strong>.</li>
+                    <li>Expanda la flecha. En <strong>Offset</strong>, digite la edad exacta del fósil (ej. <code>55.8</code> Ma). En <strong>M (Mean)</strong> asigne <code>4.0</code> y en <strong>S (Variance)</strong> <code>0.1</code>. La curva debe dibujar el "Offset" como un muro inquebrantable a la izquierda, imposibilitando edades menores.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="theory-box" style="border-left-color: #3498db; background-color: #ebf5fb;">
+            <p><strong>🔬 Auditoría Experta: "Sample from Prior" (du Plessis, 2023)</strong></p>
+            <p>Un fraude involuntario muy común en datación es publicar cronogramas donde las edades fueron generadas exclusivamente por los Priors Lognormales que el investigador inventó, porque su ADN carecía de señal temporal real para modificarlos. Para testear esto, los científicos en BEAUti (pestaña MCMC) activan la casilla <strong>"Sample from prior"</strong>. Esto obliga al MCMC a correr <em>ciego</em>, ignorando el ADN. Luego, comparan los resultados en Tracer (Corrida Normal vs. Corrida Vacía). Si las edades divergen fuertemente, significa que la secuencia de ADN sí inyectó información valiosa al árbol.</p>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">V</div>
+            <div class="step-content">
+                <strong>Fase V: Generación del XML y Ejecución MCMC (BEAST2)</strong>
+                <ol>
+                    <li>Pestaña <strong>MCMC</strong>. Ajuste el <em>Chain Length</em> a <code>20000000</code> (20 millones de iteraciones). Verifique que <code>tracelog</code> y <code>treelog</code> guarden árboles cada <code>2000</code> iteraciones para no colapsar su memoria RAM.</li>
+                    <li>Vaya a <em>File > Save</em> y nombre su proyecto (ej. <code>datacion_final.xml</code>).</li>
+                    <li>Cierre BEAUti. Abra el motor <strong>BEAST</strong>, cargue el <code>.xml</code>, asegúrese de marcar la opción <em>"Use BEAGLE library if available"</em> para invocar la aceleración de su tarjeta gráfica (o procesador multi-hilo) y pulse <strong>Run</strong>.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">4. Auditoría de Convergencia (Tracer) y Condensación</h2>
+        
+        <div class="tutorial-step">
+            <div class="step-number">VI</div>
+            <div class="step-content">
+                <strong>Fase VI: Evaluación Clínica del MCMC y Reloj (Tracer)</strong>
+                <p>Las edades de BEAST2 son irreproducibles si la Cadena de Markov no convergió.</p>
+                <ol>
+                    <li>Abra <strong>Tracer</strong> y cargue su archivo <code>.log</code>. Valide que la columna <strong>ESS sea $\ge 200$</strong> para todos los parámetros biológicos (la pestaña <em>Trace</em> debe mostrar la estabilidad del "gusano peludo").</li>
+                    <li><strong>Justificación del Reloj Relajado:</strong> Navegue al parámetro <code>ucldStdev</code> (Desviación estándar del reloj Lognormal). Analice la pestaña <em>Marginal Density</em>. Si el intervalo (95% HPD) <strong>no toca el cero matemático</strong>, significa que existe heterogeneidad significativa en las tasas entre linajes, justificando el Reloj Relajado. Si la distribución choca contra el cero estricto, una tasa mutacional única (reloj estricto) rige su matriz de forma global.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">VII</div>
+            <div class="step-content">
+                <strong>Fase VII: Maximum Clade Credibility Tree (TreeAnnotator)</strong>
+                <p>Extraeremos la media cronológica a partir de las 10,000 topologías fluctuantes (archivo <code>.trees</code>).</p>
+                <ol>
+                    <li>Abra <strong>TreeAnnotator</strong> (incluido en su instalación de BEAST).</li>
+                    <li><strong>Burnin percentage:</strong> <code>10</code> (Descarta la fase de escalada inestable MCMC).</li>
+                    <li><strong>Target tree type:</strong> <em>Maximum clade credibility tree (MCC)</em>.</li>
+                    <li><strong>Node heights:</strong> <em>Mean heights</em> (Promedia la edad nodal geométrica).</li>
+                    <li>Cargue su <code>.trees</code> de entrada, asigne el Output final como <code>arbol_MCC.tre</code> y ejecute.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">VIII</div>
+            <div class="step-content">
+                <strong>Fase VIII: Gráfico Publicable con 95% HPD en R (ggtree)</strong>
+                <p>Las revistas indexadas Q1 exigen exponer la incertidumbre temporal. Agregaremos barras de error celestes de confianza (95% HPD) sobre los clados.</p>
+
+<pre style="background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; font-family: 'Consolas', monospace; font-size: 0.85em; overflow-x: auto;">
+# 1. Cargar librerías bioinformáticas
+library(ggtree)
+library(treeio)
+library(ggplot2)
+
+# 2. Configurar Directorio e Importar el árbol MCC
+setwd("C:/Usuarios/SuNombre/Sistematica/Lab11")
+# La función read.beast decodifica todos los metadatos MCMC (HPD y PP) de forma nativa
+beast_tree <- read.beast("arbol_MCC.tre")
+
+# 3. Construcción del Cronograma Vectorial
+grafico <- ggtree(beast_tree, layout="rectangular") +
+  
+  # Adición de la escala geológica basal (Eje X en Millones de Años)
+  theme_tree2() +
+  
+  # Identificación de terminales
+  geom_tiplab(size=3.5, fontface="italic", align=TRUE) +
+  
+  # BARRAS DE INCERTIDUMBRE CRONOLÓGICA (95% HPD)
+  # Invoca paramétricamente el "height_0.95_HPD" codificado por TreeAnnotator
+  geom_range("height_0.95_HPD", color="#3498db", size=2.5, alpha=0.6) +
+  
+  # Filtro lógico de Probabilidad Posterior (Imprime Soporte numérico solo si PP >= 0.95)
+  geom_nodelab(aes(label=ifelse(as.numeric(posterior) >= 0.95, round(as.numeric(posterior), 2), "")), 
+               vjust=-1.2, size=2.5, color="#c0392b", fontface="bold") +
+               
+  # Límite horizontal: Expándalo para proteger las etiquetas de recorte visual
+  xlim(0, 100)
+
+print(grafico)
+ggsave("Cronograma_BEAST_Final.pdf", width=10, height=7, dpi=300)
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">5. Redacción Científica: Reporte de Cronogramas</h2>
+        <p>
+            Al redactar, consigne asépticamente la parametrización bioinformática (el promediador `bModelTest`), el modelo de reloj molecular auditado y la arquitectura geométrica (Lognormal) de la calibración fósil. La redacción de los resultados se realiza mediante un reporte claro, no se exige la escritura de un manuscrito completo, pero sí un párrafo que cuente con todos los elementos rigurosos de publicación.
+        </p>
+
+        <div class="info-box" style="border-left-color: #003366;">
+            <strong style="color: #003366;">📝 Extracto Tipo: Materiales y Métodos</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
+                "La co-estimación filogenética y de tiempos de divergencia se procesó en la suite BEAST v2.7. Los alineamientos multigénicos fueron concatenados asumiendo co-evolución topológica (Linked Trees). La arquitectura del modelo de sustitución se promedió dinámicamente mediante rjMCMC implementando el paquete <em>bModelTest</em>. Se asignó un modelo de reloj relajado no correlacionado (UCLN). Dada la naturaleza interespecífica de los terminales, se prescribió un prior macroevolutivo de Nacimiento-Muerte (Birth-Death). La calibración cronológica absoluta se fijó en el MRCA basal utilizando una distribución paramétrica Lognormal (Offset = 55.8 Ma, M = 4.0, S = 0.1) fundamentada en la edad mínima estratigráfica del taxón fósil <em>Teilhardina asiatica</em>. La cadena MCMC iteró durante 20 millones de generaciones. La convergencia estacionaria (ESS > 200) y la validación de la relajación del reloj se certificaron en Tracer v1.7. El árbol Maximum Clade Credibility (MCC) se derivó en TreeAnnotator descartando un burn-in del 10% y reportando los intervalos temporales de Mayor Densidad Posterior (95% HPD)."
+            </p>
+        </div>
+
+        <div class="theory-box" style="border-left-color: #27ae60; background-color: #eafaf1;">
+            <strong style="color: #1e8449;">📊 Extracto Tipo: Reporte de Resultados de Datación</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
+                "La convergencia Bayesiana (MCMC) posicionó la coalescencia del linaje corona en el Paleoceno tardío, con una edad media estimada de 61.2 millones de años (Ma) y un rango de incertidumbre estadística (95% HPD) entre 56.5 y 65.1 Ma <strong>(Figura 1)</strong>. La radiación infragenérica consecuente, soportada topológicamente al límite absoluto (PP = 1.0), fue datada en el Mioceno medio (15.4 Ma; 95% HPD: 12.2 - 18.8 Ma). El parámetro de desviación del reloj relajado (ucldStdev: media = 0.45; 95% HPD = 0.22 - 0.71) exhibió una exclusión estricta del cero matemático, validando empíricamente la asunción paramétrica de heterogeneidad en las tasas mutacionales inter-linaje para este conjunto biológico."
+            </p>
+        </div>
+    </div>
+
+    <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff; padding-bottom: 10px;">
+        <h2 class="section-title">6. Instrucciones para la Entrega y Cuestionario</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
+            <p style="margin-bottom: 10px; font-size: 0.95em;">Entregue un archivo PDF titulado <code>Apellidos_Lab11_BEAST.pdf</code> conteniendo:</p>
+            <ol style="margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
+                <li style="margin-bottom: 5px;">📄 <strong>1. Cronograma Analítico (R):</strong> Gráfico de su árbol MCC final exhibiendo el eje temporal basal (Ma), el filtrado del soporte MCMC ($\ge 0.95$ PP), y las barras de incertidumbre celestes (<code>height_0.95_HPD</code>) trazadas transversalmente.</li>
+                <li style="margin-bottom: 5px;">📄 <strong>2. Auditoría Avanzada (Tracer):</strong> Captura atestiguando la convergencia general (ESS $\ge$ 200) y el panel de distribución Marginal del parámetro <code>ucldStdev</code> para dictaminar la legitimidad empírica de la relajación del reloj.</li>
+                <li>📝 <strong>3. Reporte y Análisis Crítico:</strong> Respuestas consolidadas con máximo rigor académico para las 3 directrices formuladas.</li>
+            </ol>
+        </div>
+
+        <h3 style="color: #d35400;">Preguntas de Evaluación:</h3>
+        <div style="margin-left: 20px;">
+            <p><strong>P1. Epistemología Biológica y Diagnóstico de Reloj:</strong> Diferencie analíticamente la inferencia demográfica inherente a un prior "Coalescente" frente a la divergencia del prior "Nacimiento-Muerte" (Birth-Death). Indique explícitamente cuál prior configuró para la matriz final de su proyecto, justificándose en el nivel taxonómico de sus terminales. Adicionalmente, argumente cómo la interpretación excluyente del cero en el parámetro <code>ucldStdev</code> en Tracer valida científicamente la flexibilidad lognormal aplicada a su reloj.</p>
+            
+            <p><strong>P2. Asimetría Lognormal y Test de Señal MCMC:</strong> Basándose en el paradigma paleontológico de Hennig (1966), exponga matemáticamente la función del muro "Offset" en la curva de distribución Lognormal y justifique el rechazo dogmático de campanas simétricas (Normales) en la datación fósil absoluta. Consecutivamente (Fase IV), analice cómo el protocolo de depuración analítica "Sample from Prior" (du Plessis, 2023) garantiza la integridad científica evitando la publicación de cronologías dominadas por parámetros sintéticos.</p>
+            
+            <p><strong>P3. Reporte Cronológico Oficial:</strong> Transcribiendo los extractos asépticos de la Sección 5, diagrame el párrafo de <strong>Resultados Topológico-Temporales</strong> que condensa la edad del clado medular de su investigación (emplee medias nodales recuperadas de R/Tracer). Integre la Probabilidad Posterior topológica con los márgenes irreductibles de incertidumbre estadística temporal <strong>(95% HPD)</strong>. Finalmente, diseñe y anexe la <strong>Leyenda</strong> canónica detallada de su figura visual.</p>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">7. Rúbrica de Evaluación</h2>
+        
+        <table class="code-table" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 30%;">Excelente (4.5 - 5.0)</th>
+                    <th style="width: 30%;">Aceptable (3.5 - 4.4)</th>
+                    <th style="width: 15%;">Insuficiente (&lt; 3.5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Renderización Cronológica y Tracer (30%)</strong></td>
+                    <td>El script filtra PP $\ge$ 0.95 e inyecta la capa <code>geom_range</code> de barras HPD correlacionadas al eje X calibrado. Tracer demuestra ESS robusto general y grafica satisfactoriamente la marginación asimétrica del parámetro <code>ucldStdev</code> excluyente del cero.</td>
+                    <td>Condensa el MCC pero omite o trunca la incorporación de rangos de incertidumbre celestes en R, o evade auditar la legitimidad del <code>ucldStdev</code>, asumiendo empíricamente un reloj relajado de forma dogmática.</td>
+                    <td>Falla categóricamente en la condensación TreeAnnotator, presenta dendrogramas de IQ-TREE no enraizados carentes de escalas temporales, o interrumpe la parametrización en BEAUti inhabilitando la generación de XML.</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Priors Biológicos y Reloj Empírico (P1) (20%)</strong></td>
+                    <td>Contrasta Coalescencia (dinámica de alelos intrapoblacionales) contra Birth-Death (macroevolución inter-especies) asignando asertivamente la jerarquía taxonómica de su proyecto. Fundamenta el rechazo del reloj estricto en la positividad del HPD <code>ucldStdev</code>.</td>
+                    <td>Acota los modelos biológicos sin cristalizar sus diferencias teóricas o asume incoherencias entre su matriz y el prior elegido. Expresa el comportamiento del <code>ucldStdev</code> pero falla en asociar su validación matemática excluyente del cero.</td>
+                    <td>Diagnostica falazmente priors demográficos como funciones directas para incorporar fósiles o desconoce enteramente la naturaleza estocástica de las variaciones mutacionales entre terminales biológicos.</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Offset Fósil y Sample from Prior (P2) (20%)</strong></td>
+                    <td>Diserta el rol irreductible del Offset como Hard Minimum Bound biológico prohibiendo retrocesos temporales negativos. Aprehende el "Sample from Prior" como el test de oro para aislar y verificar la señal legítima del ADN en el Posterior.</td>
+                    <td>Enfatiza la utilidad asimétrica del Lognormal pero soslaya la fundamentación teórica de Hennig, o aborda de manera marginal la mecánica depurativa estadística de testear sin datos (Sample from prior).</td>
+                    <td>Postula erróneamente la preeminencia de priors Normales (simétricos) asumiendo fijación exacta y evidencia incomprensión sistémica sobre la arquitectura de la Verosimilitud en Inferencia Bayesiana.</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Calidad Científica del Reporte (P3) (30%)</strong></td>
+                    <td>Redacta el párrafo de resultados con rigor científico. Despliega la media de divergencia anclada e indisoluble de sus intervalos 95% HPD (Ma). Instituye la Leyenda estricta desglosando componentes visuales sin incursionar en exégesis conjeturales (Discusión).</td>
+                    <td>Emite la datación del clado en estimaciones fijas, amputando los rangos mandatorios 95% HPD de la cronología MCMC. O bien, describe las topologías ignorando los umbrales de publicación Bayesiana (PP $\ge$ 0.95).</td>
+                    <td>Sintaxis coloquial profana; disipa la información temporal medular de la simulación o sustituye el reporte aséptico con disertaciones geológicas o evolutivas que corresponden a la sección de Discusión.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">8. Bibliografía Citada</h2>
+        
+        <div style="padding-left: 20px; text-indent: -20px; font-size: 0.95em; line-height: 1.8;">
+            <p>Bouckaert, R., & Drummond, A. J. (2017). bModelTest: Bayesian phylogenetic site model averaging and model comparison. <em>BMC evolutionary biology</em>, 17(1), 1-11.</p>
+
+            <p>Bromham, L., Duchêne, S., Hua, X., Ritchie, A. M., Duchêne, D. A., & Ho, S. Y. W. (2018). Bayesian molecular dating: opening up the black box. <em>Biological Reviews</em>, 93(2), 1165-1191.</p>
+
+            <p>Drummond, A. J., & Rambaut, A. (2007). BEAST: Bayesian evolutionary analysis by sampling trees. <em>BMC Evolutionary Biology</em>, 7, 214.</p>
+            
+            <p>du Plessis, L. (2023). Taming the BEAST: BEAST2 Intro. <em>Workshop Squamish</em>. Recuperado de material del curso.</p>
+
+            <p>Farris, J. S. (1981). Distance data in phylogenetic analysis. In V. A. Funk and D. R. Brooks (eds.), <em>Advances in Cladistics</em>, volume 1, 3–23. New York Botanical Garden.</p>
+
+            <p>Hennig, W. (1966). <em>Phylogenetic Systematics</em>. University of Illinois Press, Urbana.</p>
+
+            <p>Rieux, A., & Balloux, F. (2016). Inferences from tip-calibrated phylogenies: a review and a practical guide. <em>Molecular Ecology</em>, 25(9), 1911-1924.</p>
+
+            <p>Zuckerkandl, E., & Pauling, L. (1962). Molecular disease, evolution, and genic heterogeneity. In <em>Horizons in biochemistry</em> (pp. 189-225). Academic Press.</p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
