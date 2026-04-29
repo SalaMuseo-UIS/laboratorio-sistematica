@@ -189,8 +189,9 @@
                 <li><strong>Comprender</strong> la diferencia entre la Biogeografía Ecológica (estudios de ecosistemas de hoy) y la Biogeografía Histórica (estudios de cómo evolucionó el espacio).</li>
                 <li><strong>Aprender</strong> qué es un "Área de Endemismo" y por qué se necesita un clado entero (muchas especies) para definirla.</li>
                 <li><strong>Automatizar</strong> la extracción de datos desde GBIF usando RStudio, mediante el uso de "Taxon Keys" (Claves Taxonómicas) para evitar errores.</li>
-                <li><strong>Formatear</strong> coordenadas geográficas rigurosamente según el manual oficial para que el programa VNDM las lea sin errores.</li>
+                <li><strong>Formatear y programar</strong> en R la arquitectura estricta de archivos `*.xyd` exigida por el algoritmo VNDM.</li>
                 <li><strong>Usar paso a paso</strong> VNDM para encontrar áreas de endemismo usando el Criterio Matemático de Szumik & Goloboff.</li>
+                <li><strong>Proyectar</strong> los resultados espaciales matemáticos en QGIS para lograr una correcta delimitación política y geográfica del ecosistema.</li>
             </ol>
         </div>
         
@@ -235,105 +236,130 @@
             <tbody>
                 <tr>
                     <td><strong>R y RStudio</strong></td>
-                    <td>Deberá tener instalados los paquetes <code>rgbif</code> (para descargar datos), <code>dplyr</code>, <code>stringr</code> y <code>CoordinateCleaner</code> (para limpiar datos). <em>Se instalarán en el primer paso del tutorial.</em></td>
+                    <td>Deberá tener instalados los paquetes <code>rgbif</code>, <code>dplyr</code>, <code>stringr</code> y <code>CoordinateCleaner</code>. <em>Se instalarán en el primer paso del tutorial.</em></td>
                 </tr>
                 <tr>
                     <td><strong>VNDM v3.1</strong><br>(Visor Geográfico)</td>
                     <td>
                         <strong>1.</strong> Ingrese a: <a href="http://www.lillo.org.ar/phylogeny/endemism/" target="_blank">http://www.lillo.org.ar/phylogeny/endemism/</a><br>
-                        <strong>2.</strong> Descargue el archivo ZIP para Windows. <strong>Atención:</strong> Descargue siempre la versión de 2025 o superior, ya que las versiones antiguas (2016) contenían un bug crítico (error matemático) que descartaba áreas válidas equivocadamente.<br>
+                        <strong>2.</strong> Descargue el archivo ZIP para Windows. <strong>Atención:</strong> Descargue siempre la versión de 2025 o superior, ya que es la única que permite exportar las coordenadas a QGIS[cite: 2].<br>
                         <strong>3.</strong> Extraiga la carpeta en su computador. No necesita instalación (no hay Setup).<br>
                         <strong>4.</strong> Ejecute <strong><code>vndm.exe</code></strong> para abrir la interfaz gráfica.
                     </td>
                 </tr>
+                <tr>
+                    <td><strong>QGIS</strong></td>
+                    <td>Sistema de Información Geográfica estándar. Lo usaremos al final para superponer nuestras áreas de endemismo sobre el mapa real de Colombia.</td>
+                </tr>
             </tbody>
         </table>
+
+        <div class="info-box" style="border-left-color: #f39c12; background-color: #fcf3cf;">
+            <strong style="color: #d35400;">🛡️ Nota de Seguridad de Windows (SmartScreen)</strong><br>
+            <p style="margin-top: 8px; font-size: 0.95em;">Al intentar abrir <code>vndm.exe</code> por primera vez, es muy probable que aparezca una pantalla azul de Windows indicando: <em>"SmartScreen de Microsoft Defender evitó que se iniciara una aplicación desconocida (Editor desconocido)"</em>.</p>
+            <p style="margin-top: 8px; font-size: 0.95em;"><strong>Esto es normal y no significa que sea un virus.</strong> Ocurre simplemente porque el desarrollador científico (Instituto Miguel Lillo / CONICET) no cuenta con un "Certificado Digital Comercial" de Microsoft. Para ejecutar el programa de manera segura, haga clic en la frase pequeña <strong>"Más información"</strong> y luego presione el botón <strong>"Ejecutar de todas formas"</strong>.</p>
+        </div>
     </div>
 
     <div class="content-section">
-        <h2 class="section-title">3. Tutorial Paso a Paso: De R a VNDM</h2>
+        <h2 class="section-title">3. Tutorial Paso a Paso: De R a VNDM y QGIS</h2>
 
         <div class="tutorial-step">
             <div class="step-number">I</div>
             <div class="step-content">
-                <strong>Fase I: Minería y Limpieza Automática en R</strong>
-                <p>El manual oficial de NDM/VNDM estipula que el programa falla si el archivo contiene nombres de especies con espacios, si tiene encabezados (títulos de columnas) o si incluye comas. El siguiente script asegura un formato perfecto.</p>
+                <strong>Fase I: Minería y Creación Estructurada del Archivo nativo en R</strong>
+                <p>El manual oficial del algoritmo especifica que el formato <code>*.xyd</code> tiene una arquitectura milimétrica. Para evitar corrupciones y colapsos del programa, utilizaremos una función robusta en R para construir el documento de forma segura.</p>
                 
 <pre>
 # ==============================================================================
-# LAB 12: MINERÍA Y CURACIÓN DE DATOS ESPACIALES PARA VNDM
+# LAB 12: MINERÍA Y CREACIÓN DEL ARCHIVO NATIVO XYD PARA VNDM
 # ==============================================================================
 
-# 0. Configurar el Directorio de Trabajo (Workspace)
-# Use su ruta exacta. En Windows se recomiendan barras hacia adelante (/).
-setwd("C:/Ruta/A/Su/Carpeta_de_Sistematica") 
+# 0. Configurar el Directorio de Trabajo
+# Cree una carpeta "lab12" en su Escritorio y copie la ruta. 
+# ¡IMPORTANTE!: Cambie manualmente las barras invertidas (\) por barras normales (/).
+setwd("PEGUE/AQUI/SU/RUTA/MODIFICADA")
 
-# 1. Instalar paquetes necesarios (¡Ejecute esta línea solo una vez en su computador!)
-install.packages(c("rgbif", "dplyr", "stringr", "CoordinateCleaner"))
-
-# 2. Cargar las librerías para usarlas en esta sesión
+# 1. Instalar y cargar paquetes (Ejecute install.packages solo una vez)
+# install.packages(c("rgbif", "dplyr", "stringr", "CoordinateCleaner"))
 library(rgbif)
 library(dplyr)
 library(stringr)
 library(CoordinateCleaner)
 
-# 3. Obtener el Código Taxonómico Oficial (Taxon Key)
-# Esto evita que GBIF se confunda con el texto del nombre.
-print("Buscando el código taxonómico en GBIF...")
+# 2. Función Robusta para Crear Archivos .xyd (Basado en jupanago)
+write_xyd <- function(data, filename) {
+  # Extraer especies únicas y cantidad total
+  species_list <- unique(data$species)
+  n_spp <- length(species_list)
+  
+  # Iniciar el archivo y escribir los encabezados estrictos de la V3.1
+  sink(filename)
+  cat("nocommas\n")
+  cat("longlat\n")
+  cat(paste0("spp ", n_spp, "\n"))
+  cat("xydata\n")
+  
+  # Bucle para imprimir cada especie y sus coordenadas asociadas
+  for (i in seq_along(species_list)) {
+    sp <- species_list[i]
+    # VNDM numera desde 0 y requiere corchetes exactos
+    cat(paste0("sp ", i - 1, " [", sp, "]\n"))
+    
+    # Extraer y formatear coordenadas
+    coords <- data %>% 
+      filter(species == sp) %>% 
+      select(decimalLongitude, decimalLatitude)
+    
+    # Imprimir coordenadas línea por línea
+    for (j in 1:nrow(coords)) {
+      cat(paste(coords$decimalLongitude[j], coords$decimalLatitude[j], "\n"))
+    }
+  }
+  sink()
+  print(paste("Archivo", filename, "creado con éxito. Contiene", n_spp, "especies."))
+}
+
+# 3. Descarga de Datos desde GBIF usando Taxon Key
+print("Buscando código taxonómico...")
 info_taxon <- name_backbone("Espeletia") # Cambie "Espeletia" por su clado
 codigo_gbif <- info_taxon$usageKey
 
-print(paste("Código de GBIF encontrado:", codigo_gbif))
-
-# 4. Descarga de Datos Crudos usando occ_search
-print("Descargando registros... Esto puede tomar un minuto.")
+print("Descargando registros de museo (vouchers)...")
 registros <- occ_search(
   taxonKey = codigo_gbif,               
   country = "CO",                       
-  basisOfRecord = "PRESERVED_SPECIMEN", # Exige vouchers físicos de museo
+  basisOfRecord = "PRESERVED_SPECIMEN",
   hasCoordinate = TRUE,                 
   limit = 5000                          
 )
 
 datos_crudos <- registros$data
 
-# Validación de seguridad
+# 4. Limpieza y Curación Espacial
 if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
-  print("Error: No se encontraron registros. Revise el nombre o la conexión.")
+  print("Error: No se encontraron registros.")
 } else {
-  print(paste("Registros iniciales:", nrow(datos_crudos)))
-  
-  # 5. Filtro Básico
   datos_filtrados <- datos_crudos %>%
     filter(!is.na(decimalLongitude), !is.na(decimalLatitude), !is.na(species))
   
-  # 6. Curación Espacial (CoordinateCleaner)
-  print("Iniciando curación espacial...")
+  print("Eliminando coordenadas erróneas...")
   datos_curados <- clean_coordinates(
     x = datos_filtrados,
     lon = "decimalLongitude",
     lat = "decimalLatitude",
-    tests = c("institutions", "zeros", "seas"), # Elimina océanos y museos
+    tests = c("institutions", "zeros", "seas"), 
     value = "clean"             
   )
   
-  # 7. Formato Estricto para VNDM
-  # VNDM se corrompe si el taxón tiene espacios. Se reemplazan por guiones bajos.
-  # NDM exige que el archivo no contenga separadores por comas.
-  datos_vndm <- datos_curados %>%
+  # Limpiar espacios en nombres y seleccionar columnas finales
+  datos_limpios <- datos_curados %>%
     mutate(species = str_replace_all(species, " ", "_")) %>%
     select(decimalLongitude, decimalLatitude, species) %>%
     distinct()
-  
-  print(paste("Registros listos para exportar:", nrow(datos_vndm)))
-  
-  # 8. Exportación Final
-  # El archivo NO debe contener títulos de columnas (col.names = FALSE).
-  # Las columnas deben estar separadas por tabulaciones (sep = "\t").
-  write.table(datos_vndm, "ocurrencias_vndm.xyd", 
-              sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
-  
-  print("¡Éxito! El archivo ocurrencias_vndm.xyd ha sido creado.")
+
+  # 5. Ejecutar la función para crear el archivo final
+  write_xyd(datos_limpios, "ocurrencias.xyd")
 }
 </pre>
             </div>
@@ -342,13 +368,14 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
         <div class="tutorial-step">
             <div class="step-number">II</div>
             <div class="step-content">
-                <strong>Fase II: Cargar datos en VNDM</strong>
+                <strong>Fase II: Cargar y Visualizar los datos en VNDM (Versión 3.1)</strong>
+                <p>En la versión 3.1, la interfaz es más limpia y no colapsa la pantalla dibujando todo a la vez.</p>
                 <ol>
-                    <li>Abra el programa <strong><code>vndm.exe</code></strong>. Ambos programas (NDM y VNDM) deben estar en la misma carpeta.</li>
-                    <li>Vaya al menú superior: <strong>File</strong> &rarr; <strong>Read XYZ / Data point format</strong>.</li>
-                    <li>Seleccione su nuevo archivo <code>ocurrencias_vndm.xyd</code>.</li>
-                    <li>Aparecerá un cuadro de diálogo. Seleccione la opción <strong>"X, Y, Sp"</strong> (Longitud, Latitud, Especie). Haga clic en <strong>OK</strong>.</li>
-                    <li>La pantalla negra dibujará el mapa y mostrará sus especies como puntos de colores. El panel izquierdo mostrará las especies leídas.</li>
+                    <li>Abra el programa <strong><code>vndm.exe</code></strong> (recuerde que `ndm.exe` debe estar guardado en la misma carpeta).</li>
+                    <li>Como usamos R para crear un archivo nativo estructurado, vaya al menú superior: <strong>File</strong> &rarr; <strong>Read sets from file</strong> (¡NO use "Data point format"!).</li>
+                    <li>Seleccione su archivo <code>ocurrencias.xyd</code> y presione Abrir.</li>
+                    <li>La pantalla permanecerá blanca, ¡pero esto es normal! Mire la esquina inferior izquierda: si dice la cantidad de registros y especies (ej. <em>1846 records, 89 species</em>), sus datos cargaron perfectamente en la memoria.</li>
+                    <li>Para visualizar dónde están sus organismos en el mapa, use los botones de flechas <strong><code>&lt;&lt;</code></strong> y <strong><code>&gt;&gt;</code></strong> que se encuentran en el menú superior. Esto le permitirá navegar por la distribución de su clado, especie por especie.</li>
                 </ol>
             </div>
         </div>
@@ -356,17 +383,15 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
         <div class="tutorial-step">
             <div class="step-number">III</div>
             <div class="step-content">
-                <strong>Fase III: Crear la Cuadrícula (Grid)</strong>
-                <p>Usted puede usar las teclas de dirección del teclado para ajustar rápidamente el tamaño y origen de la grilla.</p>
+                <strong>Fase III: Crear y Ajustar la Cuadrícula (Grid)</strong>
+                <p>El algoritmo necesita dividir el continente en cuadros para calcular las densidades y presencias.</p>
                 <ol>
-                    <li>Vaya al menú <strong>Grid</strong> &rarr; <strong>Set origin and sizes</strong>.</li>
-                    <li>Busque la sección <strong>Cell Size (X/Y)</strong>. Aquí define el tamaño en grados de sus cuadros.</li>
-                    <li>Escriba <strong>1.0</strong> en X y <strong>1.0</strong> en Y (cuadros de ~111 km, estándar para analizar a nivel de país). Si su clado vive en una zona muy pequeña, intente con <strong>0.5</strong>.</li>
-                    <li>Haga clic en <strong>OK</strong>. La malla aparecerá sobre el mapa. Las celdas con registros tendrán un punto rojo.</li>
-                    <li><strong>Ajustes Rápidos (Atajos de teclado):</strong>
+                    <li>Vaya al menú <strong>Settings</strong> &rarr; <strong>Set grid size and position</strong>.</li>
+                    <li>En la sección <strong>Cell Size (X/Y)</strong> defina el tamaño en grados. Escriba <strong>1.0</strong> en X y <strong>1.0</strong> en Y (cuadros de ~111 km, estándar para analizar a nivel de país). Haga clic en <strong>OK</strong>.</li>
+                    <li>La malla aparecerá sobre el mapa. <strong>Atajos de teclado rápidos:</strong>
                         <ul>
-                            <li>Use <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> para cambiar rápidamente el tamaño de la celda.</li>
-                            <li>Use <kbd>Ctrl</kbd> + <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> para desplazar el origen de la grilla sobre el mapa.</li>
+                            <li>Use <kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&larr;</kbd> <kbd>&rarr;</kbd> para cambiar el tamaño de las celdas visualmente.</li>
+                            <li>Use <kbd>Ctrl</kbd> + <kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&larr;</kbd> <kbd>&rarr;</kbd> para desplazar la grilla y acomodarla sobre el centro de sus puntos.</li>
                         </ul>
                     </li>
                 </ol>
@@ -376,17 +401,12 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
         <div class="tutorial-step">
             <div class="step-number">IV</div>
             <div class="step-content">
-                <strong>Fase IV: Búsqueda del Algoritmo (NDM)</strong>
-                <p>El programa NDM actuará como motor de búsqueda matemático llamado desde VNDM.</p>
+                <strong>Fase IV: Generar la Matriz Binaria (¡Paso Obligatorio!)</strong>
+                <p>Antes de buscar áreas, debemos ordenarle al programa que cruce la cuadrícula con las coordenadas de las especies.</p>
                 <ol>
-                    <li>Vaya al menú <strong>Analyze</strong> &rarr; <strong>Find areas (Heuristic search)</strong>.</li>
-                    <li>Ajuste estos tres valores en la ventana de características de búsqueda:</li>
-                    <ul>
-                        <li><strong>Save sets with score ></strong> Escriba <code>2.0</code>. </li>
-                        <li><strong>Swap one cell at a time:</strong> <em>Marque esta casilla</em> para afinar los bordes del área (hace más lenta la búsqueda).</li>
-                        <li><strong>Replications:</strong> Escriba <code>100</code> para asegurar una búsqueda completa.</li>
-                    </ul>
-                    <li>Haga clic en <strong>Search</strong>. </li>
+                    <li>Vaya al menú <strong>File</strong>.</li>
+                    <li>Haga clic en la opción <strong>Create matrix from data points</strong>.</li>
+                    <li>La pantalla cambiará, mostrando una cuadrícula verde con el título <code>Set 0 of 1 (size=0). Score=0.000000.</code> ¡No se asuste! Este es simplemente su lienzo en blanco. El programa agrupó dónde hay datos (las celdas verdes), preparándose para el análisis matemático.</li>
                 </ol>
             </div>
         </div>
@@ -394,12 +414,19 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
         <div class="tutorial-step">
             <div class="step-number">V</div>
             <div class="step-content">
-                <strong>Fase V: Agrupar resultados en un Consenso</strong>
-                <p>A menudo el programa encuentra áreas que difieren por apenas una celda o especie. Las agruparemos para resumir la información.</p>
+                <strong>Fase V: Ejecutar la Búsqueda Heurística (Analyze)</strong>
+                <p>El menú <em>Analyze</em> es el "cerebro matemático" de VNDM. Como es un algoritmo de aproximación (heurístico), debemos configurarlo para que busque inteligentemente a través del mapa.</p>
                 <ol>
-                    <li>Vaya a <strong>Analyze</strong> &rarr; <strong>Consensus areas...</strong>.</li>
-                    <li>En la ventana "Consense areas with cut-off (% similarity in species)", escriba <code>50</code>.</li>
-                    <li>Asegúrese de seleccionar la opción "against each of the other areas in the consensus" (Consenso estricto). Haga clic en OK.</li>
+                    <li>Vaya al menú <strong>Analyze</strong> &rarr; <strong>Analyze with NDM</strong>.</li>
+                    <li>Verá una ventana con múltiples parámetros matemáticos. Asegúrese de ajustar o confirmar los siguientes valores críticos:</li>
+                    <ul>
+                        <li><strong>Save sets with [2] or more endemic spp.:</strong> Déjelo en 2. Esto garantiza que se cumpla la regla de oro de la biogeografía (un Área de Endemismo requiere la congruencia de al menos dos especies exclusivas).</li>
+                        <li><strong>Save sets with score above:</strong> Escriba <code>2.000</code>. Esto le dice al programa que solo guarde ecosistemas que matemáticamente pesen lo mismo o más que dos especies endémicas perfectas.</li>
+                        <li><strong>Type of swapping:</strong> Seleccione <em>swap one cell at a time</em>. Esto define cómo el programa "dibuja" el área, añadiendo o quitando de a un cuadro a la vez para afinar cuidadosamente los bordes del ecosistema sin saltarse detalles geográficos.</li>
+                        <li><strong>Keep overlapping subsets if [0] % of species unique:</strong> Déjelo en 0. Significa que, temporalmente, queremos que el programa guarde todas las áreas superpuestas (incluso si son redundantes), porque en el siguiente paso nosotros mismos las limpiaremos haciendo un mapa de Consenso.</li>
+                        <li><strong>Repeat search... times:</strong> Escriba <code>100</code>. El algoritmo empezará desde puntos aleatorios 100 veces diferentes para asegurarse de que exploró todas las combinaciones posibles de celdas en el mapa.</li>
+                    </ul>
+                    <li>Haga clic en el botón <strong>OK</strong>. Verá una barra de progreso indicando la evaluación matemática de las celdas.</li>
                 </ol>
             </div>
         </div>
@@ -407,17 +434,66 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
         <div class="tutorial-step">
             <div class="step-number">VI</div>
             <div class="step-content">
-                <strong>Fase VI: Resultados y Exportación</strong>
+                <strong>Fase VI: Consenso de Áreas</strong>
+                <p>A menudo el programa encuentra versiones casi idénticas del mismo ecosistema, desplazadas por apenas una o dos celdas. En esta fase limpiaremos la redundancia sintetizando la información compartida.</p>
                 <ol>
-                    <li>Vaya al menú <strong>View</strong> y seleccione <strong>Show areas</strong> (o use las teclas para avanzar si los resultados se muestran solos).</li>
-                    <li>Use las teclas <kbd>Enter</kbd> y <kbd>Backspace</kbd> para avanzar o retroceder en la lista de áreas o especies (según lo que esté visualizando).</li>
-                    <li><strong>Lectura de Datos (Para su informe):</strong>
+                    <li>Vaya al menú <strong>Analyze</strong> &rarr; <strong>Consense areas...</strong>.</li>
+                    <li>Verá una ventana pequeña con el título <em>"Consense areas with cut-off"</em>. Aquí configuraremos las reglas de agrupación:</li>
+                    <li><strong>% similarity in species:</strong> Cambie el valor de <code>100</code> (el predeterminado) a <code>50</code>. Esto le dice al programa que agrupe las áreas identificadas si comparten al menos la mitad (50%) de sus especies endémicas exclusivas.</li>
+                    <li><strong>Include an area if cut-off is ok...:</strong> Observe las dos opciones disponibles:
                         <ul>
-                            <li><strong>Score:</strong> Es el puntaje matemático de su área. Entre más alto, mejor.</li>
-                            <li><strong>Lista inferior:</strong> Muestra los nombres de las especies exclusivas de esa zona. Presione <kbd>V</kbd> + <kbd>Enter</kbd> para ver la lista desglosada de los taxones endémicos que aportan al índice del área. Anote los nombres.</li>
+                            <li><em>against each of the other areas in the consensus</em>: Este es el <strong>Consenso Estricto</strong>. Solo agrupará un área si esta cumple la regla del 50% con <em>todas y cada una</em> de las demás áreas del grupo. Es el método más riguroso y exacto. <strong>(Seleccione esta opción)</strong>.</li>
+                            <li><em>against any of the other areas in the consensus</em>: Este es el <strong>Consenso Flexible</strong>. Agrupa el área si cumple la regla con <em>al menos una</em> de las áreas del grupo. Suele generar áreas de consenso gigantescas y poco precisas, por lo que lo evitaremos en este laboratorio.</li>
                         </ul>
                     </li>
-                    <li>Para exportar la imagen a su documento, presione <kbd>Shift</kbd> + <kbd>M</kbd> o <kbd>F12</kbd> para guardar el área en pantalla como un Metafile (*.emf).</li>
+                    <li>Una vez confirmados el `50` y la opción `against each`, haga clic en <strong>OK</strong>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number">VII</div>
+            <div class="step-content">
+                <strong>Fase VII: Exploración de Resultados (Actions)</strong>
+                <p>El menú <em>Actions</em> es donde usted extrae la información biológica clave para su informe de laboratorio.</p>
+                
+                <p><strong>1. Lectura del Mapa de Consenso:</strong></p>
+                <p>Al generar el consenso, notará que el mapa de celdas verdes cambia a una paleta de colores rojos y aparece nueva información vital en pantalla:</p>
+                <ul>
+                    <li><strong>Título superior (ej. <em>from 5 areas; max. values</em>):</strong> Le indica cuántas áreas individuales similares fueron fusionadas matemáticamente para crear este mapa resumen.</li>
+                    <li><strong>Gradiente de Colores (Leyenda derecha):</strong> Muestra los rangos del Índice de Endemicidad (Score). Las celdas <strong>rojas oscuras</strong> representan el "núcleo" geográfico del área de endemismo (donde el puntaje es más alto y la coincidencia de especies es perfecta), mientras que los tonos rosados más claros son las zonas periféricas de ese ecosistema con menor soporte. Las celdas doradas ("Just ground!") son cuadrículas que tienen datos pero no pertenecen a esta área.</li>
+                    <li><strong>Lista inferior (<em>Areas included</em>):</strong> Le muestra los números de identificación exactos de las áreas individuales originales (ej. 3, 5, 6, 8, 11) que el algoritmo agrupó en este mapa.</li>
+                </ul>
+
+                <p><strong>2. Navegación:</strong></p>
+                <p>Use las teclas <kbd>Enter</kbd> y <kbd>Backspace</kbd> para avanzar y retroceder a través de todas las diferentes áreas Consenso que descubrió el programa para Colombia.</p>
+
+                <p><strong>3. Lectura del Desglose de Especies (Scoring species):</strong></p>
+                <p>Mientras observa un área importante en su pantalla, vaya al menú <strong>Actions</strong> &rarr; <strong>Show scoring species</strong> (o presione <kbd>V</kbd> y luego <kbd>Enter</kbd>). Esto le revelará exactamente qué especies construyen esa zona biológica:</p>
+                <ul>
+                    <li><strong>Encabezado individual:</strong> Arriba leerá cuánto puntaje aporta la especie que está viendo al total del ecosistema (ej. <em>contributes 0.812500 to score=12.53</em>).</li>
+                    <li><strong>Mapa Específico:</strong> Los puntos <strong>amarillos brillantes</strong> son las colectas reales de herbario/museo de esa especie. Las celdas <strong>rojas</strong> muestran dónde la especie coincide con el Área Endémica.</li>
+                    <li><strong>Estadísticas (Inside / Outside):</strong> Detalla cuántas celdas tiene la especie "adentro" (Inside: pres) frente a cuántas tiene "afuera" (Outside: obs). <em>¡Recuerde! Si la especie tiene presencias afuera (Outside > 0), el programa la penaliza y le reduce su puntaje porque pierde exclusividad.</em></li>
+                    <li><strong>Lista Inferior (Scoring spp.):</strong> Le entrega el listado completo y definitivo de las especies que sustentan su área de endemismo (ej. <em>19 scoring spp</em>). <strong>Tome nota cuidadosa de estos nombres para su informe.</strong> Puede usar <kbd>Enter</kbd> para navegar el mapa individual de cada una de ellas.</li>
+                </ul>
+
+                <p><strong>4. Exportación Rápida de Imagen:</strong></p>
+                <p>Para guardar el mapa como una imagen y anexarla a su informe, vaya a <strong>File</strong> &rarr; <strong>Save diagram as metafile</strong> (o presione <kbd>F12</kbd>).</p>
+            </div>
+        </div>
+
+        <div class="tutorial-step" style="border-left: 4px solid #8e44ad; background-color: #f9f2fb;">
+            <div class="step-number" style="background-color: #8e44ad;">VIII</div>
+            <div class="step-content">
+                <strong>Fase VIII: Exportación a Sistemas de Información Geográfica (QGIS)</strong>
+                <p>Los cuadros de VNDM sobre un fondo blanco son útiles estadísticamente, pero dificultan saber qué departamento o cordillera exacta estamos analizando. Afortunadamente, la versión 3.1 nos permite exportar los píxeles a un mapa real[cite: 2].</p>
+                <ol>
+                    <li>Mientras observa su mejor Área de Endemismo Consenso en la pantalla de VNDM, vaya al menú <strong>File</strong>.</li>
+                    <li>Seleccione <strong>Save coordinates for GIS</strong> &rarr; <strong>Save area/s as CSV</strong>. Guarde el archivo en su carpeta <code>lab12</code>[cite: 2].</li>
+                    <li>Abra <strong>QGIS</strong> en su computador. Añada un mapa base de Colombia (ej. OpenStreetMap o Google Terrain).</li>
+                    <li>Vaya al menú superior de QGIS: <strong>Capa</strong> &rarr; <strong>Añadir capa</strong> &rarr; <strong>Añadir capa de texto delimitado...</strong>.</li>
+                    <li>Seleccione su nuevo archivo CSV. Asegúrese de indicar que el campo X es la Longitud (Long) y el campo Y es la Latitud (Lat).</li>
+                    <li>Al cargarla, la zona de endemismo matemática se proyectará perfectamente sobre la geografía real del país, permitiéndole identificar ríos, montañas o valles asociados a la distribución de sus especies. ¡Use esta imagen para fortalecer la discusión de sus resultados!</li>
                 </ol>
             </div>
         </div>
@@ -426,20 +502,20 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
     <div class="content-section">
         <h2 class="section-title">4. Redacción de Resultados</h2>
         <p>
-            Al redactar su trabajo, indique cómo extrajo los datos en R, el tamaño de la cuadrícula y el puntaje obtenido en el programa.
+            Al redactar su trabajo, indique cómo extrajo los datos en R, el tamaño de la cuadrícula y el puntaje obtenido en el programa. <strong>Para una nota excelente, acompañe su texto con el mapa proyectado en QGIS.</strong>
         </p>
 
         <div class="info-box" style="border-left-color: #003366;">
             <strong style="color: #003366;">📝 Ejemplo de Materiales y Métodos</strong>
             <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
-                "La búsqueda de Áreas de Endemismo (AoE) se realizó con el programa VNDM v3.1. Los datos de las especies del género <em>XXX</em> fueron extraídos desde GBIF mediante el paquete de R <code>rgbif</code>, utilizando el identificador taxonómico oficial para asegurar la precisión. Se filtró estrictamente por especímenes físicos de museo para evitar errores observacionales y se limpiaron coordenadas atípicas. En el programa se definió una cuadrícula de 1.0° x 1.0° de resolución. El análisis heurístico constó de 100 réplicas, conservando únicamente las áreas con un Índice de Endemicidad mayor a 2.0. Finalmente, los resultados redundantes se agruparon mediante un mapa de Consenso Estricto del 50%."
+                "La búsqueda de Áreas de Endemismo (AoE) se realizó con el programa VNDM v3.1. Los datos de las especies del género <em>XXX</em> fueron extraídos desde GBIF mediante el paquete de R <code>rgbif</code>, utilizando el identificador taxonómico oficial para asegurar la precisión. Se filtró estrictamente por especímenes físicos de museo para evitar errores observacionales y se limpiaron coordenadas atípicas. En el programa se definió una cuadrícula de 1.0&deg; &times; 1.0&deg; de resolución. El análisis heurístico constó de 100 réplicas, conservando únicamente las áreas con un Índice de Endemicidad mayor a 2.0. Finalmente, los resultados redundantes se agruparon mediante un mapa de Consenso Estricto del 50%. Las áreas resultantes fueron exportadas espacialmente a QGIS v3.x para su delimitación geográfica."
             </p>
         </div>
 
         <div class="theory-box" style="border-left-color: #27ae60; background-color: #eafaf1;">
             <strong style="color: #1e8449;">📊 Ejemplo de Resultados de Áreas de Endemismo</strong>
             <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
-                "El análisis espacial en VNDM logró identificar 3 Áreas de Endemismo Consenso (AoE) en la región andina <strong>(Figura 1)</strong>. El área principal abarcó la zona de Santander y obtuvo el puntaje más alto del análisis (Score = 3.45). El algoritmo confirmó que la existencia evolutiva de esta área se basa en la presencia exclusiva de cuatro especies: <em>Especie_A</em>, <em>Especie_B</em>, <em>Especie_C</em> y <em>Especie_D</em>, lo cual refleja una historia de aislamiento compartido para estos grupos."
+                "El análisis espacial en VNDM logró identificar 3 Áreas de Endemismo Consenso (AoE) en la región andina <strong>(Figura 1)</strong>. Al proyectar las celdas en QGIS, se evidenció que el área principal abarcó el Páramo de Santurbán en Santander y obtuvo el puntaje más alto del análisis (Score = 3.45). El algoritmo confirmó que la existencia evolutiva de esta área se basa en la presencia exclusiva de cuatro especies endémicas estrictas: <em>Especie_A</em>, <em>Especie_B</em>, <em>Especie_C</em> y <em>Especie_D</em>, lo cual refleja una historia de aislamiento ecológico compartido para estos grupos en las elevaciones de la cordillera Oriental."
             </p>
         </div>
     </div>
@@ -451,8 +527,8 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
             <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
             <p style="margin-bottom: 10px; font-size: 0.95em;">Entregue un archivo PDF titulado <code>Apellidos_Lab12_NDM.pdf</code> conteniendo:</p>
             <ol style="margin: 0; font-family: monospace; font-size: 0.95em; color: #555;">
-                <li style="margin-bottom: 5px;">📄 <strong>1. Mapa Biogeográfico (VNDM):</strong> La imagen exportada mostrando su mejor Área de Endemismo (la que tuvo el "Score" más alto).</li>
-                <li style="margin-bottom: 5px;">📄 <strong>2. Especies de Soporte:</strong> Transcriba los nombres de las especies que el programa identificó como exclusivas de esa área.</li>
+                <li style="margin-bottom: 5px;">📄 <strong>1. Mapa Biogeográfico (VNDM/QGIS):</strong> La imagen de su mejor Área de Endemismo (la que tuvo el "Score" más alto). Idealmente exportada desde QGIS para una mejor visualización espacial.</li>
+                <li style="margin-bottom: 5px;">📄 <strong>2. Especies de Soporte:</strong> Transcriba los nombres de las especies exclusivas de esa área consultadas mediante el menú <em>Actions</em>.</li>
                 <li>📝 <strong>3. Reporte y Cuestionario:</strong> El párrafo de resultados redactado formalmente y las respuestas a las siguientes dos preguntas teóricas.</li>
             </ol>
         </div>
@@ -461,9 +537,9 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
         <div style="margin-left: 20px;">
             <p><strong>P1. Uso del Código Taxonómico en R:</strong> En el paso de minería de datos en R (Fase I), utilizamos la función <code>name_backbone()</code> para conseguir un número de código (Taxon Key) en lugar de simplemente pedirle a GBIF que buscara una palabra. Explique qué problema soluciona este enfoque y por qué usar <code>basisOfRecord = "PRESERVED_SPECIMEN"</code> es importante para la calidad del análisis biogeográfico.</p>
             
-            <p><strong>P2. El tamaño de la cuadrícula:</strong> Imagine que usted está evaluando escarabajos que viven en zonas altas (páramos) de la Cordillera de los Andes. ¿Qué problema o error ocurriría en sus resultados de VNDM si usted configura cuadrículas demasiado grandes (ejemplo: 5° &times; 5°, que abarcan desde el nivel del mar hasta la cima)? ¿Qué zonas geográficas estarían mezclando artificialmente esas celdas?</p>
+            <p><strong>P2. El tamaño de la cuadrícula:</strong> Imagine que usted está evaluando escarabajos que viven en zonas altas (páramos) de la Cordillera de los Andes. ¿Qué problema o error ocurriría en sus resultados de VNDM si usted configura cuadrículas demasiado grandes (ejemplo: 5&deg; &times; 5&deg;, que abarcan desde el nivel del mar hasta la cima)? ¿Qué zonas geográficas estarían mezclando artificialmente esas celdas?</p>
             
-            <p><strong>P3. Redacción de Resultados:</strong> Usando los ejemplos de la Sección 4, redacte un párrafo informando de manera directa cuáles fueron los resultados que obtuvo con los datos de su proyecto. Mencione el Score del área principal y cite los nombres de los taxones que conforman esa área. Añada una leyenda a su figura.</p>
+            <p><strong>P3. Redacción de Resultados:</strong> Usando los ejemplos de la Sección 4, redacte un párrafo informando de manera directa cuáles fueron los resultados que obtuvo con los datos de su proyecto. Mencione el Score del área principal, su ubicación geográfica basada en la proyección de QGIS, y cite los nombres de los taxones que conforman el núcleo de esa área. Añada una leyenda a su figura.</p>
         </div>
     </div>
 
@@ -481,8 +557,8 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>1. Operación de R y VNDM (30%)</strong></td>
-                    <td>Ejecutó el script en R extrayendo datos con el Taxon Key. Cargó el .xyd en VNDM, generó la cuadrícula y exportó el mapa del Consenso mostrando un Área válida (Score > 2.0). Reportó claramente las especies.</td>
+                    <td><strong>1. Operación de R, VNDM y QGIS (30%)</strong></td>
+                    <td>Ejecutó el script en R extrayendo datos con el Taxon Key. Cargó el .xyd en VNDM, generó la cuadrícula y exportó el mapa del Consenso mostrando un Área válida (Score > 2.0). Reportó claramente las especies y contextualizó el mapa visualmente.</td>
                     <td>Generó el mapa en VNDM pero se ve incompleto, mostrando múltiples áreas redundantes por no aplicar el consenso. Faltó claridad al listar las especies o no usó el script de limpieza en R.</td>
                     <td>No logró cargar los datos en el programa debido a que no limpió los espacios en las especies o el archivo estaba mal configurado.</td>
                 </tr>
@@ -500,8 +576,8 @@ if(is.null(datos_crudos) || nrow(datos_crudos) == 0) {
                 </tr>
                 <tr>
                     <td><strong>4. Redacción de Resultados (P3) (30%)</strong></td>
-                    <td>El párrafo informa con precisión científica. Incluye el Score numérico obtenido y nombra correctamente a las especies. Incluye una leyenda descriptiva clara para la imagen.</td>
-                    <td>Escribe los resultados de forma muy breve. Omite el Score o no menciona las especies exclusivas de la zona. La leyenda de la figura es pobre.</td>
+                    <td>El párrafo informa con precisión científica. Incluye el Score numérico obtenido, nombra correctamente a las especies y sitúa el área geográficamente. Incluye una leyenda descriptiva clara para la imagen.</td>
+                    <td>Escribe los resultados de forma muy breve. Omite el Score o no menciona las especies exclusivas de la zona. La ubicación geográfica no es mencionada.</td>
                     <td>Redacción confusa, no incluye los números calculados por VNDM, o inventa conclusiones ecológicas que no se deducen del ejercicio.</td>
                 </tr>
             </tbody>
