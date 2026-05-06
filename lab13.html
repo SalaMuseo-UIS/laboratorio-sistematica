@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Lab 13: Biorregionalización y BioGeoBEARS</title>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', flowchart: { curve: 'linear' } });</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .console-box {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        border-left: 5px solid #f1c40f;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    .console-box h4 { color: #f1c40f; margin-top: 0; }
+    .console-box ul { padding-left: 20px; margin-bottom: 0; }
+    .console-box li { margin-bottom: 8px; font-size: 0.95em; }
+    .console-box code { background-color: #1a252f; padding: 2px 6px; border-radius: 3px; color: #e74c3c; }
+
+    .reference-box {
+        background-color: #f4f6f9;
+        border-top: 2px solid #bdc3c7;
+        padding: 20px 60px;
+        font-size: 0.85em;
+        color: #555;
+    }
+
+    /* CODIGO Y BLOQUES */
+    pre {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.85em;
+        line-height: 1.4;
+    }
+    .cmd {
+        background: #f4f4f4;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        color: #c0392b;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
+    kbd {
+        background-color: #eee;
+        border-radius: 3px;
+        border: 1px solid #b4b4b4;
+        box-shadow: 0 1px 1px rgba(0,0,0,.2), 0 2px 0 0 rgba(255,255,255,.7) inset;
+        color: #333;
+        display: inline-block;
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 4px;
+        white-space: nowrap;
+    }
+
+    /* TUTORIAL Y PASOS */
+    .tutorial-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        transition: transform 0.2s;
+    }
+    .tutorial-step:hover {
+        border-color: #bdc3c7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-number {
+        background: #2980b9;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-1</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Lab 13 - Biorregionalización y Biogeografía Histórica</span>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">1. Fundamentos Teóricos</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivos de Aprendizaje</h3>
+            <ol>
+                <li><strong>Diferenciar</strong> el estudio de patrones espaciales (agrupación de áreas) frente a la inferencia de mecanismos evolutivos (procesos históricos).</li>
+                <li><strong>Entender</strong> la estructura de los datos que requiere BioGeoBEARS (árboles cronometrados y matrices de presencia/ausencia).</li>
+                <li><strong>Interpretar</strong> el significado biológico de los parámetros de evolución espacial (dispersión continua, extinción y dispersión fundadora o salto).</li>
+                <li><strong>Seleccionar</strong> el mejor modelo evolutivo utilizando el Criterio de Información de Akaike (AICc).</li>
+                <li><strong>Analizar</strong> la reconstrucción gráfica (gráfico filogenético con proporciones) para identificar el área geográfica de origen de un clado.</li>
+            </ol>
+        </div>
+
+        <h3>1.1. Patrones vs. Mecanismos</h3>
+        <p>
+            En biogeografía, el análisis de <strong>patrones</strong> responde a la pregunta <em>¿Qué está dónde?</em>. Su objetivo es agrupar áreas basándose en las especies que comparten. Para esto usaremos la plataforma Infomap Bioregions.
+        </p>
+        <p>
+            Por otro lado, la inferencia de <strong>mecanismos</strong> responde a <em>¿Cómo llegaron allí?</em>. Busca explicar los procesos históricos (como dispersión o vicarianza) que generaron ese patrón. Para esto usaremos el programa estadístico BioGeoBEARS en RStudio.
+        </p>
+
+        <h3>1.2. Modelos Evolutivos en BioGeoBEARS</h3>
+        <p>
+            BioGeoBEARS calcula la probabilidad de que ocurran diferentes eventos a lo largo de un árbol evolutivo. En este laboratorio evaluaremos dos modelos:
+        </p>
+        <ul>
+            <li><strong>Modelo DEC (Dispersión y Extinción):</strong> Asume que los organismos expanden su territorio lentamente hacia áreas vecinas (parámetro d) o se extinguen de manera local (parámetro e).</li>
+            <li><strong>Modelo DEC+J (Dispersión Fundadora):</strong> Incluye el parámetro "J" (Jump dispersal o salto). Este parámetro asume que un individuo puede cruzar una barrera difícil (como un océano) y fundar de inmediato una nueva especie en una zona lejana. Es el modelo más común para explicar la vida en islas oceánicas.</li>
+        </ul>
+
+        <h3>1.3. Selección de Modelos (El valor AICc)</h3>
+        <p>
+            Para saber cuál modelo explica mejor la realidad biológica, usamos el <strong>Criterio de Información de Akaike (AICc)</strong>. Este indicador hace un balance entre qué tan bien se ajusta el modelo a los datos (Verosimilitud o LnL) y la cantidad de parámetros que usa (Complejidad). <strong>La regla es simple: el modelo con el número de AICc más bajo es el ganador.</strong>
+        </p>
+
+        <div class="theory-box" style="border-left-color: #3498db;">
+            <strong style="color: #2980b9;">¿Qué datos consume BioGeoBEARS?</strong><br>
+            A diferencia de los mapas de distribución que usan coordenadas (latitud y longitud), los modelos evolutivos estocásticos requieren dos archivos sincronizados:
+            <ol>
+                <li><strong>Un Cronograma (.newick):</strong> Un árbol filogenético donde la longitud de las ramas representa <em>tiempo real</em> (millones de años). Esto es necesario para que el programa calcule la velocidad a la que ocurren los cambios.</li>
+                <li><strong>Una Matriz Geográfica (.data):</strong> Un archivo de texto (formato PHYLIP) que lista las especies y usa códigos binarios para indicar en cuáles áreas geográficas viven (<code>1</code> = Presente, <code>0</code> = Ausente). Por ejemplo, <code>1000</code> significa que la especie solo vive en la primera área de la lista.</li>
+            </ol>
+        </div>
+
+        <h3>1.4. Visualización Gráfica en BioGeoBEARS</h3>
+        <p>
+            Además de generar tablas numéricas con las probabilidades, el programa dibuja un archivo PDF con la filogenia. En las puntas del árbol (hojas) se muestran las áreas actuales donde vive cada especie. En las uniones de las ramas (nodos internos) se dibujan <strong>gráficos de torta (pie charts)</strong>. 
+        </p>
+        <p>
+            Estos gráficos representan la probabilidad calculada por el modelo de que el ancestro haya habitado en una región específica. Si miras el nodo más profundo del árbol (la raíz), el color predominante te indicará de dónde proviene originalmente todo el grupo de especies. Además, el título principal del gráfico PDF suele mostrar un resumen de las tasas del modelo (por ejemplo, <em>d=0, e=0, j=0.11</em>) confirmando bajo qué condiciones se generó el dibujo.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">2. Preparación del Entorno (RStudio)</h2>
+
+        <div class="tutorial-step">
+            <div class="step-number" style="background-color: #34495e;">0</div>
+            <div class="step-content">
+                <strong>Fase 0: Directorios y Compiladores C++</strong>
+                
+                <h4>A. Configuración del Directorio (setwd)</h4>
+                <p>Indique a RStudio su carpeta de trabajo cambiando las barras invertidas (<code>\</code>) de Windows por barras inclinadas (<code>/</code>).</p>
+                <p><code>setwd("C:/Usuarios/Estudiante/Escritorio/Lab13")</code></p>
+
+                <h4>B. Instalación de BioGeoBEARS</h4>
+                <p>Abra RStudio y ejecute este bloque de código una sola vez para instalar la librería mediante el gestor <code>pak</code>:</p>
+<pre>
+# 1. Instalar el gestor de paquetes 'pak'
+install.packages("pak")
+
+# 2. Instalar BioGeoBEARS
+pak::pkg_install("nmatzke/BioGeoBEARS")
+</pre>
+
+                <div class="info-box" style="border-left-color: #e74c3c; background-color: #fadbd8;">
+                    <strong style="color: #c0392b;">🛠️ Solución de Problemas (Solo si falla la instalación)</strong><br>
+                    <p style="font-size: 0.9em; margin-bottom: 5px;">Si RStudio muestra un error que dice <em>"Could not find tools necessary to compile a package"</em>, significa que Windows necesita un programa adicional llamado RTools para procesar matemáticas complejas.</p>
+                    <ol style="font-size: 0.9em; margin-top: 5px;">
+                        <li>Verifique su versión de R en la consola (ej. R 4.5.x). Vaya a <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank">CRAN RTools</a> y descargue el instalador para su versión (ej. RTools 4.5). Instálelo.</li>
+                        <li>Fuerce a RStudio a conectarse con el nuevo programa ejecutando esto en la consola: <br><code>Sys.setenv(PATH = paste("C:/rtools45/usr/bin", Sys.getenv("PATH"), sep=";"))</code> <br>(Cambie el "45" a su versión). Luego vuelva a intentar el paso B.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">3. Tutorial Paso a Paso</h2>
+
+        <h3>PARTE 1: Descubrimiento del Patrón Geográfico (Infomap)</h3>
+
+        <div class="tutorial-step">
+            <div class="step-number" style="background-color: #27ae60;">I</div>
+            <div class="step-content">
+                <strong>Fase I: Minería de Datos</strong>
+                <p>Este script descarga exclusivamente datos del género <em>Psychotria</em> delimitados por las coordenadas del archipiélago de Hawái.</p>
+<pre>
+# ==============================================================================
+# LAB 13: FASE I - MINERÍA ESPACIAL DELIMITADA Y CURACIÓN
+# ==============================================================================
+setwd("C:/Ruta/A/Su/Carpeta") # Ajuste a su ruta exacta
+
+library(rgbif)
+library(dplyr)
+library(stringr)
+library(CoordinateCleaner)
+
+# Obtener código del género
+info_taxon <- name_backbone("Psychotria") 
+codigo_gbif <- info_taxon$usageKey
+
+# Descarga delimitada por coordenadas (Hawái)
+print("Descargando registros...")
+registros <- occ_search(
+  taxonKey = codigo_gbif,               
+  hasCoordinate = TRUE,
+  decimalLatitude = "18,22.5",       
+  decimalLongitude = "-160.5,-154",  
+  basisOfRecord = "PRESERVED_SPECIMEN", 
+  limit = 5000                          
+)
+
+datos_crudos <- registros$data
+
+# Curación y Limpieza
+datos_filtrados <- datos_crudos %>%
+  filter(!is.na(decimalLongitude), !is.na(decimalLatitude), !is.na(species))
+  
+datos_curados <- clean_coordinates(
+  x = datos_filtrados,
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  tests = c("institutions", "zeros", "seas"), 
+  value = "clean"             
+)
+  
+datos_infomap <- datos_curados %>%
+  mutate(species = str_replace_all(species, " ", "_")) %>%
+  select(decimalLatitude, decimalLongitude, species) %>%
+  distinct()
+  
+# Exportar
+write.csv(datos_infomap, "ocurrencias_psychotria_hawaii.csv", row.names = FALSE)
+print("¡Archivo creado exitosamente!")
+</pre>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number" style="background-color: #27ae60;">II</div>
+            <div class="step-content">
+                <strong>Fase II: Parametrización en Infomap</strong>
+                <p>Ingrese a <a href="https://bioregions.mapequation.org/" target="_blank">Infomap Bioregions</a> y siga estos pasos para agrupar las áreas basándose en las especies que contienen, filtrando posibles errores.</p>
+                <ol>
+                    <li>Haga clic en <strong>Load data...</strong> y cargue su archivo CSV.</li>
+                    <li>En el cuadro <em>"Select how to parse columns"</em> asigne los menús así: <strong>Name</strong> = <code>species</code>, <strong>Latitude</strong> = <code>decimalLatitude</code>, y <strong>Longitude</strong> = <code>decimalLongitude</code>. Presione <strong>Submit</strong>.</li>
+                    <li>En la sección <strong>Resolution</strong> asegúrese de que <em>Unit</em> sea <code>degree</code>.</li>
+                    <li>Configure <strong>Max cell size</strong> a <code>1&deg;</code>.</li>
+                    <li>Escriba <code>1/8&deg;</code> en <strong>Min cell size</strong>. Permitir celdas pequeñas asegura que el programa separe islas vecinas que están divididas por mar.</li>
+                    <li>Configure <strong>Min cell capacity</strong> en <code>10</code>. Esto elimina registros aislados y estabiliza el mapa.</li>
+                    <li>Desplácese a <strong>Clustering</strong> y presione <strong>Run...</strong> para ver el mapa de biorregiones.</li>
+                    <li>Use el botón <strong>Export...</strong> en la esquina inferior izquierda. Descargue una imagen de su mapa (Save map) y descargue el archivo <code>_summary.csv</code> (de la opción Save tables).</li>
+                </ol>
+            </div>
+        </div>
+
+        <hr style="border: 0; height: 1px; background: #ddd; margin: 40px 0;">
+        
+        <h3>PARTE 2: Inferencia de Mecanismos (BioGeoBEARS)</h3>
+
+        <div class="tutorial-step">
+            <div class="step-number" style="background-color: #8e44ad;">III</div>
+            <div class="step-content">
+                <strong>Fase III: Ejecución de Modelos en R</strong>
+                <p>Abra una sesión limpia en RStudio. Ejecutaremos el modelo continuo (DEC) y el modelo de dispersión fundadora (DEC+J).</p>
+                
+<pre>
+# ==============================================================================
+# LAB 13: FASE III - RECONSTRUCCIÓN DE ÁREAS ANCESTRALES
+# ==============================================================================
+
+setwd("C:/Cambie/Por/Ruta/A/Su/Carpeta")
+
+library(BioGeoBEARS)
+library(ape)
+
+# 1. Cargar Archivos (Incluidos como ejemplo en la librería)
+extdata_dir = np(system.file("extdata", package="BioGeoBEARS"))
+trfn = paste(extdata_dir, "/Psychotria_5.2.newick", sep="")
+geogfn = paste(extdata_dir, "/Psychotria_geog.data", sep="")
+
+tr = read.tree(trfn)
+tipranges = getranges_from_LagrangePHYLIP(lgdata_fn=geogfn)
+
+# ==============================================================================
+# 2. MODELO DEC (Dispersión y Extinción clásica)
+# ==============================================================================
+BioGeoBEARS_run_object = define_BioGeoBEARS_run()
+BioGeoBEARS_run_object$trfn = trfn
+BioGeoBEARS_run_object$geogfn = geogfn
+
+# Límite biológico: una especie no puede ocupar más de 4 islas al mismo tiempo.
+BioGeoBEARS_run_object$max_range_size = 4    
+BioGeoBEARS_run_object$min_branchlength = 0.000001
+BioGeoBEARS_run_object$include_null_range = TRUE
+BioGeoBEARS_run_object$num_cores_to_use = 1 # Previene fallos en Windows
+
+print("Optimizando modelo DEC...")
+resDEC = bears_optim_run(BioGeoBEARS_run_object)
+
+# Extraer parámetros estadísticos
+stats_DEC <- extract_params_from_BioGeoBEARS_results_object(results_object = resDEC, returnwhat = "table", addl_params = c("j"))
+
+# ==============================================================================
+# 3. MODELO DEC+J (Incluye dispersión por saltos)
+# ==============================================================================
+BioGeoBEARS_run_object_J = define_BioGeoBEARS_run()
+BioGeoBEARS_run_object_J$trfn = trfn
+BioGeoBEARS_run_object_J$geogfn = geogfn
+BioGeoBEARS_run_object_J$max_range_size = 4
+BioGeoBEARS_run_object_J$include_null_range = TRUE
+BioGeoBEARS_run_object_J$num_cores_to_use = 1
+
+# Activamos el parámetro 'j'
+BioGeoBEARS_run_object_J$BioGeoBEARS_model_object@params_table["j","type"] = "free"
+BioGeoBEARS_run_object_J$BioGeoBEARS_model_object@params_table["j","init"] = 0.0001
+BioGeoBEARS_run_object_J$BioGeoBEARS_model_object@params_table["j","est"]  = 0.0001
+BioGeoBEARS_run_object_J$BioGeoBEARS_model_object@params_table["j","min"]  = 0.00001
+BioGeoBEARS_run_object_J$BioGeoBEARS_model_object@params_table["j","max"]  = 2.99999
+
+print("Optimizando modelo DEC+J...")
+resDECJ = bears_optim_run(BioGeoBEARS_run_object_J)
+
+# Extraer parámetros estadísticos
+stats_DECJ <- extract_params_from_BioGeoBEARS_results_object(results_object = resDECJ, returnwhat = "table", addl_params = c("j"))
+
+# ==============================================================================
+# 4. TABLA COMPARATIVA
+# ==============================================================================
+print("================ COMPARACIÓN DE MODELOS ================")
+tabla_comparativa <- rbind(DEC = stats_DEC, DEC_J = stats_DECJ)
+print(tabla_comparativa)
+print("========================================================")
+</pre>
+
+                <div class="console-box">
+                    <h4>¿Cómo leer los resultados de la consola?</h4>
+                    <p style="font-size: 0.95em; color: #bdc3c7; margin-top: -5px;">El bloque anterior generará una tabla al final de la consola de R. Estos son los significados de las columnas más importantes:</p>
+                    <ul>
+                        <li><code>d</code> <strong>(Dispersión):</strong> Tasa que asume una expansión lenta del territorio de la especie.</li>
+                        <li><code>e</code> <strong>(Extinción):</strong> Tasa de desaparición en áreas locales.</li>
+                        <li><code>j</code> <strong>(Jump / Salto):</strong> Probabilidad de que se forme una nueva especie mediante un salto de larga distancia a otra isla.</li>
+                        <li><code>LnL</code> <strong>(Verosimilitud):</strong> Qué tan bien ajusta el modelo (números más cercanos a 0 son mejores).</li>
+                        <li><code>AICc</code> <strong>(Criterio de Akaike):</strong> El indicador decisivo. <strong>El modelo con el número AICc más bajo es la explicación evolutiva correcta.</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-step">
+            <div class="step-number" style="background-color: #8e44ad;">IV</div>
+            <div class="step-content">
+                <strong>Fase IV: Exportar Gráfico de Probabilidades</strong>
+                <p>El siguiente código generará el archivo PDF mostrando la distribución ancestral. Se utiliza el resultado del modelo ganador (`resDECJ`).</p>
+<pre>
+# 5. Generación de Gráfico en PDF
+pdf("BioGeoBEARS_Ancestral_Psychotria.pdf", width=10, height=12)
+
+plot_BioGeoBEARS_results(results_object = resDECJ, 
+                         analysis_titletxt = "Reconstrucción Ancestral: Modelo DEC+J", 
+                         addl_params = list("j"), 
+                         plotwhat = "pie", 
+                         label.offset = 0.5, 
+                         tipcex = 0.8, 
+                         statecex = 0.6, 
+                         splitcex = 0.5, 
+                         titlecex = 0.9)
+
+dev.off()
+print("¡Archivo PDF generado en su carpeta de trabajo!")
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">4. Guía para el Reporte Estudiantil</h2>
+        <p>
+            Al redactar su reporte, utilice un lenguaje descriptivo y claro. Indique los resultados basándose en los datos arrojados por el programa.
+        </p>
+
+        <div class="info-box" style="border-left-color: #003366;">
+            <strong style="color: #003366;">📝 Ejemplo de redacción de Métodos</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
+                "El análisis de los patrones geográficos se realizó utilizando Infomap Bioregions, aplicando una resolución mínima de celda de 1/8&deg; y un límite de 10 presencias por celda para filtrar el error de muestreo. Para determinar la historia evolutiva, se analizó el árbol filogenético fechado utilizando BioGeoBEARS en R. Se comparó estadísticamente el modelo de dispersión y extinción gradual (DEC) con un modelo que incluye eventos de dispersión por salto (DEC+J). El mejor modelo se seleccionó usando el criterio AICc."
+            </p>
+        </div>
+
+        <div class="theory-box" style="border-left-color: #27ae60; background-color: #eafaf1;">
+            <strong style="color: #1e8449;">📊 Ejemplo de redacción de Resultados</strong>
+            <p style="font-style: italic; margin-top: 10px; color: #444; line-height: 1.8;">
+                "El modelo DEC+J presentó un ajuste estadísticamente superior a los datos (AICc = 47.8) frente al modelo DEC estándar (AICc = 73.0), indicando que la expansión territorial paso a paso es muy improbable. Al examinar el gráfico filogenético resultante, los porcentajes mostrados en el nodo ancestral basal sugieren que el clado de <em>Psychotria</em> se originó inicialmente en el área K (Kauai). Los resultados apoyan la hipótesis de que este grupo colonizó las islas del archipiélago a través de eventos infrecuentes de salto o dispersión a larga distancia (parámetro J), en lugar de expansiones graduales."
+            </p>
+        </div>
+    </div>
+
+    <div class="content-section" style="border-top: 5px solid #e67e22; background-color: #fff; padding-bottom: 10px;">
+        <h2 class="section-title">5. Instrucciones de Entrega y Cuestionario</h2>
+        
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-left: 5px solid #2c3e50; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #2c3e50; border-bottom: none;">⚠️ Productos a Entregar (Moodle)</h3>
+            <p style="margin-bottom: 10px; font-size: 0.95em;">Cargue un archivo PDF titulado <code>Apellidos_Lab13.pdf</code> que incluya lo siguiente:</p>
+            <p style="font-family: monospace; font-size: 0.95em; color: #555;">📄 <strong>1. Red Espacial (Infomap):</strong> El mapa de la plataforma web. Revise su archivo <code>_summary.csv</code> y escriba debajo del mapa cuáles son las dos especies más indicativas de la biorregión más grande.</p>
+            <p style="font-family: monospace; font-size: 0.95em; color: #555;">📄 <strong>2. Filogenia Ancestral (BioGeoBEARS):</strong> El gráfico del árbol exportado en PDF, donde se vean claramente los colores en los nodos.</p>
+            <p style="font-family: monospace; font-size: 0.95em; color: #555;">📝 <strong>3. Reporte:</strong> Un párrafo respondiendo al siguiente cuestionario de manera directa.</p>
+        </div>
+
+        <h3 style="color: #d35400;">Cuestionario Analítico:</h3>
+        <div style="margin-left: 20px;">
+            <p><strong>P1. Datos de Entrada:</strong> A diferencia de los mapas que usted dibujó con coordenadas en prácticas anteriores, explique cuáles son los dos archivos que requiere BioGeoBEARS y qué tipo de información tiene cada uno para que el modelo funcione.</p>
+            
+            <p><strong>P2. Modelo Evolutivo:</strong> Basado en el concepto de "J" (Jump dispersal), explique de manera breve por qué este parámetro es fundamental para entender la evolución de organismos que viven en grupos de islas separadas por el mar.</p>
+            
+            <p><strong>P3. Análisis del AICc y Origen:</strong> Escriba los valores de AICc que obtuvo para cada modelo y justifique cuál es el ganador. Finalmente, observe el nodo más profundo (la base) del gráfico de su árbol y diga cuál es el área de origen más probable para todo el grupo de plantas.</p>
+        </div>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">6. Rúbrica de Evaluación</h2>
+        
+        <table class="code-table" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Criterio</th>
+                    <th style="width: 30%;">Excelente (4.5 - 5.0)</th>
+                    <th style="width: 30%;">Aceptable (3.5 - 4.4)</th>
+                    <th style="width: 15%;">Insuficiente (&lt; 3.5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Ejecución del Código (30%)</strong></td>
+                    <td>Generó el mapa en Infomap asignando bien las columnas. Ejecutó el entorno en RStudio, comparó los modelos y logró exportar el PDF con el gráfico de reconstrucción.</td>
+                    <td>Generó el mapa en Infomap, pero presentó fallos técnicos al exportar los datos o al generar la tabla de comparación final de modelos en RStudio.</td>
+                    <td>No logró cargar los datos en Infomap ni generar ningún resultado en RStudio debido a errores en la preparación de archivos o comandos básicos.</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Comprensión de los Datos (P1) (20%)</strong></td>
+                    <td>Explica de manera correcta que el programa requiere un árbol filogenético con escalas de tiempo (newick) y una matriz de presencias y ausencias por área.</td>
+                    <td>Menciona los archivos que se usaron en la clase, pero no explica claramente para qué sirve la escala temporal del árbol o qué indican los códigos de la matriz.</td>
+                    <td>Asume que BioGeoBEARS utiliza directamente listas de coordenadas de latitud y longitud, demostrando confusión con el funcionamiento del programa.</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Mecanismos Evolutivos (P2) (20%)</strong></td>
+                    <td>Describe el proceso de "salto" como un evento de dispersión directa a larga distancia, relacionándolo con la dificultad biológica de colonizar islas separadas.</td>
+                    <td>Describe el parámetro "J" simplemente como movimiento, sin destacar que ocurre como un salto aislado sobre barreras oceánicas.</td>
+                    <td>No relaciona el parámetro J con la dispersión geográfica o le atribuye su efecto a factores climáticos incorrectos.</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Análisis de Resultados (P3) (30%)</strong></td>
+                    <td>Compara correctamente los valores numéricos del AICc. Identifica de manera clara el área de origen observando el color en la base del gráfico. Incluye los datos solicitados de Infomap.</td>
+                    <td>Identifica el área de origen en el gráfico, pero olvida reportar y comparar los números exactos del AICc que la consola arrojó para justificar la elección del modelo.</td>
+                    <td>No reporta valores estadísticos, no responde a las preguntas o describe información que no corresponde con los resultados reales arrojados por el script.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
