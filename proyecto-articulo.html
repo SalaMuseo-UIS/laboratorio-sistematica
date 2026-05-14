@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemática 20070 - Proyecto Final: Historia de una Especie</title>
+
+<style>
+    /* --- ESTILO ACADÉMICO UIS --- */
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 40px;
+    }
+    .main-container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* ENCABEZADO */
+    .header-banner {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 45px;
+        text-align: center;
+        border-bottom: 5px solid #e67e22;
+    }
+    .header-banner h1 { margin: 0; font-size: 2.2em; text-transform: uppercase; letter-spacing: 2px; }
+    .header-banner h2 { font-size: 1.1em; font-weight: 300; margin-top: 10px; color: #ecf0f1; opacity: 0.9; }
+    
+    .student-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 50px;
+        background-color: #ecf0f1;
+        border-bottom: 1px solid #bdc3c7;
+        font-size: 0.9em;
+        font-family: monospace;
+        color: #555;
+    }
+
+    /* SECCIONES */
+    .content-section { padding: 40px 60px; border-bottom: 1px solid #eee; }
+    
+    .section-title {
+        color: #2c3e50;
+        border-left: 5px solid #e67e22;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    h3 { color: #d35400; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    h4 { color: #2c3e50; margin-top: 25px; font-weight: 600; font-size: 1.1em; }
+    p { text-align: justify; margin-bottom: 15px; font-size: 1.05em; }
+
+    /* CAJAS DIDÁCTICAS */
+    .obj-box { 
+        background-color: #eafaf1; 
+        border: 1px solid #abebc6; 
+        border-left: 4px solid #27ae60;
+        padding: 20px; 
+        border-radius: 4px; 
+        margin-bottom: 30px; 
+    }
+    .obj-box h3 { margin-top: 0; color: #27ae60; border: none; padding-bottom: 0; }
+
+    .theory-box {
+        background-color: #fdf2e9; 
+        border: 1px solid #fae5d3;
+        border-left: 4px solid #e67e22;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .info-box {
+        background-color: #e8f4f8;
+        border: 1px solid #bce0fd;
+        border-left: 5px solid #3498db;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    /* LISTAS */
+    .req-list {
+        padding-left: 20px;
+    }
+    .req-list li {
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+
+    /* TABLAS */
+    .code-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .code-table th { background-color: #34495e; color: white; padding: 12px; text-align: left; }
+    .code-table td { padding: 12px; border: 1px solid #eee; text-align: left; vertical-align: top; }
+    .code-table tr:nth-child(even) { background-color: #f8f9fa; }
+    .code-table strong { color: #2c3e50; }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header-banner">
+        <h1>UNIVERSIDAD INDUSTRIAL DE SANTANDER</h1>
+        <h2>Sistemática (20070) | Prof. Sergio Marchant</h2>
+        <h2>2026-I</h2>
+    </div>
+
+    <div class="student-info">
+        <span><strong>TEMA:</strong> Proyecto Final - "Historia de una Especie"</span>
+        <span><strong>FECHA DE ENTREGA:</strong> 22 de mayo de 2026 (Moodle)</span>
+        <span><strong>VALOR:</strong> 10% de la nota final</span>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">1. Objetivo y Formato General</h2>
+        
+        <div class="obj-box">
+            <h3>Objetivo del Proyecto</h3>
+            <p style="margin-top: 10px; margin-bottom: 0;">
+                Aplicar el flujo de trabajo computacional y los fundamentos de biología comparada vistos durante el semestre para resolver una pregunta evolutiva, sistemática o biogeográfica sobre un grupo taxonómico de su elección. El resultado final debe presentarse en formato de artículo científico corto.
+            </p>
+        </div>
+
+        <div class="info-box" style="border-left-color: #8e44ad; background-color: #f5eef8; border-color: #d7bde2;">
+            <strong style="color: #8e44ad;">📄 Especificaciones de Formato</strong>
+            <p style="margin-top: 5px; margin-bottom: 0;">
+                El documento no debe exceder las <strong>15 páginas</strong> (incluyendo figuras y referencias). Utilice fuente Times New Roman o Arial tamaño 12, con interlineado 1.5. El manuscrito debe cargarse en formato PDF a través de la plataforma Moodle antes de la medianoche de la fecha estipulada.
+            </p>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">2. Estructura del Artículo Científico</h2>
+        <p>El manuscrito debe contener las siguientes secciones estructuradas de manera clara y académica:</p>
+
+        <ol class="req-list">
+            <li><strong>Título:</strong> Conciso e informativo, que refleje el grupo de estudio y el enfoque del análisis.</li>
+            <li><strong>Resumen (Abstract):</strong> Máximo 250 palabras. Debe sintetizar la pregunta de investigación, los métodos principales, los resultados clave y la conclusión fundamental.</li>
+            <li><strong>Introducción:</strong> Presentación del grupo biológico de estudio. En esta sección deben establecer explícitamente el <strong>rango de distribución natural</strong> conocido para el grupo taxonómico. Asimismo, es fundamental <strong>formular una pregunta de investigación clara</strong> y justificar cómo las herramientas filogenéticas y/o biogeográficas seleccionadas permitirán abordarla.</li>
+            <li><strong>Metodología:</strong> Debe ser rigurosa y totalmente replicable.
+                <ul>
+                    <li><strong>Flujo de trabajo:</strong> Detallar los algoritmos de alineamiento (MAFFT/Muscle), la selección de modelos (ModelFinder), y los parámetros exactos utilizados en los análisis filogenéticos (Parsimonia, Máxima Verosimilitud, o Inferencia Bayesiana) y biogeográficos.</li>
+                </ul>
+                <div class="theory-box" style="margin-top: 15px; margin-bottom: 15px;">
+                    <strong style="color: #d35400;">⚠️ Requisitos obligatorios de reporte de datos:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Tabla de Origen de Datos:</strong> Es obligatorio incluir una tabla descriptiva que evidencie los taxones analizados, la fuente de información (números de accesión de GenBank/BOLD o referencias bibliográficas), el número de secuencias, y el tamaño exacto de los alineamientos o matrices de datos utilizadas (número de caracteres o pares de bases).</li>
+                        <li><strong>Representatividad del Muestreo:</strong> Deben declarar de forma explícita si las muestras incluidas en sus análisis son representativas de <em>todo el rango de distribución natural</em> del grupo (descrito en la introducción), o si el conjunto de datos presenta sesgos y limitaciones geográficas.</li>
+                    </ul>
+                </div>
+            </li>
+            <li><strong>Resultados:</strong> Presentación clara de las topologías (árboles, redes o mapas) obtenidas. Las figuras deben ser legibles, formales, con sus respectivos valores de soporte (Bootstrap o Probabilidades Posteriores) en los nodos y acompañadas de leyendas descriptivas completas. Aquí solo se describen los hallazgos, no se interpretan.</li>
+            <li><strong>Discusión:</strong> Interpretación de los resultados a la luz de la pregunta de investigación. Deben analizar cómo la representatividad espacial de su muestreo influye en el alcance de sus conclusiones. Si las topologías presentan politomías o bajo soporte, debe discutirse metodológicamente el porqué, evitando forzar conclusiones evolutivas que los datos no respaldan.</li>
+            <li><strong>Conclusiones:</strong> Párrafo concreto que sintetice el cierre de la investigación.</li>
+            <li><strong>Referencias:</strong> Utilizar un formato de citación estandarizado (ej. APA). Las citas en el cuerpo del texto deben coincidir exhaustivamente con la bibliografía final.</li>
+        </ol>
+    </div>
+
+    <div class="content-section" style="background-color: #fff;">
+        <h2 class="section-title">3. Rúbrica de Evaluación</h2>
+        <p>Esta rúbrica evalúa las competencias de integración de herramientas informáticas con el pensamiento biológico comparado en una escala de 0.0 a 5.0.</p>
+        
+        <table class="code-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Criterio</th>
+                    <th style="width: 18%;">Excelente<br>(4.5 - 5.0)</th>
+                    <th style="width: 18%;">Bueno<br>(4.0 - 4.4)</th>
+                    <th style="width: 18%;">Aceptable<br>(3.0 - 3.9)</th>
+                    <th style="width: 18%;">Insuficiente<br>(&lt; 3.0)</th>
+                    <th style="width: 13%;">Peso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. Pregunta y Herramientas</strong></td>
+                    <td>Formula una pregunta clara. Describe el rango de distribución natural. Justifica de manera sólida qué métodos analíticos son idóneos, demostrando dominio teórico.</td>
+                    <td>Formula una pregunta adecuada y describe la distribución. Identifica las herramientas correctas, aunque la justificación teórica es superficial.</td>
+                    <td>La pregunta es ambigua. Menciona la distribución de forma imprecisa. Poca conexión entre la pregunta y las herramientas seleccionadas.</td>
+                    <td>Carece de una pregunta clara. No describe la distribución. El uso de herramientas denota confusión conceptual profunda.</td>
+                    <td><strong>20%</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>2. Datos y Metodología</strong></td>
+                    <td>Incluye una tabla exhaustiva (origen, secuencias, tamaño de matrices). Aclara la representatividad del muestreo. Describe el flujo haciéndolo totalmente replicable.</td>
+                    <td>Incluye la tabla de datos y menciona el alcance del muestreo, pero omite detalles técnicos menores reduciendo levemente la replicabilidad.</td>
+                    <td>La tabla de datos está incompleta. No declara si el muestreo es representativo. La metodología carece de parámetros críticos (ej. modelo evolutivo).</td>
+                    <td>No incluye tabla de datos. Faltan secciones enteras de la metodología, impidiendo conocer cómo se generaron los resultados.</td>
+                    <td><strong>20%</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>3. Calidad de Resultados</strong></td>
+                    <td>Resultados directos al diseño. Figuras con calidad académica, legibles, con valores de soporte claros y leyendas descriptivas completas.</td>
+                    <td>Resultados claros y figuras comprensibles con valores de soporte, aunque la presentación estética o las leyendas podrían mejorar.</td>
+                    <td>Topologías difíciles de interpretar, carecen de valores de soporte adecuados, o se presentan capturas de pantalla sin edición gráfica formal.</td>
+                    <td>Los resultados no concuerdan con los métodos. Figuras incomprensibles o no se reporta ninguna medida de soporte estadístico.</td>
+                    <td><strong>20%</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>4. Alcance de Discusión</strong></td>
+                    <td>Interpreta con rigor biológico. Integra críticamente cómo las limitaciones del muestreo afectan las conclusiones. Apoyo sólido en literatura primaria.</td>
+                    <td>Interpretación correcta con respaldo bibliográfico. Considera limitaciones, pero el análisis sobre el impacto del muestreo geográfico es superficial.</td>
+                    <td>Discusión descriptiva (repite resultados). Escasa interpretación evolutiva. No considera los sesgos de sus datos y carece de respaldo.</td>
+                    <td>Ausencia de análisis biológico. Conclusiones desconectadas de los datos o especulaciones carentes de sustento metodológico.</td>
+                    <td><strong>25%</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>5. Citas y Redacción</strong></td>
+                    <td>Redacción científica formal e impecable. Formato de citación estricto y consistente. Todas las afirmaciones teóricas están debidamente citadas.</td>
+                    <td>Redacción fluida con errores menores. Formato de referencias general consistente, con discrepancias mínimas entre texto y bibliografía.</td>
+                    <td>Dificultades de cohesión. Inconsistencias notables en referencias o faltan citas para aseveraciones biológicas importantes.</td>
+                    <td>Redacción no académica, ortografía deficiente. Sistema de citación caótico o plagio textual sin citar (Plagio = 0.0 automático).</td>
+                    <td><strong>15%</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
